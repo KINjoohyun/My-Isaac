@@ -12,7 +12,7 @@ protected:
 	float speed = 300.0f;
 	bool flipX = false;
 
-	float gapHeadToBody = 13.0f;
+	float gapHeadToBody = 26.0f;
 public:
 	sf::Sprite head;
 	sf::Sprite body;

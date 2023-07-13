@@ -40,6 +40,7 @@ void SceneGame::Init()
 	AddGO(background);
 
 	player = (Player*)AddGO(new Player());
+	player->sortLayer = 1;
 
 	for (auto go : gameObjects)
 	{

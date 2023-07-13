@@ -1,3 +1,13 @@
 "RESOURCES TYPES (Texture, Font, SoundBuffer, AnimationClip)",PATH
-3,animations/HeadIdleDown.csv
 3,animations/BodyIdleDown.csv
+3,animations/BodyIdleRight.csv
+3,animations/BodyMoveDown.csv
+3,animations/BodyMoveRight.csv
+3,animations/HeadIdleDown.csv
+3,animations/HeadIdleRight.csv
+3,animations/HeadIdleUp.csv
+3,animations/HeadIdleLeft.csv
+3,animations/HeadShootDown.csv
+3,animations/HeadShootRight.csv
+3,animations/HeadShootUp.csv
+3,animations/HeadShootLeft.csv

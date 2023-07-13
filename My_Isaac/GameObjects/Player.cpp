@@ -13,9 +13,18 @@ void Player::Init()
 {
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyIdleDown.csv"));
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyIdleRight.csv"));
+	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyMoveDown.csv"));
+	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyMoveRight.csv"));
 	bodyAnimation.SetTarget(&body);
 
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadIdleDown.csv"));
+	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadIdleRight.csv"));
+	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadIdleUp.csv"));
+	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadIdleLeft.csv"));
+	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadShootDown.csv"));
+	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadShootRight.csv"));
+	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadShootUp.csv"));
+	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadShootLeft.csv"));
 	headAnimation.SetTarget(&head);
 
 	SetOrigin(Origins::C);
@@ -44,7 +53,72 @@ void Player::Update(float dt)
 	SetPosition(position);
 
 	// Animation
+	if (bodyAnimation.GetCurrentClipId() == "BodyIdleDown")
+	{
+		if (abs(direction.x) > abs(direction.y))
+		{
+			bodyAnimation.Play("BodyMoveRight");
+			SetFlipX(body, direction.x < 0.0f);
+		}
+		if (abs(direction.x) < abs(direction.y))
+		{
+			bodyAnimation.Play("BodyMoveDown");
+		}
+	}
+	if (bodyAnimation.GetCurrentClipId() == "BodyIdleRight")
+	{
+		if (abs(direction.x) > abs(direction.y))
+		{
+			bodyAnimation.Play("BodyMoveRight");
+			SetFlipX(body, direction.x < 0.0f);
+		}
+		if (abs(direction.x) < abs(direction.y))
+		{
+			bodyAnimation.Play("BodyMoveDown");
+		}
+	}
+	if (bodyAnimation.GetCurrentClipId() == "BodyMoveDown")
+	{
+		if (direction.x == 0.0f && direction.y == 0.0f)
+		{
+			bodyAnimation.Play("BodyIdleDown");
+		}
+		if (abs(direction.x) > abs(direction.y))
+		{
+			bodyAnimation.Play("BodyMoveRight");
+			SetFlipX(body, direction.x < 0.0f);
+		}
+	}
+	if (bodyAnimation.GetCurrentClipId() == "BodyMoveRight")
+	{
+		if (direction.x == 0.0f && direction.y == 0.0f)
+		{
+			bodyAnimation.Play("BodyIdleRight");
+		}
+		if (abs(direction.x) < abs(direction.y))
+		{
+			bodyAnimation.Play("BodyMoveDown");
+		}
+	}
 
+	// test
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Left))
+	{
+		headAnimation.Play("HeadShootLeft");
+	}
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Right))
+	{
+		headAnimation.Play("HeadShootRight");
+	}
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Up))
+	{
+		headAnimation.Play("HeadShootUp");
+	}
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Down))
+	{
+		headAnimation.Play("HeadShootDown");
+	}
+	
 }
 void Player::Draw(sf::RenderWindow& window)
 {

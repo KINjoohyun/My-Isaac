@@ -17,7 +17,7 @@ public:
 	void Init(int cacheSize = 100);
 	void Release();
 	void AllReturn();
-	T* Get(); // 얘도 const ? 내부에서 SetActive(true)로 변경하기 때문에 const를 제외?
+	T* Get();
 	void Return(T* object);
 	const std::list<T*>& GetPool() const;
 	const std::list<T*>& GetUseList() const;

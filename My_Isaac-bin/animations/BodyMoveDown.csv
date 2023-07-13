@@ -1,0 +1,14 @@
+ID,FPS,LOOPTYPE,,
+BodyMoveDown,10,1,,
+,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
+graphics/player.png,15,80,18,14
+graphics/player.png,47,80,18,14
+graphics/player.png,79,80,18,14
+graphics/player.png,111,80,18,14
+graphics/player.png,143,80,18,14
+graphics/player.png,175,80,18,14
+graphics/player.png,207,80,18,14
+graphics/player.png,239,80,18,14
+graphics/player.png,271,80,18,14
+graphics/player.png,303,80,18,14

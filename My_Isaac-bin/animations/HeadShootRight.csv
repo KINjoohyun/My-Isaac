@@ -1,0 +1,6 @@
+ID,FPS,LOOPTYPE,,
+HeadShootRight,10,0,,
+,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
+graphics/player.png,130,25,28,26
+graphics/player.png,90,25,28,26

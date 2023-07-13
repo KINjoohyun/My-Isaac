@@ -2,4 +2,4 @@ ID,FPS,LOOPTYPE,,
 BodyIdleRight,10,1,,
 ,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
-graphics/player.png,15,123,18,13
+graphics/player.png,15,123,18,14

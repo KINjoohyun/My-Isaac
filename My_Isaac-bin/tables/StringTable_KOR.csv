@@ -1,0 +1,14 @@
+ID,KOR
+HELLO,안녕하세요
+BYE,안녕히가세요
+YOU_DIE,당신은 죽었습니다
+TITLE,좀비 서바이벌
+START,Enter키를 눌러 게임을 시작하시오.
+SKILL1,1. 데미지 증가
+SKILL2,2. 총알 속도 증가
+SKILL3,3. 다중발사
+GAMEOVER,게임 종료
+HSCORE,최고점수: 
+SCORE,점수: 
+WAVE,웨이브: 
+ZOMBIE,좀비: 

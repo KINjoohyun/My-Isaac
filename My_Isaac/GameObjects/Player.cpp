@@ -35,6 +35,9 @@ void Player::Reset()
 	bodyAnimation.Play("BodyIdleDown");
 	SetPosition(0.0f, 0.0f);
 	SetOrigin(origin);
+
+	body.setScale(5.0f, 5.0f);
+
 }
 void Player::Update(float dt)
 {
@@ -58,7 +61,6 @@ void Player::Update(float dt)
 		if (abs(direction.x) > abs(direction.y))
 		{
 			bodyAnimation.Play("BodyMoveRight");
-			SetFlipX(body, direction.x < 0.0f);
 		}
 		if (abs(direction.x) < abs(direction.y))
 		{
@@ -70,7 +72,6 @@ void Player::Update(float dt)
 		if (abs(direction.x) > abs(direction.y))
 		{
 			bodyAnimation.Play("BodyMoveRight");
-			SetFlipX(body, direction.x < 0.0f);
 		}
 		if (abs(direction.x) < abs(direction.y))
 		{
@@ -82,11 +83,11 @@ void Player::Update(float dt)
 		if (direction.x == 0.0f && direction.y == 0.0f)
 		{
 			bodyAnimation.Play("BodyIdleDown");
+			return;
 		}
 		if (abs(direction.x) > abs(direction.y))
 		{
 			bodyAnimation.Play("BodyMoveRight");
-			SetFlipX(body, direction.x < 0.0f);
 		}
 	}
 	if (bodyAnimation.GetCurrentClipId() == "BodyMoveRight")
@@ -94,11 +95,13 @@ void Player::Update(float dt)
 		if (direction.x == 0.0f && direction.y == 0.0f)
 		{
 			bodyAnimation.Play("BodyIdleRight");
+			return;
 		}
 		if (abs(direction.x) < abs(direction.y))
 		{
 			bodyAnimation.Play("BodyMoveDown");
 		}
+		SetFlipX(body, direction.x < 0.0f);
 	}
 
 	// test
@@ -129,13 +132,13 @@ void Player::Draw(sf::RenderWindow& window)
 void Player::SetPosition(const sf::Vector2f& position)
 {
 	GameObject::SetPosition(position);
-	body.setPosition({position.x, position.y + 13.0f});
+	body.setPosition({position.x, position.y + gapHeadToBody});
 	head.setPosition(position);
 }
 void Player::SetPosition(float x, float y)
 {
 	GameObject::SetPosition(x, y);
-	body.setPosition(x, y + 13.0f);
+	body.setPosition(x, y + gapHeadToBody);
 	head.setPosition(x, y);
 }
 

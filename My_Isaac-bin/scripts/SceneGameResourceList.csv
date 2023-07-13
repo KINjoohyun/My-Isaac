@@ -1,0 +1,5 @@
+"RESOURCES TYPES (Texture, Font, SoundBuffer, AnimationClip)",PATH
+0,graphics/player.png
+0,graphics/basement.png
+3,animations/HeadIdleDown.csv
+3,animations/BodyIdleDown.csv

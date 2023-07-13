@@ -4,10 +4,10 @@
 class SceneTitle : public Scene
 {
 protected:
-
+	
 public:
 	SceneTitle();
-	virtual ~SceneTitle() override = default;
+	virtual ~SceneTitle() override;
 
 	virtual void Init() override;
 	virtual void Update(float dt) override;

@@ -1,0 +1,5 @@
+ID,FPS,LOOPTYPE,,
+HeadIdleDown,10,1,,
+,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
+graphics/player.png,10,25,28,26

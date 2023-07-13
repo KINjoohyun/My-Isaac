@@ -1,14 +1,3 @@
 "RESOURCES TYPES (Texture, Font, SoundBuffer, AnimationClip)",PATH
-0,graphics/RubySheet.png
-0,graphics/sprite_sheet.png
 0,graphics/slide.png
 0,graphics/slide_off.png
-3,animations/Idle.csv
-3,animations/Move.csv
-3,animations/Jump.csv
-3,animations/Idle0.csv
-3,animations/Idle1.csv
-3,animations/Idle2.csv
-3,animations/Move0.csv
-3,animations/Move1.csv
-3,animations/Move2.csv

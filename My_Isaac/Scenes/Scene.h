@@ -19,6 +19,7 @@ protected:
 	sf::View uiView;
 
 	sf::RenderWindow& window;
+	sf::Vector2f windowSize;
 public:
 	Scene(SceneId id = SceneId::None);
 	virtual ~Scene();

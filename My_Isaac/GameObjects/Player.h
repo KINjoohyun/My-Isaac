@@ -1,34 +1,36 @@
 #pragma once
-#include "SpriteGameObject.h"
+#include "GameObject.h"
 #include "AnimationController.h"
 
-class Player : public SpriteGameObject
+class Player : public GameObject
 {
-public:
-
 protected:
-	AnimationController animation;
-	sf::Vector2f velocity;
+	AnimationController bodyAnimation;
+	AnimationController headAnimation;
 
-	float accel = 500.f;
-	float speed = 500.f;
-	float JumpForce = -250.f;
-	float gravity = 500.f;
+	sf::Vector2f direction = {0.0f, -1.0f};
+	float speed = 300.0f;
 
 	bool flipX = false;
-	bool isGround = true;
-
 public:
-	Player(const std::string& textureId = "", const std::string& n = "")
-		: SpriteGameObject(textureId, n) {}
+	sf::Sprite head;
+	sf::Sprite body;
+
+	Player(const std::string name = "");
 	virtual ~Player() override { Release(); }
 
 	virtual void Init() override;
 	virtual void Reset() override;
 	virtual void Update(float dt) override;
+	virtual void Draw(sf::RenderWindow& window) override;
+	virtual void Release() override {}
+
+	virtual void SetPosition(const sf::Vector2f& position);
+	virtual void SetPosition(float x, float y);
+
+	virtual void SetOrigin(Origins origin);
+	virtual void SetOrigin(float x, float y);
 
 	bool GetFlipX() const;
-	void SetFlipX(bool flip);
-	
+	void SetFlipX(sf::Sprite& sprite, bool flip);
 };
-

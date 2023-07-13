@@ -6,7 +6,7 @@
 
 Scene::Scene(SceneId id) :sceneId(id), window(FRAMEWORK.GetWindow())
 {
-
+	windowSize = FRAMEWORK.GetWindowSize();
 }
 Scene::~Scene()
 {

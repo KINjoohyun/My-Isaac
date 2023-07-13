@@ -2,9 +2,14 @@
 #include "Scene.h"
 #include "GameObject.h"
 
+class Player;
+class VertexArrayGameObject;
+
 class SceneGame : public Scene
 {
 protected:
+
+	Player* player;
 
 public:
 	SceneGame();
@@ -15,6 +20,9 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 	virtual void Release() override;
 
-	virtual void Enter() override; //씬에 들어갈때
-	virtual void Exit() override;  //씬을 나올때
+	virtual void Enter() override;
+	virtual void Exit() override;
+
+	VertexArrayGameObject* CreateBackground(sf::Vector2i size, sf::Vector2f tileSize, sf::Vector2f textureSize, std::string textureId);
+
 };

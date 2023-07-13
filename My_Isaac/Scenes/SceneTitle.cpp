@@ -10,44 +10,30 @@
 #include "StringTable.h"
 #include "Variables.h"
 
-#include "Player2.h"
-#include "Player.h"
-#include "RectGameObject.h"
-
 #include "UIButton.h"
 
 SceneTitle::SceneTitle() : Scene(SceneId::Title)
 {
 	resourceListPath = "scripts/SceneTitleResourceList.csv";
 }
+SceneTitle::~SceneTitle()
+{
+	Release();
+}
 
 void SceneTitle::Init()
 {
 	Release();
 
-	worldView.setSize(FRAMEWORK.GetWindowSize());
+	worldView.setSize(windowSize);
 	worldView.setCenter(0, 0);
 
-	uiView.setSize(FRAMEWORK.GetWindowSize());
-	uiView.setCenter({ FRAMEWORK.GetWindowSize().x / 2.0f, FRAMEWORK.GetWindowSize().y / 2.0f });
-
-	//Player2* player2 = (Player2*)AddGO(new Player2());
-	//player2->sortLayer = 1;
-
-	Player* player = (Player*)AddGO(new Player());
-	player->sortLayer = 1;
-
-	RectGameObject* rect = new RectGameObject();
-	rect->rect.setSize({ 1000.0f, 100.0f });
-	rect->rect.setFillColor(sf::Color::White);
-	rect->rect.setOutlineColor(sf::Color::Red);
-	rect->rect.setOutlineThickness(2);
-	rect->SetOrigin(Origins::TC);
-	AddGO(rect);
+	uiView.setSize(windowSize);
+	uiView.setCenter({ windowSize.x / 2.0f, windowSize.y / 2.0f });
 
 	UIButton* button = new UIButton("graphics/slide.png", "button");
 	button->SetOrigin(Origins::C);
-	button->SetPosition(FRAMEWORK.GetWindowSize().x / 2, FRAMEWORK.GetWindowSize().y);
+	button->SetPosition(windowSize.x / 2, windowSize.y / 2);
 	button->OnEnter = [button]()
 	{
 		std::cout << "Enter" << std::endl;
@@ -61,6 +47,7 @@ void SceneTitle::Init()
 	button->OnClick = []()
 	{
 		std::cout << "Click" << std::endl;
+		SCENE_MGR.ChangeScene(SceneId::Game);
 	};
 	button->sortLayer = 100;
 	AddGO(button);
@@ -73,11 +60,6 @@ void SceneTitle::Init()
 void SceneTitle::Update(float dt)
 {
 	Scene::Update(dt);
-
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Enter))
-	{
-		SCENE_MGR.ChangeScene(SceneId::Game);
-	}
 }
 void SceneTitle::Draw(sf::RenderWindow& window)
 {

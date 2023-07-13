@@ -1,95 +1,92 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "InputMgr.h"
-#include "Framework.h"
 #include "ResourceMgr.h"
+
+Player::Player(const std::string name)
+	:GameObject(name)
+{
+
+}
 
 void Player::Init()
 {
-	animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/Idle.csv"));
-	animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/Move.csv"));
-	animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/Jump.csv"));
+	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyIdleDown.csv"));
+	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyIdleRight.csv"));
+	bodyAnimation.SetTarget(&body);
 
-	animation.SetTarget(&sprite);
+	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadIdleDown.csv"));
+	headAnimation.SetTarget(&head);
 
-	SetOrigin(Origins::BC);
+	SetOrigin(Origins::C);
 }
-
 void Player::Reset()
 {
-	animation.Play("Idle");
+	headAnimation.Play("HeadIdleDown");
+	bodyAnimation.Play("BodyIdleDown");
+	SetPosition(0.0f, 0.0f);
 	SetOrigin(origin);
-	SetPosition({ 0, 0 });
-	SetFlipX(false);
 }
-
 void Player::Update(float dt)
 {
-	animation.Update(dt);
-	float h = INPUT_MGR.GetAxisRaw(Axis::Horizontal);
+	headAnimation.Update(dt);
+	bodyAnimation.Update(dt);
 
-	// 플립
-	if (h != 0.f)
+	direction.x = INPUT_MGR.GetAxisRaw(Axis::Horizontal);
+	direction.y = INPUT_MGR.GetAxisRaw(Axis::Vertical);
+	float magnitude = Utils::Magnitude(direction);
+	if (magnitude > 1.f)
 	{
-		bool flip = h < 0.f;
-		if (GetFlipX() != flip)
-		{
-			SetFlipX(flip);
-		}
+		direction /= magnitude;
 	}
 
-	// 점프
-	if (isGround && INPUT_MGR.GetKeyDown(sf::Keyboard::Space))
-	{
-		velocity.y += JumpForce;
-		animation.Play("Jump");
-		isGround = false;
-	}
-
-	// 이동
-	velocity.x = h * speed;
-	velocity.y += gravity * dt;
-	position += velocity * dt;
-
-	// 바닥 충돌 처리
-	if (position.y > 0.f)
-	{
-		isGround = true;
-		position.y = 0.f;
-		velocity.y = 0.f;
-	}
-
+	position += direction * speed * dt;
 	SetPosition(position);
 
-	// 에니메이션
-	if (animation.GetCurrentClipId() == "Idle")
+	// Animation
+
+}
+void Player::Draw(sf::RenderWindow& window)
+{
+	window.draw(body);
+	window.draw(head);
+}
+
+void Player::SetPosition(const sf::Vector2f& position)
+{
+	GameObject::SetPosition(position);
+	body.setPosition({position.x, position.y + 13.0f});
+	head.setPosition(position);
+}
+void Player::SetPosition(float x, float y)
+{
+	GameObject::SetPosition(x, y);
+	body.setPosition(x, y + 13.0f);
+	head.setPosition(x, y);
+}
+
+void Player::SetOrigin(Origins origin)
+{
+	GameObject::SetOrigin(origin);
+
+	if (this->origin != Origins::CUSTOM)
 	{
-		if (isGround && h != 0.f)
-		{
-			animation.Play("Move");
-		}
+		Utils::SetOrigin(body, origin);
+		Utils::SetOrigin(head, origin);
 	}
-	else if (animation.GetCurrentClipId() == "Move")
-	{
-		if (isGround && h == 0.f)
-		{
-			animation.Play("Idle");
-		}
-	}
-	else if (animation.GetCurrentClipId() == "Jump")
-	{
-		if (isGround)
-		{
-			animation.Play((h == 0.f) ? "Idle" : "Move");
-		}
-	}
+}
+void Player::SetOrigin(float x, float y)
+{
+	GameObject::SetOrigin(x, y);
+	body.setOrigin(x, y);
+	head.setOrigin(x, y);
 }
 
 bool Player::GetFlipX() const
 {
 	return flipX;
 }
-void Player::SetFlipX(bool flip)
+void Player::SetFlipX(sf::Sprite& sprite, bool flip)
 {
 	flipX = flip;
 

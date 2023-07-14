@@ -19,7 +19,6 @@ bool StringTable::Load()
     std::vector<std::string> fileNames;
     fileNames.push_back("tables/StringTable_KOR.csv");
     fileNames.push_back("tables/StringTable_ENG.csv");
-    fileNames.push_back("tables/StringTable_JAP.csv");
 
     for (int i = 0; i < tables.size(); i++)
     {

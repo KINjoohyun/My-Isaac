@@ -17,7 +17,7 @@ void ResourceMgr::UnLoadAll()
 		auto it = mapTexture.begin();
 		while (it != mapTexture.end())
 		{
-			if (std::get<1>(it->second))
+			if (!std::get<1>(it->second))
 			{
 				delete std::get<0>(it->second);
 				it = mapTexture.erase(it);
@@ -32,7 +32,7 @@ void ResourceMgr::UnLoadAll()
 		auto it = mapFont.begin();
 		while (it != mapFont.end())
 		{
-			if (std::get<1>(it->second))
+			if (!std::get<1>(it->second))
 			{
 				delete std::get<0>(it->second);
 				it = mapFont.erase(it);
@@ -47,7 +47,7 @@ void ResourceMgr::UnLoadAll()
 		auto it = mapSoundBuffer.begin();
 		while (it != mapSoundBuffer.end())
 		{
-			if (std::get<1>(it->second))
+			if (!std::get<1>(it->second))
 			{
 				delete std::get<0>(it->second);
 				it = mapSoundBuffer.erase(it);
@@ -62,7 +62,7 @@ void ResourceMgr::UnLoadAll()
 		auto it = mapAnimationClip.begin();
 		while (it != mapAnimationClip.end())
 		{
-			if (std::get<1>(it->second))
+			if (!std::get<1>(it->second))
 			{
 				delete std::get<0>(it->second);
 				it = mapAnimationClip.erase(it);

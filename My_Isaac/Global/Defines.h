@@ -6,7 +6,6 @@ enum class Languages
 {
 	KOR,
 	ENG,
-	JAP,
 	Count,
 };
 

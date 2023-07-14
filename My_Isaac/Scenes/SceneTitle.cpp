@@ -29,28 +29,54 @@ void SceneTitle::Init()
 	worldView.setCenter(0, 0);
 
 	uiView.setSize(windowSize);
-	uiView.setCenter({ windowSize.x / 2.0f, windowSize.y / 2.0f });
+	uiView.setCenter({ windowSize.x * 0.5f, windowSize.y * 0.5f });
 
-	UIButton* button = new UIButton("graphics/slide.png", "button");
-	button->SetOrigin(Origins::C);
-	button->SetPosition(windowSize.x / 2, windowSize.y / 2);
-	button->OnEnter = [button]()
+	UIButton* button1 = new UIButton("fonts/DNFBitBitOTF.otf");
+	button1->SetOrigin(Origins::C);
+	button1->SetText("fonts/DNFBitBitOTF.otf", "Game Start", 50, sf::Color::White, 1.0f);
+	button1->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 50.0f);
+	button1->OnEnter = [button1]()
 	{
-		std::cout << "Enter" << std::endl;
-		button->sprite.setTexture(*RESOURCE_MGR.GetTexture("graphics/slide_off.png"));
+		button1->text.setCharacterSize(button1->text.getCharacterSize() + 5);
+		button1->SetOrigin(Origins::C);
 	};
-	button->OnExit = [button]()
+	button1->OnExit = [button1]()
 	{
-		std::cout << "Exit" << std::endl;
-		button->sprite.setTexture(*RESOURCE_MGR.GetTexture(button->textureId));
+		button1->text.setCharacterSize(button1->text.getCharacterSize() - 5);
+		button1->SetOrigin(Origins::C);
 	};
-	button->OnClick = []()
+	button1->OnClick = [this]()
 	{
-		std::cout << "Click" << std::endl;
 		SCENE_MGR.ChangeScene(SceneId::Game);
 	};
-	button->sortLayer = 100;
-	AddGO(button);
+	button1->sortLayer = 100;
+	AddGO(button1);
+
+	UIButton* button2 = new UIButton("fonts/DNFBitBitOTF.otf");
+	button2->SetOrigin(Origins::C);
+	button2->SetText("fonts/DNFBitBitOTF.otf", "Map Editor", 50, sf::Color::White, 1.0f);
+	button2->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 150.0f);
+	button2->OnEnter = [button2]()
+	{
+		button2->text.setCharacterSize(button2->text.getCharacterSize() + 5);
+		button2->SetOrigin(Origins::C);
+	};
+	button2->OnExit = [button2]()
+	{
+		button2->text.setCharacterSize(button2->text.getCharacterSize() - 5);
+		button2->SetOrigin(Origins::C);
+	};
+	button2->OnClick = [this]()
+	{
+		SCENE_MGR.ChangeScene(SceneId::Editor);
+	};
+	button2->sortLayer = 100;
+	AddGO(button2);
+
+	SpriteGameObject* background = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/background.png", "bg"));
+	background->SetOrigin(Origins::C);
+	background->SetPosition(0.0f, 0.0f);
+	background->sortLayer = -1;
 
 	for (auto go : gameObjects)
 	{

@@ -7,7 +7,7 @@ public:
 	{
 		None = -1,
 		String,
-		Zombie,
+		Room,
 	};
 
 	static const int TotalIds = 1;

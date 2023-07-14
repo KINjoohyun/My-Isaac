@@ -22,7 +22,4 @@ public:
 
 	virtual void Enter() override;
 	virtual void Exit() override;
-
-	VertexArrayGameObject* CreateBackground(sf::Vector2i size, sf::Vector2f tileSize, sf::Vector2f textureSize, std::string textureId);
-
 };

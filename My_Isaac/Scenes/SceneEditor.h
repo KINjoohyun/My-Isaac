@@ -4,7 +4,7 @@
 class SceneEditor : public Scene
 {
 protected:
-
+	
 public:
 	SceneEditor();
 	virtual ~SceneEditor() override;

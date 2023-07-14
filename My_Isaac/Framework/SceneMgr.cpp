@@ -2,6 +2,7 @@
 #include "SceneMgr.h"
 #include "SceneTitle.h"
 #include "SceneGame.h"
+#include "SceneEditor.h"
 
 void SceneMgr::Init()
 {
@@ -12,6 +13,7 @@ void SceneMgr::Init()
 
 	scenes.push_back(new SceneTitle());
 	scenes.push_back(new SceneGame());
+	scenes.push_back(new SceneEditor());
 	
 	for (auto scene : scenes)
 	{
@@ -21,8 +23,6 @@ void SceneMgr::Init()
 	currentSceneId = startSceneId;
 	currentScene = scenes[(int)currentSceneId];
 	currentScene->Enter();
-
-	
 }
 void SceneMgr::Release()
 {

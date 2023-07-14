@@ -37,7 +37,13 @@ enum class Origins
 	BL,
 	BC,
 	BR,
-	CUSTOM
+	CUSTOM,
+};
+
+enum class ObjType
+{
+	None = -1,
+
 };
 
 #include "AnimationClip.h"

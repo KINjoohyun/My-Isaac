@@ -1,2 +1,4 @@
-BACKGROUND
-graphics/basement_bg1.png
+TEXTURE,OBJ TYPE,X,Y
+graphics/basement_bg1.png,0,-33.3,-33
+,0,0,0
+,0,33.3,33

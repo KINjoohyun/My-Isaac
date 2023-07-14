@@ -8,6 +8,9 @@
 #include "DataTableMgr.h"
 #include "StringTable.h"
 #include "Variables.h"
+#include "UIButton.h"
+
+#include "rapidcsv.h"
 
 SceneEditor::SceneEditor() : Scene(SceneId::Editor)
 {
@@ -30,10 +33,66 @@ void SceneEditor::Init()
 	
 	SpriteGameObject* background = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/background.png"));
 	background->SetOrigin(Origins::C);
-	background->SetPosition(-100.0f, 0.0f);
+	background->SetPosition(0.0f, 0.0f);
 	background->sortLayer = -1;
 
-	
+	UIButton* saveButton = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
+	saveButton->SetOrigin(Origins::R);
+	saveButton->SetText("Save", 30, sf::Color::White, 1.0f);
+	saveButton->SetPosition(windowSize.x, windowSize.y * 0.8f);
+	saveButton->OnEnter = []()
+	{
+		
+	};
+	saveButton->OnExit = []()
+	{
+		
+	};
+	saveButton->OnClick = []()
+	{
+		std::cout << "save" << std::endl;
+	};
+	saveButton->sortLayer = 100;
+
+	UIButton* loadButton = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
+	loadButton->SetOrigin(Origins::R);
+	loadButton->SetText("Load", 30, sf::Color::White, 1.0f);
+	loadButton->SetPosition(windowSize.x, windowSize.y * 0.9f);
+	loadButton->OnEnter = []()
+	{
+		
+	};
+	loadButton->OnExit = []()
+	{
+
+	};
+	loadButton->OnClick = [this]()
+	{
+		//일단 하드 코딩 - room/Room1.csv
+		rapidcsv::Document doc("room/Room1.csv");
+		std::string bg = *doc.GetColumn<std::string>(0).begin();
+		std::vector<int> types = doc.GetColumn<int>(1);
+		std::vector<float> x = doc.GetColumn<float>(2);
+		std::vector<float> y = doc.GetColumn<float>(3);
+
+		for (int i = 0; i < types.size(); i++)
+		{
+			
+
+			std::cout << i;
+		}
+		textureBG.push_back(bg);
+		SpriteGameObject* back = (SpriteGameObject*)AddGO(new SpriteGameObject(bg));
+		back->sprite.setColor({255, 255, 255, 200});
+		back->SetOrigin(Origins::C);
+		back->SetPosition(0.0f, 0.0f);
+		back->sortLayer = 0;
+		back->Init();
+		back->Reset();
+
+		std::cout << "load" << std::endl;
+	};
+	loadButton->sortLayer = 100;
 
 	for (auto go : gameObjects)
 	{

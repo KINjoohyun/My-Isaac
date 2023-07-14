@@ -18,5 +18,5 @@ public:
 	std::function<void()> OnEnter;
 	std::function<void()> OnExit;
 
-	void SetText(const std::string& font = "", const std::string& text = "", int size = 0, sf::Color textColor = sf::Color::Black, float outlineSize = 0.0f, sf::Color outColor = sf::Color::Black);
+	void SetText(const std::string& text = "", int size = 0, sf::Color textColor = sf::Color::Black, float outlineSize = 0.0f, sf::Color outColor = sf::Color::Black);
 };

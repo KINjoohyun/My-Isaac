@@ -40,6 +40,8 @@ void UIButton::Update(float dt)
 		if (OnEnter != nullptr)
 		{
 			OnEnter();
+			text.setCharacterSize(text.getCharacterSize() + 5);
+			SetOrigin(origin);
 		}
 	}
 
@@ -48,6 +50,8 @@ void UIButton::Update(float dt)
 		if (OnExit != nullptr)
 		{
 			OnExit();
+			text.setCharacterSize(text.getCharacterSize() - 5);
+			SetOrigin(origin);
 		}
 	}
 
@@ -65,9 +69,8 @@ void UIButton::Release()
 	Release();
 }
 
-void UIButton::SetText(const std::string& font, const std::string& text, int size, sf::Color textColor, float outlineSize, sf::Color outColor)
+void UIButton::SetText(const std::string& text, int size, sf::Color textColor, float outlineSize, sf::Color outColor)
 {
-	this->text.setFont(*RESOURCE_MGR.GetFont(font));
 	this->text.setString(text);
 	this->text.setCharacterSize(size);
 	this->text.setFillColor(textColor);

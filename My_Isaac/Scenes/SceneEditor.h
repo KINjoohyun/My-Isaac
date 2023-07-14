@@ -4,7 +4,7 @@
 class SceneEditor : public Scene
 {
 protected:
-	
+	std::vector<std::string> textureBG;
 public:
 	SceneEditor();
 	virtual ~SceneEditor() override;

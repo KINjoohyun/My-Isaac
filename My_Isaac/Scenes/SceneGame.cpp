@@ -28,7 +28,7 @@ void SceneGame::Init()
 	worldView.setCenter(0, 0);
 
 	uiView.setSize(windowSize);
-	uiView.setCenter({ windowSize.x / 2.0f, windowSize.y / 2.0f });
+	uiView.setCenter({ windowSize.x * 0.5f, windowSize.y * 0.5f });
 
 	SpriteGameObject* background = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/basement_bg1.png", "bg"));
 	background->SetOrigin(Origins::C);

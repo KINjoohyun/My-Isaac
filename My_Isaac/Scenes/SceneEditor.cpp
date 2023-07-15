@@ -147,6 +147,8 @@ void SceneEditor::Release()
 void SceneEditor::Enter()
 {
 	Scene::Enter();
+
+	RoomReset();
 }
 void SceneEditor::Exit()
 {
@@ -155,6 +157,8 @@ void SceneEditor::Exit()
 
 void SceneEditor::RoomReset()
 {
+	if (currentRoom.empty()) return;
+
 	for (auto it : currentRoom)
 	{
 		RemoveGO(it);

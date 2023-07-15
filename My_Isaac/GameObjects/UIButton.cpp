@@ -23,6 +23,7 @@ void UIButton::Reset()
 {
 	TextGameObject::Reset();
 
+	text.setFillColor({ 255, 255, 255, 255 });
 	isHover = false;
 }
 void UIButton::Update(float dt)
@@ -39,9 +40,8 @@ void UIButton::Update(float dt)
 	{
 		if (OnEnter != nullptr)
 		{
+			text.setFillColor({ 255, 255, 255, 100 });
 			OnEnter();
-			text.setCharacterSize(text.getCharacterSize() + 5);
-			SetOrigin(origin);
 		}
 	}
 
@@ -49,9 +49,8 @@ void UIButton::Update(float dt)
 	{
 		if (OnExit != nullptr)
 		{
+			text.setFillColor({ 255, 255, 255, 255 });
 			OnExit();
-			text.setCharacterSize(text.getCharacterSize() - 5);
-			SetOrigin(origin);
 		}
 	}
 
@@ -59,9 +58,8 @@ void UIButton::Update(float dt)
 	{
 		if (OnClick != nullptr)
 		{
+			Reset();
 			OnClick();
-			text.setCharacterSize(text.getCharacterSize() - 5);
-			SetOrigin(origin);
 		}
 	}
 

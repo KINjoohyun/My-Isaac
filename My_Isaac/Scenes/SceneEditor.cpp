@@ -89,31 +89,7 @@ void SceneEditor::Init()
 	loadButton->OnClick = [this]()
 	{
 		RoomReset();
-
-		//일단 하드 코딩 - room/Room1.csv
-		rapidcsv::Document doc("room/Room1.csv");
-		std::string bg = *doc.GetColumn<std::string>(0).begin();
-		std::vector<int> objtypes = doc.GetColumn<int>(1);
-		std::vector<std::string> texture = doc.GetColumn<std::string>(2);
-		std::vector<float> x = doc.GetColumn<float>(3);
-		std::vector<float> y = doc.GetColumn<float>(4);
-
-		for (int i = 0; i < objtypes.size(); i++)
-		{
-			
-
-			std::cout << i;
-		}
-		SpriteGameObject* back = (SpriteGameObject*)AddGO(new SpriteGameObject(bg));
-		back->sprite.setColor({255, 255, 255, 200});
-		back->SetOrigin(Origins::C);
-		back->SetPosition(0.0f, 0.0f);
-		back->sortLayer = 0;
-		back->Init();
-		back->Reset();
-		currentRoom.push_back(back);
-
-		std::cout << "load" << std::endl;
+		RoomLoad("room/Room1.csv");
 	};
 	loadButton->sortLayer = 100;
 
@@ -165,4 +141,35 @@ void SceneEditor::RoomReset()
 	}
 
 	currentRoom.clear();
+}
+void SceneEditor::RoomLoad(const std::string& roomPath)
+{
+	//일단 하드 코딩
+	rapidcsv::Document doc(roomPath);
+	std::string bg = *doc.GetColumn<std::string>(0).begin();
+	SpriteGameObject* back = (SpriteGameObject*)AddGO(new SpriteGameObject(bg));
+	back->sprite.setColor({ 255, 255, 255, 200 });
+	back->SetOrigin(Origins::C);
+	back->SetPosition(0.0f, 0.0f);
+	back->sortLayer = 0;
+	back->Init();
+	back->Reset();
+	currentRoom.push_back(back);
+
+	std::vector<int> objtypes = doc.GetColumn<int>(1);
+	std::vector<std::string> texture = doc.GetColumn<std::string>(2);
+	std::vector<float> x = doc.GetColumn<float>(3);
+	std::vector<float> y = doc.GetColumn<float>(4);
+	for (int i = 0; i < objtypes.size(); i++)
+	{
+		SpriteGameObject* obj = (SpriteGameObject*)AddGO(new SpriteGameObject(texture[i]));
+		obj->SetOrigin(Origins::C);
+		obj->SetPosition(x[i], y[i]);
+		obj->sortLayer = 1;
+		obj->Init();
+		obj->Reset();
+		currentRoom.push_back(obj);
+	}
+	
+	std::cout << roomPath << std::endl;
 }

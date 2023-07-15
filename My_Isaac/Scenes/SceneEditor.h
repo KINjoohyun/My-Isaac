@@ -18,4 +18,5 @@ public:
 	virtual void Exit() override;
 
 	void RoomReset();
+	void RoomLoad(const std::string& roomPath);
 };

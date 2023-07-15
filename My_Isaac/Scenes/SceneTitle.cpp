@@ -32,7 +32,7 @@ void SceneTitle::Init()
 	UIButton* button1 = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
 	button1->SetOrigin(Origins::C);
 	button1->SetText("Game Start", 50);
-	button1->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 50.0f);
+	button1->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 150.0f);
 	button1->OnEnter = []()
 	{
 		
@@ -50,7 +50,7 @@ void SceneTitle::Init()
 	UIButton* button2 = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
 	button2->SetOrigin(Origins::C);
 	button2->SetText("Map Editor", 50);
-	button2->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 150.0f);
+	button2->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 250.0f);
 	button2->OnEnter = []()
 	{
 		

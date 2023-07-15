@@ -4,7 +4,6 @@
 #include "ResourceMgr.h"
 #include "SceneMgr.h"
 #include "SpriteGameObject.h"
-#include "Framework.h"
 #include "DataTableMgr.h"
 #include "StringTable.h"
 #include "Variables.h"
@@ -36,6 +35,25 @@ void SceneEditor::Init()
 	background->SetPosition(0.0f, 0.0f);
 	background->sortLayer = -1;
 
+	UIButton* resetButton = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
+	resetButton->SetOrigin(Origins::R);
+	resetButton->SetText("Reset", 30, sf::Color::White, 1.0f);
+	resetButton->SetPosition(windowSize.x, windowSize.y * 0.7f);
+	resetButton->OnEnter = []()
+	{
+
+	};
+	resetButton->OnExit = []()
+	{
+
+	};
+	resetButton->OnClick = [this]()
+	{
+		RoomReset();
+		std::cout << "Reset" << std::endl;
+	};
+	resetButton->sortLayer = 100;
+
 	UIButton* saveButton = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
 	saveButton->SetOrigin(Origins::R);
 	saveButton->SetText("Save", 30, sf::Color::White, 1.0f);
@@ -50,6 +68,8 @@ void SceneEditor::Init()
 	};
 	saveButton->OnClick = []()
 	{
+
+
 		std::cout << "save" << std::endl;
 	};
 	saveButton->sortLayer = 100;
@@ -68,20 +88,22 @@ void SceneEditor::Init()
 	};
 	loadButton->OnClick = [this]()
 	{
+		RoomReset();
+
 		//일단 하드 코딩 - room/Room1.csv
 		rapidcsv::Document doc("room/Room1.csv");
 		std::string bg = *doc.GetColumn<std::string>(0).begin();
-		std::vector<int> types = doc.GetColumn<int>(1);
-		std::vector<float> x = doc.GetColumn<float>(2);
-		std::vector<float> y = doc.GetColumn<float>(3);
+		std::vector<int> objtypes = doc.GetColumn<int>(1);
+		std::vector<std::string> texture = doc.GetColumn<std::string>(2);
+		std::vector<float> x = doc.GetColumn<float>(3);
+		std::vector<float> y = doc.GetColumn<float>(4);
 
-		for (int i = 0; i < types.size(); i++)
+		for (int i = 0; i < objtypes.size(); i++)
 		{
 			
 
 			std::cout << i;
 		}
-		textureBG.push_back(bg);
 		SpriteGameObject* back = (SpriteGameObject*)AddGO(new SpriteGameObject(bg));
 		back->sprite.setColor({255, 255, 255, 200});
 		back->SetOrigin(Origins::C);
@@ -89,6 +111,7 @@ void SceneEditor::Init()
 		back->sortLayer = 0;
 		back->Init();
 		back->Reset();
+		currentRoom.push_back(back);
 
 		std::cout << "load" << std::endl;
 	};
@@ -128,4 +151,14 @@ void SceneEditor::Enter()
 void SceneEditor::Exit()
 {
 	Scene::Exit();
+}
+
+void SceneEditor::RoomReset()
+{
+	for (auto it : currentRoom)
+	{
+		RemoveGO(it);
+	}
+
+	currentRoom.clear();
 }

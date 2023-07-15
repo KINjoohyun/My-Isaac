@@ -4,7 +4,7 @@
 class SceneEditor : public Scene
 {
 protected:
-	std::vector<std::string> textureBG;
+	std::vector<GameObject*> currentRoom;
 public:
 	SceneEditor();
 	virtual ~SceneEditor() override;
@@ -16,4 +16,6 @@ public:
 
 	virtual void Enter() override;
 	virtual void Exit() override;
+
+	void RoomReset();
 };

@@ -5,7 +5,6 @@
 #include "SceneMgr.h"
 #include "SpriteGameObject.h"
 #include "TextGameObject.h"
-#include "Framework.h"
 #include "DataTableMgr.h"
 #include "StringTable.h"
 #include "Variables.h"
@@ -66,11 +65,11 @@ void SceneTitle::Init()
 	};
 	button2->sortLayer = 100;
 
-	SpriteGameObject* background = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/background.png", "bg"));
-	background->SetOrigin(Origins::C);
-	background->SetPosition(0.0f, 0.0f);
-	background->sortLayer = -1;
-
+	SpriteGameObject* empty = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/emptyscreen.png", "empty"));
+	empty->SetOrigin(Origins::C);
+	empty->SetPosition(0.0f, 0.0f);
+	empty->sortLayer = -100;
+	
 	for (auto go : gameObjects)
 	{
 		go->Init();

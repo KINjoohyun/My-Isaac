@@ -11,5 +11,6 @@
 3,animations/HeadShootRight.csv
 3,animations/HeadShootUp.csv
 3,animations/HeadShootLeft.csv
-0,graphics/background.png
 1,fonts/DNFBitBitOTF.otf
+0,graphics/background.png
+0,graphics/emptyscreen.png

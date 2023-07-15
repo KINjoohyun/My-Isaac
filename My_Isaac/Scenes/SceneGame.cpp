@@ -3,7 +3,6 @@
 #include "InputMgr.h"
 #include "ResourceMgr.h"
 #include "SceneMgr.h"
-#include "Framework.h"
 #include "DataTableMgr.h"
 #include "StringTable.h"
 #include "Variables.h"

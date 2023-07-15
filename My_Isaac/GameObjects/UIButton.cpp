@@ -60,6 +60,8 @@ void UIButton::Update(float dt)
 		if (OnClick != nullptr)
 		{
 			OnClick();
+			text.setCharacterSize(text.getCharacterSize() - 5);
+			SetOrigin(origin);
 		}
 	}
 

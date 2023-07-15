@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "ResourceMgr.h"
 #include "Framework.h"
+#include "SpriteGameObject.h"
 
 Scene::Scene(SceneId id) :sceneId(id), window(FRAMEWORK.GetWindow())
 {

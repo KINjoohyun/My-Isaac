@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./Animation;./DataTables;./3rd;./;./SFML-2.5.1/include;./Global;./Framework;./Scenes;./GameObjects;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./MapEditor;./Animation;./DataTables;./3rd;./;./SFML-2.5.1/include;./Global;./Framework;./Scenes;./GameObjects;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -178,6 +178,7 @@
     <ClCompile Include="GameObjects\SpriteGameObject.cpp" />
     <ClCompile Include="Global\Variables.cpp" />
     <ClCompile Include="GameObjects\UIButton.cpp" />
+    <ClCompile Include="MapEditor\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\rapidcsv.h" />
@@ -208,6 +209,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Global\Variables.h" />
     <ClInclude Include="GameObjects\UIButton.h" />
+    <ClInclude Include="MapEditor\Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

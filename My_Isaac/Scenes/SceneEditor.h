@@ -1,10 +1,13 @@
 #pragma once
 #include "Scene.h"
 
+class SpriteGameObject;
+
 class SceneEditor : public Scene
 {
 protected:
 	std::vector<GameObject*> currentRoom;
+	SpriteGameObject* roomImage = nullptr;
 public:
 	SceneEditor();
 	virtual ~SceneEditor() override;

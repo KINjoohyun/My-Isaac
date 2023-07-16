@@ -4,8 +4,10 @@
 
 enum class Languages
 {
+	None = -1,
 	KOR,
 	ENG,
+
 	Count,
 };
 
@@ -15,15 +17,19 @@ enum class SceneId
 	Title,
 	Game,
 	Editor,
+
 	Count,
 };
 
 enum class ResourceTypes
 {
+	None = -1,
 	Texture,
 	Font,
 	SoundBuffer,
 	AnimationClip,
+
+	Count,
 };
 
 enum class Origins

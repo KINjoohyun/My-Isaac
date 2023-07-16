@@ -8,6 +8,7 @@
 #include "StringTable.h"
 #include "Variables.h"
 #include "UIButton.h"
+#include "Tile.h"
 
 #include "rapidcsv.h"
 
@@ -141,35 +142,45 @@ void SceneEditor::RoomReset()
 	}
 
 	currentRoom.clear();
+	if (roomImage != nullptr)
+	{
+		RemoveGO(roomImage);
+		roomImage = nullptr;
+	}
 }
 void SceneEditor::RoomLoad(const std::string& roomPath)
 {
 	//일단 하드 코딩
 	rapidcsv::Document doc(roomPath);
 	std::string bg = *doc.GetColumn<std::string>(0).begin();
-	SpriteGameObject* back = (SpriteGameObject*)AddGO(new SpriteGameObject(bg));
-	back->sprite.setColor({ 255, 255, 255, 200 });
-	back->SetOrigin(Origins::C);
-	back->SetPosition(0.0f, 0.0f);
-	back->sortLayer = 0;
-	back->Init();
-	back->Reset();
-	currentRoom.push_back(back);
+	roomImage = (SpriteGameObject*)AddGO(new SpriteGameObject(bg));
+	roomImage->sprite.setColor({ 255, 255, 255, 200 });
+	roomImage->SetOrigin(Origins::C);
+	roomImage->SetPosition(0.0f, 0.0f);
+	roomImage->sortLayer = 0;
+	roomImage->Init();
+	roomImage->Reset();
+	currentRoom.push_back(roomImage);
 
 	std::vector<int> objtypes = doc.GetColumn<int>(1);
 	std::vector<std::string> texture = doc.GetColumn<std::string>(2);
 	std::vector<float> x = doc.GetColumn<float>(3);
 	std::vector<float> y = doc.GetColumn<float>(4);
+	std::vector<int> order = doc.GetColumn<int>(5);
 	for (int i = 0; i < objtypes.size(); i++)
 	{
-		SpriteGameObject* obj = (SpriteGameObject*)AddGO(new SpriteGameObject(texture[i]));
+		//objtypes 사용
+		Tile* obj = (Tile*)AddGO(new Tile((ObjType)objtypes[i], texture[i]));
 		obj->SetOrigin(Origins::C);
 		obj->SetPosition(x[i], y[i]);
 		obj->sortLayer = 1;
+		obj->sortOrder = order[i];
 		obj->Init();
 		obj->Reset();
 		currentRoom.push_back(obj);
 	}
+
+	
 	
 	std::cout << roomPath << std::endl;
 }

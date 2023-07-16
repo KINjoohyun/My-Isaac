@@ -1,12 +1,13 @@
 #pragma once
 #include "Scene.h"
+#include "Tile.h"
 
 class SpriteGameObject;
 
 class SceneEditor : public Scene
 {
 protected:
-	std::vector<GameObject*> currentRoom;
+	std::list<GameObject*> currentRoom;
 	SpriteGameObject* roomImage = nullptr;
 public:
 	SceneEditor();
@@ -22,4 +23,6 @@ public:
 
 	void RoomReset();
 	void RoomLoad(const std::string& roomPath);
+
+	void TileRemove(GameObject* tile);
 };

@@ -3,6 +3,7 @@
 #include "Collider.h"
 #include "InputMgr.h"
 #include "SceneMgr.h"
+#include "SceneEditor.h"
 
 Tile::Tile(const ObjType objtype, const std::string& textureId, const std::string& name)
 	:SpriteGameObject(textureId, name)
@@ -44,7 +45,11 @@ void Tile::Update(float dt)
 	{
 		SetPosition(worldMousPos);
 	}
-
+	if (isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Right))
+	{
+		SceneEditor* scene = (SceneEditor*)SCENE_MGR.GetCurrentScene();
+		scene->TileRemove(this);
+	}
 }
 void Tile::Draw(sf::RenderWindow& window)
 {

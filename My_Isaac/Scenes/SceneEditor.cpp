@@ -184,3 +184,9 @@ void SceneEditor::RoomLoad(const std::string& roomPath)
 	
 	std::cout << roomPath << std::endl;
 }
+
+void SceneEditor::TileRemove(GameObject* tile)
+{
+	currentRoom.remove(tile);
+	RemoveGO(tile);
+}

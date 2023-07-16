@@ -5,6 +5,8 @@ class Tile : public SpriteGameObject
 {
 protected:
 	ObjType objtype;
+
+	bool isHover = false;
 public:
 	sf::RectangleShape box;
 

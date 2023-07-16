@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Tile.h"
 #include "Collider.h"
+#include "InputMgr.h"
+#include "SceneMgr.h"
 
 Tile::Tile(const ObjType objtype, const std::string& textureId, const std::string& name)
 	:SpriteGameObject(textureId, name)
@@ -26,10 +28,23 @@ void Tile::Reset()
 
 	box.setSize({ sprite.getGlobalBounds().width, sprite.getGlobalBounds().height });
 	Utils::SetOrigin(box, origin);
+	isHover = false;
 }
 void Tile::Update(float dt)
 {
 	SpriteGameObject::Update(dt);
+
+	sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
+	sf::Vector2f worldMousPos = SCENE_MGR.GetCurrentScene()->ScreenToWorldPos(mousePos);
+
+	bool prevHover = isHover;
+	isHover = sprite.getGlobalBounds().contains(worldMousPos);
+	
+	if (isHover && INPUT_MGR.GetMouseButton(sf::Mouse::Left))
+	{
+		SetPosition(worldMousPos);
+	}
+
 }
 void Tile::Draw(sf::RenderWindow& window)
 {

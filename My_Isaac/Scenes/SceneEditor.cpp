@@ -95,7 +95,6 @@ void SceneEditor::SetTools()
 	resetButton->OnClick = [this]()
 	{
 		RoomReset();
-		std::cout << "Reset" << std::endl;
 	};
 	resetButton->sortLayer = 100;
 
@@ -111,10 +110,12 @@ void SceneEditor::SetTools()
 	{
 
 	};
-	saveButton->OnClick = []()
+	saveButton->OnClick = [this]()
 	{
+		rapidcsv::Document doc("room/Room2.csv");
+		doc.SetCell<std::string>("BACKGROUND", 0, roomImage->GetName());
 
-
+		doc.Save();
 		std::cout << "save" << std::endl;
 	};
 	saveButton->sortLayer = 100;
@@ -134,7 +135,7 @@ void SceneEditor::SetTools()
 	loadButton->OnClick = [this]()
 	{
 		RoomReset();
-		RoomLoad("room/Spawn.csv");
+		RoomLoad("room/Room1.csv");
 	};
 	loadButton->sortLayer = 100;
 
@@ -304,7 +305,7 @@ void SceneEditor::SetTools()
 }
 void SceneEditor::SetBackground(const std::string& texture)
 {
-	roomImage = (SpriteGameObject*)AddGO(new SpriteGameObject(texture));
+	roomImage = (SpriteGameObject*)AddGO(new SpriteGameObject(texture, texture));
 	roomImage->sprite.setColor({ 255, 255, 255, 200 });
 	roomImage->SetOrigin(Origins::C);
 	roomImage->SetPosition(0.0f, 0.0f);

@@ -101,3 +101,12 @@ void Tile::SetOrigin(float x, float y)
 	box.setOrigin(x, y);
 	order.setOrigin(x, y);
 }
+
+ObjType Tile::GetType() const
+{
+	return this->objtype;
+}
+std::string Tile::GetTextureId() const
+{
+	return textureId;
+}

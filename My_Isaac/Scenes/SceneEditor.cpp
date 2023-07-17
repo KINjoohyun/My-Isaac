@@ -112,11 +112,7 @@ void SceneEditor::SetTools()
 	};
 	saveButton->OnClick = [this]()
 	{
-		rapidcsv::Document doc("room/Room2.csv");
-		doc.SetCell<std::string>("BACKGROUND", 0, roomImage->GetName());
-
-		doc.Save();
-		std::cout << "save" << std::endl;
+		RoomSave("room/Room2.csv");
 	};
 	saveButton->sortLayer = 100;
 
@@ -159,10 +155,10 @@ void SceneEditor::SetTools()
 		std::string bg = doc.GetColumn<std::string>(0).front();
 		SetBackground(bg);
 
-		int sizex = doc.GetCell<int>(1, 0);
-		int sizey = doc.GetCell<int>(1, 1);
-		int gridx = doc.GetCell<int>(2, 0);
-		int gridy = doc.GetCell<int>(2, 1);
+		sizex = doc.GetCell<int>(1, 0);
+		sizey = doc.GetCell<int>(1, 1);
+		gridx = doc.GetCell<int>(2, 0);
+		gridy = doc.GetCell<int>(2, 1);
 		SetGrid(sizex, sizey, gridx, gridy);
 	};
 	bg1->sortLayer = 100;
@@ -187,10 +183,10 @@ void SceneEditor::SetTools()
 		std::string bg = doc.GetColumn<std::string>(0).front();
 		SetBackground(bg);
 
-		int sizex = doc.GetCell<int>(1, 0);
-		int sizey = doc.GetCell<int>(1, 1);
-		int gridx = doc.GetCell<int>(2, 0);
-		int gridy = doc.GetCell<int>(2, 1);
+		sizex = doc.GetCell<int>(1, 0);
+		sizey = doc.GetCell<int>(1, 1);
+		gridx = doc.GetCell<int>(2, 0);
+		gridy = doc.GetCell<int>(2, 1);
 		SetGrid(sizex, sizey, gridx, gridy);
 	};
 	bg2->sortLayer = 100;
@@ -312,23 +308,62 @@ void SceneEditor::SetBackground(const std::string& texture)
 	roomImage->sortLayer = 0;
 	roomImage->Init();
 	roomImage->Reset();
-	currentRoom.push_back(roomImage);
 }
 void SceneEditor::RoomReset()
 {
-	if (currentRoom.empty()) return;
-
-	for (auto it : currentRoom)
+	if (!currentRoom.empty())
 	{
-		RemoveGO(it);
+		for (auto it : currentRoom)
+		{
+			RemoveGO(it);
+		}
 	}
-
 	currentRoom.clear();
+
 	if (roomImage != nullptr)
 	{
 		RemoveGO(roomImage);
 		roomImage = nullptr;
 	}
+
+	if (!grids.empty())
+	{
+		for (auto it : grids)
+		{
+			RemoveGO(it);
+		}
+	}
+	grids.clear();
+}
+void SceneEditor::RoomSave(const std::string& roomPath)
+{
+	if (roomImage == nullptr)
+	{
+		std::cout << "WARNING: Not Exist roomImage" << std::endl;
+		return;
+	}
+
+	rapidcsv::Document doc(roomPath);
+	doc.SetCell<std::string>("BACKGROUND", 0, roomImage->GetName());
+
+	doc.SetCell<int>("SIZE", 0, sizex);
+	doc.SetCell<int>("SIZE", 1, sizey);
+
+	doc.SetCell<int>("GRID", 0, gridx);
+	doc.SetCell<int>("GRID", 1, gridy);
+
+	int i = 0;
+	for (auto it : currentRoom)
+	{
+		doc.SetCell<int>("OBJ TYPE", i, (int)it->GetType());
+		doc.SetCell<std::string>("TEXTURE", i, it->GetTextureId());
+		doc.SetCell<float>("X", i, it->GetPosition().x);
+		doc.SetCell<float>("Y", i, it->GetPosition().y);
+		doc.SetCell<int>("ORDER", i, it->sortOrder);
+
+		i++;
+	}
+	doc.Save();
 }
 void SceneEditor::RoomLoad(const std::string& roomPath)
 {
@@ -337,10 +372,10 @@ void SceneEditor::RoomLoad(const std::string& roomPath)
 	std::string bg = doc.GetColumn<std::string>(0).front();
 	SetBackground(bg);
 
-	int sizex = doc.GetCell<int>(1, 0);
-	int sizey = doc.GetCell<int>(1, 1);
-	int gridx = doc.GetCell<int>(2, 0);
-	int gridy = doc.GetCell<int>(2, 1);
+	sizex = doc.GetCell<int>(1, 0);
+	sizey = doc.GetCell<int>(1, 1);
+	gridx = doc.GetCell<int>(2, 0);
+	gridy = doc.GetCell<int>(2, 1);
 	SetGrid(sizex, sizey, gridx, gridy);
 	
 	std::vector<int> objtypes = doc.GetColumn<int>(3);
@@ -361,10 +396,6 @@ void SceneEditor::RoomLoad(const std::string& roomPath)
 		obj->Reset();
 		currentRoom.push_back(obj);
 	}
-
-	
-	
-	std::cout << roomPath << std::endl;
 }
 void SceneEditor::SetGrid(int sizex, int sizey, int r, int c)
 {
@@ -381,13 +412,13 @@ void SceneEditor::SetGrid(int sizex, int sizey, int r, int c)
 			grid->rect.setOutlineColor(sf::Color::Black);
 			grid->rect.setOutlineThickness(1);
 			grid->rect.setFillColor(sf::Color::Transparent);
-			currentRoom.push_back(grid);
+			grids.push_back(grid);
 			AddGO(grid);
 		}
 	}
 }
 
-void SceneEditor::TileRemove(GameObject* tile)
+void SceneEditor::TileRemove(Tile* tile)
 {
 	currentRoom.remove(tile);
 	RemoveGO(tile);

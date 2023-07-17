@@ -3,12 +3,19 @@
 #include "Tile.h"
 
 class SpriteGameObject;
+class RectGameObject;
 
 class SceneEditor : public Scene
 {
 protected:
-	std::list<GameObject*> currentRoom;
+	std::list<Tile*> currentRoom;
 	SpriteGameObject* roomImage = nullptr;
+
+	int sizex = 0;
+	int sizey = 0;
+	int gridx = 0;
+	int gridy = 0;
+	std::vector<RectGameObject*> grids;
 public:
 	SceneEditor();
 	virtual ~SceneEditor() override;
@@ -24,8 +31,9 @@ public:
 	void SetTools();
 	void SetBackground(const std::string& texture);
 	void RoomReset();
+	void RoomSave(const std::string& roomPath);
 	void RoomLoad(const std::string& roomPath);
 	void SetGrid(int sizex, int sizey, int r, int c);
 
-	void TileRemove(GameObject* tile);
+	void TileRemove(Tile* tile);
 };

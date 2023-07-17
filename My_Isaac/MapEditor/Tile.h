@@ -25,4 +25,7 @@ public:
 
 	void SetOrigin(Origins origin);
 	void SetOrigin(float x, float y);
+
+	ObjType GetType() const;
+	std::string GetTextureId() const;
 };

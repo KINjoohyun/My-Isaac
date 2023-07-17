@@ -9,6 +9,7 @@ protected:
 	bool isHover = false;
 public:
 	sf::RectangleShape box;
+	sf::Text order;
 
 	Tile(const ObjType objtype, const std::string& textureId = "", const std::string& name = "");
 	virtual ~Tile() override;

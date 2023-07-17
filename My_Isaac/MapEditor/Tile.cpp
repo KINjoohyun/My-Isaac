@@ -13,6 +13,9 @@ Tile::Tile(const ObjType objtype, const std::string& textureId, const std::strin
 	box.setFillColor(sf::Color::Transparent);
 	box.setOutlineColor(sf::Color::Red);
 	box.setOutlineThickness(1);
+	order.setString(std::to_string(sortOrder));
+	order.setCharacterSize(20);
+	order.setFillColor(sf::Color::Red);
 }
 Tile::~Tile()
 {
@@ -29,6 +32,7 @@ void Tile::Reset()
 
 	box.setSize({ sprite.getGlobalBounds().width, sprite.getGlobalBounds().height });
 	Utils::SetOrigin(box, origin);
+	Utils::SetOrigin(order, origin);
 	isHover = false;
 }
 void Tile::Update(float dt)
@@ -50,31 +54,47 @@ void Tile::Update(float dt)
 		SceneEditor* scene = (SceneEditor*)SCENE_MGR.GetCurrentScene();
 		scene->TileRemove(this);
 	}
+
+	if (isHover && INPUT_MGR.GetMouseButton(sf::Mouse::Left) && INPUT_MGR.GetKeyUp(sf::Keyboard::Add))
+	{
+		sortOrder++;
+		order.setString(std::to_string(sortOrder));
+	}
+	if (isHover && INPUT_MGR.GetMouseButton(sf::Mouse::Left) && INPUT_MGR.GetKeyUp(sf::Keyboard::Dash))
+	{
+		sortOrder--;
+		order.setString(std::to_string(sortOrder));
+	}
 }
 void Tile::Draw(sf::RenderWindow& window)
 {
 	SpriteGameObject::Draw(window);
 	window.draw(box);
+	window.draw(order);
 }
 
 void Tile::SetPosition(const sf::Vector2f& position)
 {
 	SpriteGameObject::SetPosition(position);
 	box.setPosition(position);
+	order.setPosition(position);
 }
 void Tile::SetPosition(float x, float y)
 {
 	SpriteGameObject::SetPosition(x, y);
 	box.setPosition(x, y);
+	order.setPosition(x, y);
 }
 
 void Tile::SetOrigin(Origins origin)
 {
 	SpriteGameObject::SetOrigin(origin);
 	Utils::SetOrigin(box, origin);
+	Utils::SetOrigin(order, origin);
 }
 void Tile::SetOrigin(float x, float y)
 {
 	SpriteGameObject::SetOrigin(origin);
 	box.setOrigin(x, y);
+	order.setOrigin(x, y);
 }

@@ -23,6 +23,7 @@ public:
 
 	void RoomReset();
 	void RoomLoad(const std::string& roomPath);
+	void SetGrid(int sizex, int sizey, int r, int c);
 
 	void TileRemove(GameObject* tile);
 };

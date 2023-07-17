@@ -9,6 +9,7 @@
 #include "Variables.h"
 #include "UIButton.h"
 #include "Tile.h"
+#include "RectGameObject.h"
 
 #include "rapidcsv.h"
 
@@ -152,7 +153,7 @@ void SceneEditor::RoomLoad(const std::string& roomPath)
 {
 	//일단 하드 코딩
 	rapidcsv::Document doc(roomPath);
-	std::string bg = *doc.GetColumn<std::string>(0).begin();
+	std::string bg = doc.GetColumn<std::string>(0).front();
 	roomImage = (SpriteGameObject*)AddGO(new SpriteGameObject(bg));
 	roomImage->sprite.setColor({ 255, 255, 255, 200 });
 	roomImage->SetOrigin(Origins::C);
@@ -162,17 +163,25 @@ void SceneEditor::RoomLoad(const std::string& roomPath)
 	roomImage->Reset();
 	currentRoom.push_back(roomImage);
 
-	std::vector<int> objtypes = doc.GetColumn<int>(1);
-	std::vector<std::string> texture = doc.GetColumn<std::string>(2);
-	std::vector<float> x = doc.GetColumn<float>(3);
-	std::vector<float> y = doc.GetColumn<float>(4);
-	std::vector<int> order = doc.GetColumn<int>(5);
+	int sizex = doc.GetCell<int>(1, 0);
+	int sizey = doc.GetCell<int>(1, 1);
+
+	int gridx = doc.GetCell<int>(2, 0);
+	int gridy = doc.GetCell<int>(2, 1);
+	SetGrid(sizex, sizey, gridx, gridy);
+	
+	std::vector<int> objtypes = doc.GetColumn<int>(3);
+	std::vector<std::string> texture = doc.GetColumn<std::string>(4);
+	std::vector<float> x = doc.GetColumn<float>(5);
+	std::vector<float> y = doc.GetColumn<float>(6);
+	std::vector<int> order = doc.GetColumn<int>(7);
 	for (int i = 0; i < objtypes.size(); i++)
 	{
 		//objtypes 사용
 		Tile* obj = (Tile*)AddGO(new Tile((ObjType)objtypes[i], texture[i]));
 		obj->SetOrigin(Origins::C);
 		obj->SetPosition(x[i], y[i]);
+		obj->order.setFont(*RESOURCE_MGR.GetFont("fonts/DNFBitBitOTF.otf"));
 		obj->sortLayer = 1;
 		obj->sortOrder = order[i];
 		obj->Init();
@@ -183,6 +192,26 @@ void SceneEditor::RoomLoad(const std::string& roomPath)
 	
 	
 	std::cout << roomPath << std::endl;
+}
+void SceneEditor::SetGrid(int sizex, int sizey, int r, int c)
+{
+	float width = sizex / r;
+	float height = sizey / c;
+
+	for (int i = 0; i < r; i++)
+	{
+		for (int j = 0; j < c; j++)
+		{
+			RectGameObject* grid = new RectGameObject();
+			grid->rect.setSize({ width, height });
+			grid->SetPosition(-sizex/2 + width * i, -sizey/2 + height * j);
+			grid->rect.setOutlineColor(sf::Color::Black);
+			grid->rect.setOutlineThickness(1);
+			grid->rect.setFillColor(sf::Color::Transparent);
+			currentRoom.push_back(grid);
+			AddGO(grid);
+		}
+	}
 }
 
 void SceneEditor::TileRemove(GameObject* tile)

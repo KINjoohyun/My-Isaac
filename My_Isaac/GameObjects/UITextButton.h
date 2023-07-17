@@ -1,13 +1,13 @@
 #pragma once
 #include "TextGameObject.h"
 
-class UIButton : public TextGameObject
+class UITextButton : public TextGameObject
 {
 protected:
 	bool isHover = false;
 public:
-	UIButton(const std::string& fontId = "", const std::string& name = "");
-	virtual ~UIButton() override;
+	UITextButton(const std::string& fontId = "", const std::string& name = "");
+	virtual ~UITextButton() override;
 
 	virtual void Init() override;
 	virtual void Reset() override;

@@ -1,32 +1,32 @@
 #include "stdafx.h"
-#include "UIButton.h"
+#include "UITextButton.h"
 #include "InputMgr.h"
 #include "SceneMgr.h"
 #include "ResourceMgr.h"
 
-UIButton::UIButton(const std::string& fontId, const std::string& name)
+UITextButton::UITextButton(const std::string& fontId, const std::string& name)
 	:TextGameObject(fontId, name)
 {
 
 }
-UIButton::~UIButton()
+UITextButton::~UITextButton()
 {
 
 }
 
-void UIButton::Init()
+void UITextButton::Init()
 {
 	TextGameObject::Init();
 	SetOrigin(origin);
 }
-void UIButton::Reset()
+void UITextButton::Reset()
 {
 	TextGameObject::Reset();
 
 	text.setFillColor({ 255, 255, 255, 255 });
 	isHover = false;
 }
-void UIButton::Update(float dt)
+void UITextButton::Update(float dt)
 {
 	TextGameObject::Update(dt);
 
@@ -64,12 +64,12 @@ void UIButton::Update(float dt)
 	}
 
 }
-void UIButton::Release()
+void UITextButton::Release()
 {
 	Release();
 }
 
-void UIButton::SetText(const std::string& text, int size, sf::Color textColor, float outlineSize, sf::Color outColor)
+void UITextButton::SetText(const std::string& text, int size, sf::Color textColor, float outlineSize, sf::Color outColor)
 {
 	this->text.setString(text);
 	this->text.setCharacterSize(size);

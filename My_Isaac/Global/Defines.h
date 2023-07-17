@@ -34,6 +34,7 @@ enum class ResourceTypes
 
 enum class Origins
 {
+	None = -1,
 	TL, //Top Left
 	TC,
 	TR,
@@ -44,12 +45,14 @@ enum class Origins
 	BC,
 	BR,
 	CUSTOM,
+
+	Count,
 };
 
 enum class ObjType
 {
 	None = -1,
-
+	Rock = 1,
 };
 
 #include "AnimationClip.h"

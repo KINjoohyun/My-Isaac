@@ -8,7 +8,7 @@
 #include "DataTableMgr.h"
 #include "StringTable.h"
 #include "Variables.h"
-#include "UIButton.h"
+#include "UITextButton.h"
 
 SceneTitle::SceneTitle() : Scene(SceneId::Title)
 {
@@ -29,7 +29,7 @@ void SceneTitle::Init()
 	uiView.setSize(windowSize);
 	uiView.setCenter({ windowSize.x * 0.5f, windowSize.y * 0.5f });
 
-	UIButton* button1 = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
+	UITextButton* button1 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
 	button1->SetOrigin(Origins::C);
 	button1->SetText("Game Start", 50);
 	button1->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 150.0f);
@@ -47,7 +47,7 @@ void SceneTitle::Init()
 	};
 	button1->sortLayer = 100;
 
-	UIButton* button2 = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
+	UITextButton* button2 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
 	button2->SetOrigin(Origins::C);
 	button2->SetText("Map Editor", 50);
 	button2->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 250.0f);

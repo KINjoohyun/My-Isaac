@@ -7,7 +7,8 @@
 #include "DataTableMgr.h"
 #include "StringTable.h"
 #include "Variables.h"
-#include "UIButton.h"
+#include "UITextButton.h"
+#include "UIImageButton.h"
 #include "Tile.h"
 #include "RectGameObject.h"
 
@@ -37,7 +38,7 @@ void SceneEditor::Init()
 	background->SetPosition(0.0f, 0.0f);
 	background->sortLayer = -1;
 
-	UIButton* resetButton = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
+	UITextButton* resetButton = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
 	resetButton->SetOrigin(Origins::R);
 	resetButton->SetText("Reset", 30, sf::Color::White, 1.0f);
 	resetButton->SetPosition(windowSize.x, windowSize.y * 0.7f);
@@ -56,7 +57,7 @@ void SceneEditor::Init()
 	};
 	resetButton->sortLayer = 100;
 
-	UIButton* saveButton = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
+	UITextButton* saveButton = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
 	saveButton->SetOrigin(Origins::R);
 	saveButton->SetText("Save", 30, sf::Color::White, 1.0f);
 	saveButton->SetPosition(windowSize.x, windowSize.y * 0.8f);
@@ -76,7 +77,7 @@ void SceneEditor::Init()
 	};
 	saveButton->sortLayer = 100;
 
-	UIButton* loadButton = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
+	UITextButton* loadButton = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
 	loadButton->SetOrigin(Origins::R);
 	loadButton->SetText("Load", 30, sf::Color::White, 1.0f);
 	loadButton->SetPosition(windowSize.x, windowSize.y * 0.9f);
@@ -95,10 +96,10 @@ void SceneEditor::Init()
 	};
 	loadButton->sortLayer = 100;
 
-	UIButton* bg1 = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
+	UITextButton* bg1 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
 	bg1->SetOrigin(Origins::R);
 	bg1->SetText("BG1", 20, sf::Color::White, 1.0f);
-	bg1->SetPosition(windowSize.x - 80.0f, windowSize.y * 0.1f);
+	bg1->SetPosition(windowSize.x - 70.0f, windowSize.y * 0.1f);
 	bg1->OnEnter = []()
 	{
 
@@ -123,7 +124,7 @@ void SceneEditor::Init()
 	};
 	bg1->sortLayer = 100;
 
-	UIButton* bg2 = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
+	UITextButton* bg2 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
 	bg2->SetOrigin(Origins::R);
 	bg2->SetText("BG2", 20, sf::Color::White, 1.0f);
 	bg2->SetPosition(windowSize.x - 10.0f, windowSize.y * 0.1f);
@@ -150,6 +151,24 @@ void SceneEditor::Init()
 		SetGrid(sizex, sizey, gridx, gridy);
 	};
 	bg2->sortLayer = 100;
+
+	UIImageButton* rocks1 = (UIImageButton*)AddGO(new UIImageButton("graphics/rocks1.png"));
+	rocks1->SetOrigin(Origins::C);
+	rocks1->SetPosition(30.0f, windowSize.y * 0.1f);
+	rocks1->sprite.setScale(0.5f, 0.5f);
+	rocks1->OnClick = [this]()
+	{
+		Tile* rocks1 = (Tile*)AddGO(new Tile(ObjType::Rock, "graphics/rocks1.png"));
+		rocks1->SetOrigin(Origins::C);
+		rocks1->SetPosition(0.0f, 0.0f);
+		rocks1->order.setFont(*RESOURCE_MGR.GetFont("fonts/DNFBitBitOTF.otf"));
+		rocks1->sortLayer = 1;
+		rocks1->sortOrder = 0;
+		rocks1->Init();
+		rocks1->Reset();
+		currentRoom.push_back(rocks1);
+	};
+	rocks1->sortLayer = 100;
 
 	for (auto go : gameObjects)
 	{

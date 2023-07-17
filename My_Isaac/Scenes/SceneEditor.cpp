@@ -95,6 +95,46 @@ void SceneEditor::Init()
 	};
 	loadButton->sortLayer = 100;
 
+	UIButton* bg1 = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
+	bg1->SetOrigin(Origins::R);
+	bg1->SetText("BG1", 20, sf::Color::Red, 1.0f);
+	bg1->SetPosition(windowSize.x - 70.0f, windowSize.y * 0.1f);
+	bg1->OnEnter = []()
+	{
+
+	};
+	bg1->OnExit = []()
+	{
+
+	};
+	bg1->OnClick = [this]()
+	{
+		RoomReset();
+		SetBackground("graphics/basement_bg1.png");
+		SetGrid(734, 414, 12, 6);
+	};
+	bg1->sortLayer = 100;
+
+	UIButton* bg2 = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
+	bg2->SetOrigin(Origins::R);
+	bg2->SetText("BG2", 20, sf::Color::Red, 1.0f);
+	bg2->SetPosition(windowSize.x, windowSize.y * 0.1f);
+	bg2->OnEnter = []()
+	{
+
+	};
+	bg2->OnExit = []()
+	{
+
+	};
+	bg2->OnClick = [this]()
+	{
+		RoomReset();
+		SetBackground("graphics/basement_bg2.png");
+		SetGrid(734, 414, 12, 6);
+	};
+	bg2->sortLayer = 100;
+
 	for (auto go : gameObjects)
 	{
 		go->Init();
@@ -133,6 +173,17 @@ void SceneEditor::Exit()
 	Scene::Exit();
 }
 
+void SceneEditor::SetBackground(const std::string& texture)
+{
+	roomImage = (SpriteGameObject*)AddGO(new SpriteGameObject(texture));
+	roomImage->sprite.setColor({ 255, 255, 255, 200 });
+	roomImage->SetOrigin(Origins::C);
+	roomImage->SetPosition(0.0f, 0.0f);
+	roomImage->sortLayer = 0;
+	roomImage->Init();
+	roomImage->Reset();
+	currentRoom.push_back(roomImage);
+}
 void SceneEditor::RoomReset()
 {
 	if (currentRoom.empty()) return;
@@ -154,18 +205,10 @@ void SceneEditor::RoomLoad(const std::string& roomPath)
 	//일단 하드 코딩
 	rapidcsv::Document doc(roomPath);
 	std::string bg = doc.GetColumn<std::string>(0).front();
-	roomImage = (SpriteGameObject*)AddGO(new SpriteGameObject(bg));
-	roomImage->sprite.setColor({ 255, 255, 255, 200 });
-	roomImage->SetOrigin(Origins::C);
-	roomImage->SetPosition(0.0f, 0.0f);
-	roomImage->sortLayer = 0;
-	roomImage->Init();
-	roomImage->Reset();
-	currentRoom.push_back(roomImage);
+	SetBackground(bg);
 
 	int sizex = doc.GetCell<int>(1, 0);
 	int sizey = doc.GetCell<int>(1, 1);
-
 	int gridx = doc.GetCell<int>(2, 0);
 	int gridy = doc.GetCell<int>(2, 1);
 	SetGrid(sizex, sizey, gridx, gridy);

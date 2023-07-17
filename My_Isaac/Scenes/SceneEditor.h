@@ -21,6 +21,7 @@ public:
 	virtual void Enter() override;
 	virtual void Exit() override;
 
+	void SetBackground(const std::string& texture);
 	void RoomReset();
 	void RoomLoad(const std::string& roomPath);
 	void SetGrid(int sizex, int sizey, int r, int c);

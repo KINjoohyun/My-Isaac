@@ -55,7 +55,9 @@ enum class ObjType
 	Rock,
 	Poop,
 	Spike,
-
+	AttackFly,
+	Pooter,
+	Sucker,
 
 	Count,
 };

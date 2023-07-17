@@ -75,7 +75,7 @@ void SceneEditor::Exit()
 
 void SceneEditor::SetTools()
 {
-	SpriteGameObject* background = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/background.png"));
+	SpriteGameObject* background = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/editscreen.png"));
 	background->SetOrigin(Origins::C);
 	background->SetPosition(0.0f, 0.0f);
 	background->sortLayer = -1;
@@ -247,6 +247,60 @@ void SceneEditor::SetTools()
 		currentRoom.push_back(spikes1);
 	};
 	spikes1->sortLayer = 100;
+
+	UIImageButton* attackfly = (UIImageButton*)AddGO(new UIImageButton("graphics/grid_AttackFly.png"));
+	attackfly->SetOrigin(Origins::C);
+	attackfly->SetPosition(30.0f, windowSize.y * 0.2f);
+	attackfly->sprite.setScale(0.5f, 0.5f);
+	attackfly->OnClick = [this]()
+	{
+		Tile* attackfly = (Tile*)AddGO(new Tile(ObjType::AttackFly, "graphics/grid_AttackFly.png"));
+		attackfly->SetOrigin(Origins::C);
+		attackfly->SetPosition(0.0f, 0.0f);
+		attackfly->order.setFont(*RESOURCE_MGR.GetFont("fonts/DNFBitBitOTF.otf"));
+		attackfly->sortLayer = 1;
+		attackfly->sortOrder = 0;
+		attackfly->Init();
+		attackfly->Reset();
+		currentRoom.push_back(attackfly);
+	};
+	attackfly->sortLayer = 100;
+
+	UIImageButton* pooter = (UIImageButton*)AddGO(new UIImageButton("graphics/grid_Pooter.png"));
+	pooter->SetOrigin(Origins::C);
+	pooter->SetPosition(60.0f, windowSize.y * 0.2f);
+	pooter->sprite.setScale(0.5f, 0.5f);
+	pooter->OnClick = [this]()
+	{
+		Tile* pooter = (Tile*)AddGO(new Tile(ObjType::Pooter, "graphics/grid_Pooter.png"));
+		pooter->SetOrigin(Origins::C);
+		pooter->SetPosition(0.0f, 0.0f);
+		pooter->order.setFont(*RESOURCE_MGR.GetFont("fonts/DNFBitBitOTF.otf"));
+		pooter->sortLayer = 1;
+		pooter->sortOrder = 0;
+		pooter->Init();
+		pooter->Reset();
+		currentRoom.push_back(pooter);
+	};
+	pooter->sortLayer = 100;
+
+	UIImageButton* sucker = (UIImageButton*)AddGO(new UIImageButton("graphics/grid_Sucker.png"));
+	sucker->SetOrigin(Origins::C);
+	sucker->SetPosition(90.0f, windowSize.y * 0.2f);
+	sucker->sprite.setScale(0.5f, 0.5f);
+	sucker->OnClick = [this]()
+	{
+		Tile* sucker = (Tile*)AddGO(new Tile(ObjType::Sucker, "graphics/grid_Sucker.png"));
+		sucker->SetOrigin(Origins::C);
+		sucker->SetPosition(0.0f, 0.0f);
+		sucker->order.setFont(*RESOURCE_MGR.GetFont("fonts/DNFBitBitOTF.otf"));
+		sucker->sortLayer = 1;
+		sucker->sortOrder = 0;
+		sucker->Init();
+		sucker->Reset();
+		currentRoom.push_back(sucker);
+	};
+	sucker->sortLayer = 100;
 }
 void SceneEditor::SetBackground(const std::string& texture)
 {

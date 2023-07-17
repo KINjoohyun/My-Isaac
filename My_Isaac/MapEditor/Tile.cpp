@@ -16,6 +16,8 @@ Tile::Tile(const ObjType objtype, const std::string& textureId, const std::strin
 	order.setString(std::to_string(sortOrder));
 	order.setCharacterSize(20);
 	order.setFillColor(sf::Color::Red);
+	order.setOutlineThickness(1);
+	order.setOutlineColor(sf::Color::White);
 }
 Tile::~Tile()
 {

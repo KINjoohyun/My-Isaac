@@ -97,8 +97,8 @@ void SceneEditor::Init()
 
 	UIButton* bg1 = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
 	bg1->SetOrigin(Origins::R);
-	bg1->SetText("BG1", 20, sf::Color::Red, 1.0f);
-	bg1->SetPosition(windowSize.x - 70.0f, windowSize.y * 0.1f);
+	bg1->SetText("BG1", 20, sf::Color::White, 1.0f);
+	bg1->SetPosition(windowSize.x - 80.0f, windowSize.y * 0.1f);
 	bg1->OnEnter = []()
 	{
 
@@ -110,15 +110,23 @@ void SceneEditor::Init()
 	bg1->OnClick = [this]()
 	{
 		RoomReset();
-		SetBackground("graphics/basement_bg1.png");
-		SetGrid(734, 414, 12, 6);
+
+		rapidcsv::Document doc("room/BG1.csv");
+		std::string bg = doc.GetColumn<std::string>(0).front();
+		SetBackground(bg);
+
+		int sizex = doc.GetCell<int>(1, 0);
+		int sizey = doc.GetCell<int>(1, 1);
+		int gridx = doc.GetCell<int>(2, 0);
+		int gridy = doc.GetCell<int>(2, 1);
+		SetGrid(sizex, sizey, gridx, gridy);
 	};
 	bg1->sortLayer = 100;
 
 	UIButton* bg2 = (UIButton*)AddGO(new UIButton("fonts/DNFBitBitOTF.otf"));
 	bg2->SetOrigin(Origins::R);
-	bg2->SetText("BG2", 20, sf::Color::Red, 1.0f);
-	bg2->SetPosition(windowSize.x, windowSize.y * 0.1f);
+	bg2->SetText("BG2", 20, sf::Color::White, 1.0f);
+	bg2->SetPosition(windowSize.x - 10.0f, windowSize.y * 0.1f);
 	bg2->OnEnter = []()
 	{
 
@@ -130,8 +138,16 @@ void SceneEditor::Init()
 	bg2->OnClick = [this]()
 	{
 		RoomReset();
-		SetBackground("graphics/basement_bg2.png");
-		SetGrid(734, 414, 12, 6);
+
+		rapidcsv::Document doc("room/BG2.csv");
+		std::string bg = doc.GetColumn<std::string>(0).front();
+		SetBackground(bg);
+		
+		int sizex = doc.GetCell<int>(1, 0);
+		int sizey = doc.GetCell<int>(1, 1);
+		int gridx = doc.GetCell<int>(2, 0);
+		int gridy = doc.GetCell<int>(2, 1);
+		SetGrid(sizex, sizey, gridx, gridy);
 	};
 	bg2->sortLayer = 100;
 

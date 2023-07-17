@@ -53,6 +53,7 @@ void Tile::Update(float dt)
 	{
 		SceneEditor* scene = (SceneEditor*)SCENE_MGR.GetCurrentScene();
 		scene->TileRemove(this);
+		return;
 	}
 
 	if (isHover && INPUT_MGR.GetMouseButton(sf::Mouse::Left) && INPUT_MGR.GetKeyUp(sf::Keyboard::Add))

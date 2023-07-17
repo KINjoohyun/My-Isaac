@@ -53,6 +53,10 @@ enum class ObjType
 {
 	None = -1,
 	Rock = 1,
+	Poop,
+	Spike,
+
+	Count,
 };
 
 #include "AnimationClip.h"

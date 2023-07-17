@@ -1,0 +1,4 @@
+BACKGROUND,SIZE,GRID,OBJ TYPE,TEXTURE,X,Y,ORDER
+graphics/basement_bg1.png,734,12,-1,graphics/spawnUI.png,0,-78,0
+,414,6,2,graphics/poop1.png,-152.5,36,0
+,,,2,graphics/poop1.png,152.5,36,0

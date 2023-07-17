@@ -32,7 +32,49 @@ void SceneEditor::Init()
 
 	uiView.setSize(windowSize);
 	uiView.setCenter({ windowSize.x / 2.0f, windowSize.y / 2.0f });
-	
+
+	SetTools();
+
+	for (auto go : gameObjects)
+	{
+		go->Init();
+	}
+}
+void SceneEditor::Update(float dt)
+{
+	Scene::Update(dt);
+
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Escape))
+	{
+		SCENE_MGR.ChangeScene(SceneId::Title);
+	}
+}
+void SceneEditor::Draw(sf::RenderWindow& window)
+{
+	Scene::Draw(window);
+}
+void SceneEditor::Release()
+{
+	for (auto go : gameObjects)
+	{
+		//go->Release();
+		delete go;
+	}
+}
+
+void SceneEditor::Enter()
+{
+	Scene::Enter();
+
+	RoomReset();
+}
+void SceneEditor::Exit()
+{
+	Scene::Exit();
+}
+
+void SceneEditor::SetTools()
+{
 	SpriteGameObject* background = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/background.png"));
 	background->SetOrigin(Origins::C);
 	background->SetPosition(0.0f, 0.0f);
@@ -63,11 +105,11 @@ void SceneEditor::Init()
 	saveButton->SetPosition(windowSize.x, windowSize.y * 0.8f);
 	saveButton->OnEnter = []()
 	{
-		
+
 	};
 	saveButton->OnExit = []()
 	{
-		
+
 	};
 	saveButton->OnClick = []()
 	{
@@ -83,7 +125,7 @@ void SceneEditor::Init()
 	loadButton->SetPosition(windowSize.x, windowSize.y * 0.9f);
 	loadButton->OnEnter = []()
 	{
-		
+
 	};
 	loadButton->OnExit = []()
 	{
@@ -92,7 +134,7 @@ void SceneEditor::Init()
 	loadButton->OnClick = [this]()
 	{
 		RoomReset();
-		RoomLoad("room/Room1.csv");
+		RoomLoad("room/Spawn.csv");
 	};
 	loadButton->sortLayer = 100;
 
@@ -143,7 +185,7 @@ void SceneEditor::Init()
 		rapidcsv::Document doc("room/BG2.csv");
 		std::string bg = doc.GetColumn<std::string>(0).front();
 		SetBackground(bg);
-		
+
 		int sizex = doc.GetCell<int>(1, 0);
 		int sizey = doc.GetCell<int>(1, 1);
 		int gridx = doc.GetCell<int>(2, 0);
@@ -170,44 +212,42 @@ void SceneEditor::Init()
 	};
 	rocks1->sortLayer = 100;
 
-	for (auto go : gameObjects)
+	UIImageButton* poop1 = (UIImageButton*)AddGO(new UIImageButton("graphics/poop1.png"));
+	poop1->SetOrigin(Origins::C);
+	poop1->SetPosition(60.0f, windowSize.y * 0.1f);
+	poop1->sprite.setScale(0.5f, 0.5f);
+	poop1->OnClick = [this]()
 	{
-		go->Init();
-	}
-}
-void SceneEditor::Update(float dt)
-{
-	Scene::Update(dt);
+		Tile* poop1 = (Tile*)AddGO(new Tile(ObjType::Poop, "graphics/poop1.png"));
+		poop1->SetOrigin(Origins::C);
+		poop1->SetPosition(0.0f, 0.0f);
+		poop1->order.setFont(*RESOURCE_MGR.GetFont("fonts/DNFBitBitOTF.otf"));
+		poop1->sortLayer = 1;
+		poop1->sortOrder = 0;
+		poop1->Init();
+		poop1->Reset();
+		currentRoom.push_back(poop1);
+	};
+	poop1->sortLayer = 100;
 
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Escape))
+	UIImageButton* spikes1 = (UIImageButton*)AddGO(new UIImageButton("graphics/spikes1.png"));
+	spikes1->SetOrigin(Origins::C);
+	spikes1->SetPosition(90.0f, windowSize.y * 0.1f);
+	spikes1->sprite.setScale(0.5f, 0.5f);
+	spikes1->OnClick = [this]()
 	{
-		SCENE_MGR.ChangeScene(SceneId::Title);
-	}
+		Tile* spikes1 = (Tile*)AddGO(new Tile(ObjType::Spike, "graphics/spikes1.png"));
+		spikes1->SetOrigin(Origins::C);
+		spikes1->SetPosition(0.0f, 0.0f);
+		spikes1->order.setFont(*RESOURCE_MGR.GetFont("fonts/DNFBitBitOTF.otf"));
+		spikes1->sortLayer = 1;
+		spikes1->sortOrder = 0;
+		spikes1->Init();
+		spikes1->Reset();
+		currentRoom.push_back(spikes1);
+	};
+	spikes1->sortLayer = 100;
 }
-void SceneEditor::Draw(sf::RenderWindow& window)
-{
-	Scene::Draw(window);
-}
-void SceneEditor::Release()
-{
-	for (auto go : gameObjects)
-	{
-		//go->Release();
-		delete go;
-	}
-}
-
-void SceneEditor::Enter()
-{
-	Scene::Enter();
-
-	RoomReset();
-}
-void SceneEditor::Exit()
-{
-	Scene::Exit();
-}
-
 void SceneEditor::SetBackground(const std::string& texture)
 {
 	roomImage = (SpriteGameObject*)AddGO(new SpriteGameObject(texture));

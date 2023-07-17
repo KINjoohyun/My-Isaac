@@ -194,13 +194,13 @@ void SceneEditor::SetTools()
 	};
 	bg2->sortLayer = 100;
 
-	UIImageButton* rocks1 = (UIImageButton*)AddGO(new UIImageButton("graphics/rocks1.png"));
+	UIImageButton* rocks1 = (UIImageButton*)AddGO(new UIImageButton("graphics/grid_rocks1.png"));
 	rocks1->SetOrigin(Origins::C);
 	rocks1->SetPosition(30.0f, windowSize.y * 0.1f);
 	rocks1->sprite.setScale(0.5f, 0.5f);
 	rocks1->OnClick = [this]()
 	{
-		Tile* rocks1 = (Tile*)AddGO(new Tile(ObjType::Rock, "graphics/rocks1.png"));
+		Tile* rocks1 = (Tile*)AddGO(new Tile(ObjType::Rock, "graphics/grid_rocks1.png"));
 		rocks1->SetOrigin(Origins::C);
 		rocks1->SetPosition(0.0f, 0.0f);
 		rocks1->order.setFont(*RESOURCE_MGR.GetFont("fonts/DNFBitBitOTF.otf"));
@@ -212,13 +212,13 @@ void SceneEditor::SetTools()
 	};
 	rocks1->sortLayer = 100;
 
-	UIImageButton* poop1 = (UIImageButton*)AddGO(new UIImageButton("graphics/poop1.png"));
+	UIImageButton* poop1 = (UIImageButton*)AddGO(new UIImageButton("graphics/grid_poop1.png"));
 	poop1->SetOrigin(Origins::C);
 	poop1->SetPosition(60.0f, windowSize.y * 0.1f);
 	poop1->sprite.setScale(0.5f, 0.5f);
 	poop1->OnClick = [this]()
 	{
-		Tile* poop1 = (Tile*)AddGO(new Tile(ObjType::Poop, "graphics/poop1.png"));
+		Tile* poop1 = (Tile*)AddGO(new Tile(ObjType::Poop, "graphics/grid_poop1.png"));
 		poop1->SetOrigin(Origins::C);
 		poop1->SetPosition(0.0f, 0.0f);
 		poop1->order.setFont(*RESOURCE_MGR.GetFont("fonts/DNFBitBitOTF.otf"));
@@ -230,13 +230,13 @@ void SceneEditor::SetTools()
 	};
 	poop1->sortLayer = 100;
 
-	UIImageButton* spikes1 = (UIImageButton*)AddGO(new UIImageButton("graphics/spikes1.png"));
+	UIImageButton* spikes1 = (UIImageButton*)AddGO(new UIImageButton("graphics/grid_spikes1.png"));
 	spikes1->SetOrigin(Origins::C);
 	spikes1->SetPosition(90.0f, windowSize.y * 0.1f);
 	spikes1->sprite.setScale(0.5f, 0.5f);
 	spikes1->OnClick = [this]()
 	{
-		Tile* spikes1 = (Tile*)AddGO(new Tile(ObjType::Spike, "graphics/spikes1.png"));
+		Tile* spikes1 = (Tile*)AddGO(new Tile(ObjType::Spike, "graphics/grid_spikes1.png"));
 		spikes1->SetOrigin(Origins::C);
 		spikes1->SetPosition(0.0f, 0.0f);
 		spikes1->order.setFont(*RESOURCE_MGR.GetFont("fonts/DNFBitBitOTF.otf"));

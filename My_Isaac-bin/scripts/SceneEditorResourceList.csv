@@ -1,9 +1,7 @@
 "RESOURCES TYPES (Texture, Font, SoundBuffer, AnimationClip)",PATH
-0,graphics/tile_wall.png
-0,graphics/tile_ground.png
 0,graphics/basement_bg1.png
 0,graphics/basement_bg2.png
-0,graphics/rocks1.png
+0,graphics/grid_rocks1.png
 0,graphics/spawnUI.png
-0,graphics/poop1.png
-0,graphics/spikes1.png
+0,graphics/grid_poop1.png
+0,graphics/grid_spikes1.png

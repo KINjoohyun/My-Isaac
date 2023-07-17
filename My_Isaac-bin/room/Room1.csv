@@ -1,5 +1,5 @@
 BACKGROUND,SIZE,GRID,OBJ TYPE,TEXTURE,X,Y,ORDER
-graphics/basement_bg1.png,734,12,1,graphics/rocks1.png,-335,-171,0
-,414,6,1,graphics/rocks1.png,-335,174,0
-,,,1,graphics/rocks1.png,335,-171,0
-,,,1,graphics/rocks1.png,335,174,0
+graphics/basement_bg1.png,734,12,0,graphics/grid_rocks1.png,-335,-171,0
+,414,6,0,graphics/grid_rocks1.png,-335,174,0
+,,,0,graphics/grid_rocks1.png,335,-171,0
+,,,0,graphics/grid_rocks1.png,335,174,0

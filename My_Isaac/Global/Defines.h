@@ -52,9 +52,10 @@ enum class Origins
 enum class ObjType
 {
 	None = -1,
-	Rock = 1,
+	Rock,
 	Poop,
 	Spike,
+
 
 	Count,
 };

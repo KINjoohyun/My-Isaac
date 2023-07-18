@@ -112,7 +112,12 @@ void SceneEditor::SetTools()
 	};
 	saveButton->OnClick = [this]()
 	{
-		RoomSave("room/Room2.csv");
+		if (roomName == "")
+		{
+			std::cerr << "ERROR: Can't Save Room!" << std::endl;
+			return;
+		}
+		RoomSave(roomName);
 	};
 	saveButton->sortLayer = 100;
 
@@ -130,8 +135,13 @@ void SceneEditor::SetTools()
 	};
 	loadButton->OnClick = [this]()
 	{
+		if (roomName == "")
+		{
+			std::cerr << "ERROR: Can't Load Room!" << std::endl;
+			return;
+		}
 		RoomReset();
-		RoomLoad("room/Room1.csv");
+		RoomLoad(roomName);
 	};
 	loadButton->sortLayer = 100;
 
@@ -149,8 +159,6 @@ void SceneEditor::SetTools()
 	};
 	bg1->OnClick = [this]()
 	{
-		RoomReset();
-
 		rapidcsv::Document doc("room/BG1.csv");
 		std::string bg = doc.GetColumn<std::string>(0).front();
 		SetBackground(bg);
@@ -177,8 +185,6 @@ void SceneEditor::SetTools()
 	};
 	bg2->OnClick = [this]()
 	{
-		RoomReset();
-
 		rapidcsv::Document doc("room/BG2.csv");
 		std::string bg = doc.GetColumn<std::string>(0).front();
 		SetBackground(bg);
@@ -191,6 +197,30 @@ void SceneEditor::SetTools()
 	};
 	bg2->sortLayer = 100;
 
+	for (int i = 1; i <= 9; i++)
+	{
+		std::string path;
+		path = "room/Room" + std::to_string(i) + ".csv";
+
+		UITextButton* roomButton = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf", path));
+		roomButton->SetOrigin(Origins::C);
+		roomButton->SetText(path, 12, sf::Color::White, 1.0f);
+		roomButton->SetPosition(windowSize.x - 60.0f, windowSize.y * 0.15f + (windowSize.y * 0.05f * i));
+		roomButton->OnEnter = []()
+		{
+
+		};
+		roomButton->OnExit = []()
+		{
+
+		};
+		roomButton->OnClick = [&, path]()
+		{
+			roomName = path;
+		};
+		roomButton->sortLayer = 100;
+	}
+	
 	UIImageButton* rocks1 = (UIImageButton*)AddGO(new UIImageButton("graphics/grid_rocks1.png"));
 	rocks1->SetOrigin(Origins::C);
 	rocks1->SetPosition(30.0f, windowSize.y * 0.1f);
@@ -301,6 +331,12 @@ void SceneEditor::SetTools()
 }
 void SceneEditor::SetBackground(const std::string& texture)
 {
+	if (roomImage != nullptr)
+	{
+		RemoveGO(roomImage);
+		roomImage = nullptr;
+	}
+
 	roomImage = (SpriteGameObject*)AddGO(new SpriteGameObject(texture, texture));
 	roomImage->sprite.setColor({ 255, 255, 255, 200 });
 	roomImage->SetOrigin(Origins::C);

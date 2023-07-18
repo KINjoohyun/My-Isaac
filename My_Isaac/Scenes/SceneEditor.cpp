@@ -156,9 +156,9 @@ void SceneEditor::SetTools()
 		SetBackground(bg);
 
 		sizex = doc.GetCell<int>(1, 0);
-		sizey = doc.GetCell<int>(1, 1);
-		gridx = doc.GetCell<int>(2, 0);
-		gridy = doc.GetCell<int>(2, 1);
+		sizey = doc.GetCell<int>(2, 0);
+		gridx = doc.GetCell<int>(3, 0);
+		gridy = doc.GetCell<int>(4, 0);
 		SetGrid(sizex, sizey, gridx, gridy);
 	};
 	bg1->sortLayer = 100;
@@ -184,9 +184,9 @@ void SceneEditor::SetTools()
 		SetBackground(bg);
 
 		sizex = doc.GetCell<int>(1, 0);
-		sizey = doc.GetCell<int>(1, 1);
-		gridx = doc.GetCell<int>(2, 0);
-		gridy = doc.GetCell<int>(2, 1);
+		sizey = doc.GetCell<int>(2, 0);
+		gridx = doc.GetCell<int>(3, 0);
+		gridy = doc.GetCell<int>(4, 0);
 		SetGrid(sizex, sizey, gridx, gridy);
 	};
 	bg2->sortLayer = 100;
@@ -343,23 +343,34 @@ void SceneEditor::RoomSave(const std::string& roomPath)
 		return;
 	}
 
-	rapidcsv::Document doc(roomPath);
-	doc.SetCell<std::string>("BACKGROUND", 0, roomImage->GetName());
+	rapidcsv::Document doc(roomPath, rapidcsv::LabelParams(-1, -1));
+	doc.Clear();
+	doc.SetCell<std::string>(0, 0, "BACKGROUND");
+	doc.SetCell<std::string>(1, 0, "SIZEX");
+	doc.SetCell<std::string>(2, 0, "SIZEY");
+	doc.SetCell<std::string>(3, 0, "GRIDX");
+	doc.SetCell<std::string>(4, 0, "GRIDY");
 
-	doc.SetCell<int>("SIZE", 0, sizex);
-	doc.SetCell<int>("SIZE", 1, sizey);
+	doc.SetCell<std::string>(0, 3, "OBJ TYPE");
+	doc.SetCell<std::string>(1, 3, "TEXTURE");
+	doc.SetCell<std::string>(2, 3, "X");
+	doc.SetCell<std::string>(3, 3, "Y");
+	doc.SetCell<std::string>(4, 3, "ORDER");
 
-	doc.SetCell<int>("GRID", 0, gridx);
-	doc.SetCell<int>("GRID", 1, gridy);
+	doc.SetCell<std::string>(0, 1, roomImage->GetName());
+	doc.SetCell<int>(1, 1, sizex);
+	doc.SetCell<int>(2, 1, sizey);
+	doc.SetCell<int>(3, 1, gridx);
+	doc.SetCell<int>(4, 1, gridy);
 
-	int i = 0;
+	int i = 4;
 	for (auto it : currentRoom)
 	{
-		doc.SetCell<int>("OBJ TYPE", i, (int)it->GetType());
-		doc.SetCell<std::string>("TEXTURE", i, it->GetTextureId());
-		doc.SetCell<float>("X", i, it->GetPosition().x);
-		doc.SetCell<float>("Y", i, it->GetPosition().y);
-		doc.SetCell<int>("ORDER", i, it->sortOrder);
+		doc.SetCell<int>(0, i, (int)it->GetType());
+		doc.SetCell<std::string>(1, i, it->GetTextureId());
+		doc.SetCell<float>(2, i, it->GetPosition().x);
+		doc.SetCell<float>(3, i, it->GetPosition().y);
+		doc.SetCell<int>(4, i, it->sortOrder);
 
 		i++;
 	}
@@ -367,31 +378,25 @@ void SceneEditor::RoomSave(const std::string& roomPath)
 }
 void SceneEditor::RoomLoad(const std::string& roomPath)
 {
-	//일단 하드 코딩
-	rapidcsv::Document doc(roomPath);
-	std::string bg = doc.GetColumn<std::string>(0).front();
+	rapidcsv::Document doc(roomPath, rapidcsv::LabelParams(-1, -1));
+	std::string bg = doc.GetCell<std::string>(0, 1);
 	SetBackground(bg);
 
-	sizex = doc.GetCell<int>(1, 0);
-	sizey = doc.GetCell<int>(1, 1);
-	gridx = doc.GetCell<int>(2, 0);
-	gridy = doc.GetCell<int>(2, 1);
+	sizex = doc.GetCell<int>(1, 1);
+	sizey = doc.GetCell<int>(2, 1);
+	gridx = doc.GetCell<int>(3, 1);
+	gridy = doc.GetCell<int>(4, 1);
 	SetGrid(sizex, sizey, gridx, gridy);
 	
-	std::vector<int> objtypes = doc.GetColumn<int>(3);
-	std::vector<std::string> texture = doc.GetColumn<std::string>(4);
-	std::vector<float> x = doc.GetColumn<float>(5);
-	std::vector<float> y = doc.GetColumn<float>(6);
-	std::vector<int> order = doc.GetColumn<int>(7);
-	for (int i = 0; i < objtypes.size(); i++)
+	for (int i = 4; i < doc.GetRowCount(); i++)
 	{
-		//objtypes 사용
-		Tile* obj = (Tile*)AddGO(new Tile((ObjType)objtypes[i], texture[i]));
+		auto rows = doc.GetRow<std::string>(i);
+		Tile* obj = (Tile*)AddGO(new Tile((ObjType)std::stoi(rows[0]), rows[1]));
 		obj->SetOrigin(Origins::C);
-		obj->SetPosition(x[i], y[i]);
+		obj->SetPosition(std::stof(rows[2]), std::stof(rows[3]));
 		obj->order.setFont(*RESOURCE_MGR.GetFont("fonts/DNFBitBitOTF.otf"));
 		obj->sortLayer = 1;
-		obj->sortOrder = order[i];
+		obj->sortOrder = std::stoi(rows[4]);
 		obj->Init();
 		obj->Reset();
 		currentRoom.push_back(obj);

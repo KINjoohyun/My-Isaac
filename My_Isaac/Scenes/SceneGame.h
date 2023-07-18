@@ -3,7 +3,6 @@
 #include "GameObject.h"
 
 class Player;
-class VertexArrayGameObject;
 
 class SceneGame : public Scene
 {
@@ -22,4 +21,6 @@ public:
 
 	virtual void Enter() override;
 	virtual void Exit() override;
+
+	void CallRoom(const std::string& roomPath);
 };

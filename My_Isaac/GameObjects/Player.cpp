@@ -35,9 +35,8 @@ void Player::Reset()
 	bodyAnimation.Play("BodyIdleDown");
 	SetPosition(0.0f, 0.0f);
 	SetOrigin(origin);
-
-	body.setScale(5.0f, 5.0f);
-
+	head.setScale(2.0f, 2.0f);
+	body.setScale(2.0f, 2.0f);
 }
 void Player::Update(float dt)
 {

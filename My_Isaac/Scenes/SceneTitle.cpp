@@ -5,12 +5,10 @@
 #include "SceneMgr.h"
 #include "SpriteGameObject.h"
 #include "TextGameObject.h"
-#include "Framework.h"
 #include "DataTableMgr.h"
 #include "StringTable.h"
 #include "Variables.h"
-
-#include "UIButton.h"
+#include "UITextButton.h"
 
 SceneTitle::SceneTitle() : Scene(SceneId::Title)
 {
@@ -29,29 +27,49 @@ void SceneTitle::Init()
 	worldView.setCenter(0, 0);
 
 	uiView.setSize(windowSize);
-	uiView.setCenter({ windowSize.x / 2.0f, windowSize.y / 2.0f });
+	uiView.setCenter({ windowSize.x * 0.5f, windowSize.y * 0.5f });
 
-	UIButton* button = new UIButton("graphics/slide.png", "button");
-	button->SetOrigin(Origins::C);
-	button->SetPosition(windowSize.x / 2, windowSize.y / 2);
-	button->OnEnter = [button]()
+	UITextButton* button1 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
+	button1->SetOrigin(Origins::C);
+	button1->SetText("Game Start", 50);
+	button1->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 150.0f);
+	button1->OnEnter = []()
 	{
-		std::cout << "Enter" << std::endl;
-		button->sprite.setTexture(*RESOURCE_MGR.GetTexture("graphics/slide_off.png"));
+		
 	};
-	button->OnExit = [button]()
+	button1->OnExit = []()
 	{
-		std::cout << "Exit" << std::endl;
-		button->sprite.setTexture(*RESOURCE_MGR.GetTexture(button->textureId));
+		
 	};
-	button->OnClick = []()
+	button1->OnClick = [this]()
 	{
-		std::cout << "Click" << std::endl;
 		SCENE_MGR.ChangeScene(SceneId::Game);
 	};
-	button->sortLayer = 100;
-	AddGO(button);
+	button1->sortLayer = 100;
 
+	UITextButton* button2 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
+	button2->SetOrigin(Origins::C);
+	button2->SetText("Map Editor", 50);
+	button2->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 250.0f);
+	button2->OnEnter = []()
+	{
+		
+	};
+	button2->OnExit = []()
+	{
+		
+	};
+	button2->OnClick = [this]()
+	{
+		SCENE_MGR.ChangeScene(SceneId::Editor);
+	};
+	button2->sortLayer = 100;
+
+	SpriteGameObject* empty = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/emptyscreen.png", "empty"));
+	empty->SetOrigin(Origins::C);
+	empty->SetPosition(0.0f, 0.0f);
+	empty->sortLayer = -100;
+	
 	for (auto go : gameObjects)
 	{
 		go->Init();

@@ -4,9 +4,10 @@
 
 enum class Languages
 {
+	None = -1,
 	KOR,
 	ENG,
-	JAP,
+
 	Count,
 };
 
@@ -15,19 +16,25 @@ enum class SceneId
 	None = -1,
 	Title,
 	Game,
+	Editor,
+
 	Count,
 };
 
 enum class ResourceTypes
 {
+	None = -1,
 	Texture,
 	Font,
 	SoundBuffer,
 	AnimationClip,
+
+	Count,
 };
 
 enum class Origins
 {
+	None = -1,
 	TL, //Top Left
 	TC,
 	TR,
@@ -37,7 +44,22 @@ enum class Origins
 	BL,
 	BC,
 	BR,
-	CUSTOM
+	CUSTOM,
+
+	Count,
+};
+
+enum class ObjType
+{
+	None = -1,
+	Rock,
+	Poop,
+	Spike,
+	AttackFly,
+	Pooter,
+	Sucker,
+
+	Count,
 };
 
 #include "AnimationClip.h"

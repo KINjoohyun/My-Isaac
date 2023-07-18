@@ -1,0 +1,6 @@
+BACKGROUND,SIZEX,SIZEY,GRIDX,GRIDY
+graphics/basement_bg1.png,734,414,12,6
+,,,,
+"OBJ TYPE",TEXTURE,X,Y,ORDER
+5,graphics/grid_Sucker.png,-227,1.99998379,0
+5,graphics/grid_Sucker.png,200.999985,-53.9999924,0

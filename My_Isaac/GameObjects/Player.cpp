@@ -198,7 +198,12 @@ void Player::TearShoot(const sf::Vector2f& direction)
 {
 	Tear* tear = poolTears.Get();
 	tear->sortLayer = 0;
-	tear->Shoot(position, direction, 500.0f, 25.0f);
+	sf::Vector2f headPos =
+	{
+		head.getGlobalBounds().left + head.getGlobalBounds().width/3,
+		head.getGlobalBounds().top + head.getGlobalBounds().height/2
+	};
+	tear->Shoot(headPos, direction, 500.0f, 25.0f);
 
 	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	if (scene != nullptr)

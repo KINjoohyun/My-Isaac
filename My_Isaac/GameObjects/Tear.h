@@ -13,6 +13,8 @@ protected:
 	int damage = 0;
 	sf::Vector2f direction;
 
+	float timer = 0.0f;
+	float duration = 1.5f;
 public:
 	ObjectPool<Tear>* pool;
 

@@ -42,6 +42,7 @@ void Tear::Update(float dt)
 	SetPosition(position + direction * speed * dt);
 
 	range -= speed * dt;
+	timer += dt;
 	
 	if ((range < 0.0f) && animation.GetCurrentClipId() == "TearShooting")
 	{
@@ -49,7 +50,7 @@ void Tear::Update(float dt)
 		SetOrigin(Origins::C);
 		direction = {0.0f, 0.0f};
 	}
-	if (!animation.IsPlaying())
+	if (timer >= duration) // 충돌 조건 추가 필요
 	{
 		pool->Return(this);
 		SCENE_MGR.GetCurrentScene()->RemoveGO(this);

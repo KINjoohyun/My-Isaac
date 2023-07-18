@@ -180,6 +180,7 @@
     <ClCompile Include="GameObjects\UITextButton.cpp" />
     <ClCompile Include="MapEditor\Tile.cpp" />
     <ClCompile Include="GameObjects\UIImageButton.cpp" />
+    <ClCompile Include="GameObjects\Tear.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\rapidcsv.h" />
@@ -212,6 +213,7 @@
     <ClInclude Include="GameObjects\UITextButton.h" />
     <ClInclude Include="MapEditor\Tile.h" />
     <ClInclude Include="GameObjects\UIImageButton.h" />
+    <ClInclude Include="GameObjects\Tear.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

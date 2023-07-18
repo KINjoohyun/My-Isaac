@@ -84,6 +84,8 @@ void SceneGame::Enter()
 }
 void SceneGame::Exit()
 {
+	player->Reset();
+
 	Scene::Exit();
 }
 

@@ -1,0 +1,5 @@
+ID,FPS,LOOPTYPE,,
+TearShooting,10,0,,
+,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
+graphics/tear.png,25,23,15,15

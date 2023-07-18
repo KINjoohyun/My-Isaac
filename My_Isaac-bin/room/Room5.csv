@@ -1,4 +1,6 @@
 BACKGROUND,SIZEX,SIZEY,GRIDX,GRIDY
-graphics/basement_bg1.png,734,414,12,6
+graphics/basement_bg2.png,734,414,12,6
 ,,,,
 "OBJ TYPE",TEXTURE,X,Y,ORDER
+4,graphics/grid_Pooter.png,-214.000015,-102.000008,0
+4,graphics/grid_Pooter.png,214.000015,-102.000008,0

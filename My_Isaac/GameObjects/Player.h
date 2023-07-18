@@ -11,8 +11,6 @@ protected:
 	sf::Vector2f direction = {0.0f, -1.0f};
 	float speed = 300.0f;
 	bool flipX = false;
-
-	float gapHeadToBody = 26.0f;
 public:
 	sf::Sprite head;
 	sf::Sprite body;

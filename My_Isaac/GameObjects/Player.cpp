@@ -131,13 +131,13 @@ void Player::Draw(sf::RenderWindow& window)
 void Player::SetPosition(const sf::Vector2f& position)
 {
 	GameObject::SetPosition(position);
-	body.setPosition({position.x, position.y + gapHeadToBody});
+	body.setPosition({position.x, position.y});
 	head.setPosition(position);
 }
 void Player::SetPosition(float x, float y)
 {
 	GameObject::SetPosition(x, y);
-	body.setPosition(x, y + gapHeadToBody);
+	body.setPosition(x, y);
 	head.setPosition(x, y);
 }
 
@@ -147,8 +147,8 @@ void Player::SetOrigin(Origins origin)
 
 	if (this->origin != Origins::CUSTOM)
 	{
-		Utils::SetOrigin(body, origin);
-		Utils::SetOrigin(head, origin);
+		Utils::SetOrigin(body, Origins::C);
+		Utils::SetOrigin(head, Origins::BC);
 	}
 }
 void Player::SetOrigin(float x, float y)

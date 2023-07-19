@@ -11,6 +11,7 @@
 #include "Tile.h"
 #include "RectGameObject.h"
 #include "Player.h"
+#include "Poop.h"
 
 #include "Door.h"
 
@@ -152,7 +153,7 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 	for (int i = 4; i < doc.GetRowCount(); i++)
 	{
 		auto rows = doc.GetRow<std::string>(i);
-		Tile* obj = (Tile*)AddGO(new Tile((ObjType)std::stoi(rows[0]), rows[1])); //현재는 Tile을 로드
+		auto obj = LoadObj((ObjType)std::stoi(rows[0]), rows[1]);
 		obj->SetOrigin(Origins::C);
 		obj->SetPosition(position.x + std::stof(rows[2]), position.y + std::stof(rows[3]));
 		obj->sortLayer = 1;
@@ -182,8 +183,55 @@ void SceneGame::RenewLife(int life)
 		lifebar.push_back(ui_heart);
 	}
 }
-
 void SceneGame::ViewSet(const sf::Vector2f& position)
 {
 	worldView.setCenter({position.x, position.y - 100.0f});
+}
+SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& textureId)
+{
+	switch (objtype)
+	{
+	case ObjType::Rock:
+	{
+		Poop* rock = (Poop*)AddGO(new Poop(textureId));
+		return (SpriteGameObject*)rock;
+	}
+	break;
+	case ObjType::Poop:
+	{
+		Poop* poop = (Poop*)AddGO(new Poop(textureId));
+		return (SpriteGameObject*)poop;
+	}
+	break;
+	case ObjType::Spike:
+	{
+		Poop* spike = (Poop*)AddGO(new Poop(textureId));
+		return (SpriteGameObject*)spike;
+	}
+	break;
+	case ObjType::AttackFly:
+	{
+		Poop* attackfly = (Poop*)AddGO(new Poop(textureId));
+		return (SpriteGameObject*)attackfly;
+	}
+	break;
+	case ObjType::Pooter:
+	{
+		Poop* pooter = (Poop*)AddGO(new Poop(textureId));
+		return (SpriteGameObject*)pooter;
+	}
+	break;
+	case ObjType::Sucker:
+	{
+		Poop* sucker = (Poop*)AddGO(new Poop(textureId));
+		return (SpriteGameObject*)sucker;
+	}
+	break;
+	default:
+	{
+		Tile* tile = (Tile*)AddGO(new Tile(objtype, textureId));
+		return (SpriteGameObject*)tile;
+	}
+	break;
+	}
 }

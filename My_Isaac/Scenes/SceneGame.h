@@ -4,6 +4,7 @@
 #include "ObjectPool.h"
 
 class Player;
+class SpriteGameObject;
 
 class SceneGame : public Scene
 {
@@ -28,6 +29,7 @@ public:
 
 	void RenewLife(int life);
 	void ViewSet(const sf::Vector2f& position);
+	SpriteGameObject* LoadObj(ObjType objtype, const std::string& textureId);
 
 	template <typename T>
 	void ClearPool(ObjectPool<T>& pool);

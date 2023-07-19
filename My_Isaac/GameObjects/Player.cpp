@@ -31,12 +31,18 @@ void Player::Init()
 
 	SetOrigin(Origins::C);
 
-	ObjectPool<Tear>* ptr = &poolTears;
-	poolTears.OnCreate = [ptr](Tear* tear) // Rambda
+	poolTears.OnCreate = [this](Tear* tear)
 	{
-		tear->pool = ptr;
+		tear->pool = &poolTears;
+		tear->SetPlayer(this);
 	};
 	poolTears.Init();
+
+	poolEffects.OnCreate = [this](TearEffect* effect)
+	{
+		effect->pool = &poolEffects;
+	};
+	poolEffects.Init();
 }
 void Player::Reset()
 {
@@ -47,11 +53,17 @@ void Player::Reset()
 	head.setScale(2.0f, 2.0f);
 	body.setScale(2.0f, 2.0f);
 
-	for (auto bullet : poolTears.GetUseList())
+	for (auto tear : poolTears.GetUseList())
 	{
-		SCENE_MGR.GetCurrentScene()->RemoveGO(bullet);
+		SCENE_MGR.GetCurrentScene()->RemoveGO(tear);
 	}
 	poolTears.AllReturn();
+
+	for (auto effect : poolEffects.GetUseList())
+	{
+		SCENE_MGR.GetCurrentScene()->RemoveGO(effect);
+	}
+	poolEffects.AllReturn();
 
 	life = maxLife;
 }
@@ -70,6 +82,11 @@ void Player::Update(float dt)
 
 	position += direction * speed * dt;
 	SetPosition(position);
+
+	if (!wall.contains(position))
+	{
+		SetPosition(Utils::Clamp(position, { wallLeft, wallTop }, { wallRight, wallBottom }));
+	}
 
 	// Animation
 	if (bodyAnimation.GetCurrentClipId() == "BodyIdleDown")
@@ -145,7 +162,6 @@ void Player::Update(float dt)
 
 		TearShoot({ 0.0f, 1.0f });
 	}
-
 }
 void Player::Draw(sf::RenderWindow& window)
 {
@@ -199,7 +215,7 @@ void Player::SetFlipX(sf::Sprite& sprite, bool flip)
 void Player::TearShoot(const sf::Vector2f& direction)
 {
 	Tear* tear = poolTears.Get();
-	tear->sortLayer = 0;
+	tear->sortLayer = 1;
 	sf::Vector2f headPos =
 	{
 		head.getGlobalBounds().left + head.getGlobalBounds().width/3,
@@ -213,6 +229,18 @@ void Player::TearShoot(const sf::Vector2f& direction)
 		scene->AddGO(tear);
 	}
 }
+void Player::TearSplash(const sf::Vector2f& tearPos)
+{
+	TearEffect* effect = poolEffects.Get();
+	effect->sortLayer = 1;
+	effect->SetPosition(tearPos);
+
+	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+	if (scene != nullptr)
+	{
+		scene->AddGO(effect);
+	}
+}
 void Player::OnHit(int damage)
 {
 	life = std::max(0, life - damage);
@@ -222,6 +250,7 @@ void Player::OnHit(int damage)
 	{
 		scene->RenewLife(life);
 	}
+
 	if (life <= 0)
 	{
 		OnDiePlayer();
@@ -232,6 +261,20 @@ void Player::OnDiePlayer()
 	std::cout << "DIE" << std::endl;
 
 	Reset();
+}
+void Player::SetWall(const sf::FloatRect& wall)
+{
+	this->wall = wall;
+
+	wallTop = wall.top;
+	wallBottom = wall.top + wall.height;
+	wallLeft = wall.left;
+	wallRight = wall.left + wall.width;
+
+	for (auto it : poolTears.GetPool())
+	{
+		it->SetWall(wall);
+	}
 }
 
 int Player::GetMaxLife() const

@@ -10,8 +10,9 @@
 #include "rapidcsv.h"
 #include "Tile.h"
 #include "RectGameObject.h"
-
 #include "Player.h"
+
+#include "Door.h"
 
 SceneGame::SceneGame() :Scene(SceneId::Game)
 {
@@ -59,6 +60,37 @@ void SceneGame::Init()
 	}
 	RenewLife(player->GetMaxLife());
 
+	// test code
+	Door* door1 = (Door*)AddGO(new Door("graphics/door_open.png", {400.0f, 0.0f}, Door::Look::Right));
+	Door* door2 = (Door*)AddGO(new Door("graphics/door_open.png", {-400.0f, 0.0f}, Door::Look::Left));
+	door1->SetPlayer(player);
+	door2->SetPlayer(player);
+	door1->Open();
+	door2->Open();
+	door1->SetDestination({ 1100.0f, 0.0f });
+	door2->SetDestination({ -1100.0f, 0.0f });
+
+	Door* door3 = (Door*)AddGO(new Door("graphics/door_open.png", { -700.0f, 0.0f }, Door::Look::Right));
+	door3->SetPlayer(player);
+	door3->Open();
+	door3->SetDestination({ 0.0f, 0.0f });
+
+	Door* door4 = (Door*)AddGO(new Door("graphics/door_open.png", { 700.0f, 0.0f }, Door::Look::Left));
+	door4->SetPlayer(player);
+	door4->Open();
+	door4->SetDestination({ 0.0f, 0.0f });
+
+	// test code
+	RectGameObject* wall = (RectGameObject*)FindGO("wall");
+	float wallTop = wall->rect.getGlobalBounds().top;
+	float wallBottom = wall->rect.getGlobalBounds().top + wall->rect.getGlobalBounds().height;
+	float wallLeft = wall->rect.getGlobalBounds().left;
+	float wallRight = wall->rect.getGlobalBounds().left + wall->rect.getGlobalBounds().width;
+	if (wall->rect.getGlobalBounds().contains(player->GetPosition()))
+	{
+		player->SetWall(wall->rect.getGlobalBounds());
+	}
+
 	for (auto go : gameObjects)
 	{
 		go->Init();
@@ -72,21 +104,6 @@ void SceneGame::Update(float dt)
 	{
 		SCENE_MGR.ChangeScene(SceneId::Title);
 	}
-
-	// 하드 코딩으로 벽 생성
-	RectGameObject* wall = (RectGameObject*)FindGO("wall");
-	float wallTop = wall->rect.getGlobalBounds().top;
-	float wallBottom = wall->rect.getGlobalBounds().top + wall->rect.getGlobalBounds().height;
-	float wallLeft = wall->rect.getGlobalBounds().left;
-	float wallRight = wall->rect.getGlobalBounds().left + wall->rect.getGlobalBounds().width;
-
-	if (!wall->rect.getGlobalBounds().contains(player->GetPosition()))
-	{
-		player->SetPosition(Utils::Clamp(player->GetPosition(), {wallLeft, wallTop}, {wallRight, wallBottom}));
-	}
-
-	//worldView.setCenter(player->GetPosition());
-
 }
 void SceneGame::Draw(sf::RenderWindow& window)
 {
@@ -164,4 +181,9 @@ void SceneGame::RenewLife(int life)
 		ui_heart->Reset();
 		lifebar.push_back(ui_heart);
 	}
+}
+
+void SceneGame::ViewSet(const sf::Vector2f& position)
+{
+	worldView.setCenter({position.x, position.y - 100.0f});
 }

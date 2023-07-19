@@ -3,9 +3,13 @@
 #include "AnimationController.h"
 #include "ObjectPool.h"
 
+class Player;
+
 class Tear : public SpriteGameObject
 {
 protected:
+	Player* player;
+
 	AnimationController animation;
 
 	float speed = 0.0f;
@@ -13,13 +17,16 @@ protected:
 	int damage = 0;
 	sf::Vector2f direction;
 
-	float timer = 0.0f;
-	float duration = 1.5f;
+	sf::FloatRect wall;
+	float wallTop = 0.0f;
+	float wallBottom = 0.0f;
+	float wallLeft = 0.0f;
+	float wallRight = 0.0f;
 public:
 	ObjectPool<Tear>* pool;
 
 	Tear(const std::string& textureId = "", const std::string& name = "");
-	virtual ~Tear() override;
+	virtual ~Tear() override { Release(); }
 
 	virtual void Init() override;
 	virtual void Reset() override;
@@ -27,5 +34,6 @@ public:
 	virtual void Release() override { }
 
 	void Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, float speed, int damage);
-	void SetWall();
+	void SetWall(const sf::FloatRect& wall);
+	void SetPlayer(Player* player);
 };

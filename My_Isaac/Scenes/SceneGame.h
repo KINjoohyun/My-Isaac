@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include "GameObject.h"
+#include "ObjectPool.h"
 
 class Player;
 
@@ -26,4 +27,18 @@ public:
 	void CallRoom(const std::string& roomPath, const sf::Vector2f& position);
 
 	void RenewLife(int life);
+	void ViewSet(const sf::Vector2f& position);
+
+	template <typename T>
+	void ClearPool(ObjectPool<T>& pool);
 };
+
+template<typename T>
+inline void SceneGame::ClearPool(ObjectPool<T>& pool)
+{
+	for (auto it : pool.GetUseList())
+	{
+		RemoveGO(it);
+	}
+	pool.AllReturn();
+}

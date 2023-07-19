@@ -4,6 +4,7 @@
 #include "ObjectPool.h"
 
 class Player;
+class Poop;
 
 class Tear : public SpriteGameObject
 {
@@ -22,10 +23,13 @@ protected:
 	float wallBottom = 0.0f;
 	float wallLeft = 0.0f;
 	float wallRight = 0.0f;
+
+	const std::list<Poop*>* poops;
+
 public:
 	ObjectPool<Tear>* pool;
 
-	Tear(const std::string& textureId = "", const std::string& name = "");
+	Tear(const std::string& textureId = "", const std::string& name = "tear");
 	virtual ~Tear() override { Release(); }
 
 	virtual void Init() override;
@@ -36,4 +40,5 @@ public:
 	void Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, float speed, int damage);
 	void SetWall(const sf::FloatRect& wall);
 	void SetPlayer(Player* player);
+	void SetPoops(const std::list<Poop*>* list);
 };

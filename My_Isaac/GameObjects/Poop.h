@@ -17,4 +17,6 @@ public:
 	virtual void Reset() override;
 	virtual void Update(float dt) override;
 	virtual void Release() {}
+
+	void OnHit(int damage);
 };

@@ -82,15 +82,8 @@ void SceneGame::Init()
 	door4->SetDestination({ 0.0f, 0.0f });
 
 	// test code
-	RectGameObject* wall = (RectGameObject*)FindGO("wall");
-	float wallTop = wall->rect.getGlobalBounds().top;
-	float wallBottom = wall->rect.getGlobalBounds().top + wall->rect.getGlobalBounds().height;
-	float wallLeft = wall->rect.getGlobalBounds().left;
-	float wallRight = wall->rect.getGlobalBounds().left + wall->rect.getGlobalBounds().width;
-	if (wall->rect.getGlobalBounds().contains(player->GetPosition()))
-	{
-		player->SetWall(wall->rect.getGlobalBounds());
-	}
+	RectGameObject* wall = (RectGameObject*)FindGO(randomPath1);
+	player->SetWall(wall->rect.getGlobalBounds());
 
 	for (auto go : gameObjects)
 	{
@@ -142,9 +135,9 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 	int sizex = doc.GetCell<int>(1, 1);
 	int sizey = doc.GetCell<int>(2, 1);
 
-	RectGameObject* wall = (RectGameObject*)AddGO(new RectGameObject("wall"));
+	RectGameObject* wall = (RectGameObject*)AddGO(new RectGameObject(roomPath));
 	wall->rect.setSize({ (float)sizex, (float)sizey });
-	wall->rect.setOutlineColor(sf::Color::Blue);
+	wall->rect.setOutlineColor(sf::Color::Red);
 	wall->rect.setOutlineThickness(1);
 	wall->rect.setFillColor(sf::Color::Transparent);
 	wall->SetOrigin(Origins::C);
@@ -200,6 +193,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	case ObjType::Poop:
 	{
 		Poop* poop = (Poop*)AddGO(new Poop(textureId));
+		poops.push_back(poop);
 		return (SpriteGameObject*)poop;
 	}
 	break;
@@ -234,4 +228,8 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	}
 	break;
 	}
+}
+const std::list<Poop*>* SceneGame::GetPoopList() const
+{
+	return &poops;
 }

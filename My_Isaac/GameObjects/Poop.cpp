@@ -15,8 +15,21 @@ void Poop::Init()
 void Poop::Reset()
 {
 	SpriteGameObject::Reset();
+
+	hp = maxHp;
 }
 void Poop::Update(float dt)
 {
 	SpriteGameObject::Update(dt);
+}
+
+void Poop::OnHit(int damage)
+{
+	hp = std::max(0, hp - damage);
+
+	// test
+	if (hp == 0)
+	{
+		SetActive(false);
+	}
 }

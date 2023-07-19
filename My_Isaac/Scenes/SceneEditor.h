@@ -10,6 +10,7 @@ class SceneEditor : public Scene
 protected:
 	std::list<Tile*> currentRoom;
 	SpriteGameObject* roomImage = nullptr;
+	std::string roomName = "";
 
 	int sizex = 0;
 	int sizey = 0;

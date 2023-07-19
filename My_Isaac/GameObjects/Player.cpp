@@ -2,6 +2,8 @@
 #include "Player.h"
 #include "InputMgr.h"
 #include "ResourceMgr.h"
+#include "SceneMgr.h"
+#include "SceneGame.h"
 
 Player::Player(const std::string name)
 	:GameObject(name)
@@ -28,6 +30,13 @@ void Player::Init()
 	headAnimation.SetTarget(&head);
 
 	SetOrigin(Origins::C);
+
+	ObjectPool<Tear>* ptr = &poolTears;
+	poolTears.OnCreate = [ptr](Tear* tear) // Rambda
+	{
+		tear->pool = ptr;
+	};
+	poolTears.Init();
 }
 void Player::Reset()
 {
@@ -37,6 +46,12 @@ void Player::Reset()
 	SetOrigin(origin);
 	head.setScale(2.0f, 2.0f);
 	body.setScale(2.0f, 2.0f);
+
+	for (auto bullet : poolTears.GetUseList())
+	{
+		SCENE_MGR.GetCurrentScene()->RemoveGO(bullet);
+	}
+	poolTears.AllReturn();
 }
 void Player::Update(float dt)
 {
@@ -107,18 +122,26 @@ void Player::Update(float dt)
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Left))
 	{
 		headAnimation.Play("HeadShootLeft");
+
+		TearShoot({-1.0f, 0.0f});
 	}
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Right))
 	{
 		headAnimation.Play("HeadShootRight");
+
+		TearShoot({ 1.0f, 0.0f });
 	}
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Up))
 	{
 		headAnimation.Play("HeadShootUp");
+
+		TearShoot({ 0.0f, -1.0f });
 	}
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Down))
 	{
 		headAnimation.Play("HeadShootDown");
+
+		TearShoot({ 0.0f, 1.0f });
 	}
 	
 }
@@ -131,13 +154,13 @@ void Player::Draw(sf::RenderWindow& window)
 void Player::SetPosition(const sf::Vector2f& position)
 {
 	GameObject::SetPosition(position);
-	body.setPosition({position.x, position.y + gapHeadToBody});
+	body.setPosition({position});
 	head.setPosition(position);
 }
 void Player::SetPosition(float x, float y)
 {
 	GameObject::SetPosition(x, y);
-	body.setPosition(x, y + gapHeadToBody);
+	body.setPosition(x, y);
 	head.setPosition(x, y);
 }
 
@@ -147,8 +170,8 @@ void Player::SetOrigin(Origins origin)
 
 	if (this->origin != Origins::CUSTOM)
 	{
-		Utils::SetOrigin(body, origin);
-		Utils::SetOrigin(head, origin);
+		Utils::SetOrigin(body, Origins::C);
+		Utils::SetOrigin(head, Origins::BC);
 	}
 }
 void Player::SetOrigin(float x, float y)
@@ -169,4 +192,22 @@ void Player::SetFlipX(sf::Sprite& sprite, bool flip)
 	sf::Vector2f scale = sprite.getScale();
 	scale.x = !flipX ? abs(scale.x) : -abs(scale.x);
 	sprite.setScale(scale);
+}
+
+void Player::TearShoot(const sf::Vector2f& direction)
+{
+	Tear* tear = poolTears.Get();
+	tear->sortLayer = 0;
+	sf::Vector2f headPos =
+	{
+		head.getGlobalBounds().left + head.getGlobalBounds().width/3,
+		head.getGlobalBounds().top + head.getGlobalBounds().height/2
+	};
+	tear->Shoot(headPos, direction, 500.0f, 25.0f);
+
+	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+	if (scene != nullptr)
+	{
+		scene->AddGO(tear);
+	}
 }

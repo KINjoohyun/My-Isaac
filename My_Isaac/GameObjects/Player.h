@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 #include "AnimationController.h"
+#include "ObjectPool.h"
+#include "Tear.h"
 
 class Player : public GameObject
 {
@@ -12,7 +14,8 @@ protected:
 	float speed = 300.0f;
 	bool flipX = false;
 
-	float gapHeadToBody = 26.0f;
+	ObjectPool<Tear> poolTears;
+
 public:
 	sf::Sprite head;
 	sf::Sprite body;
@@ -24,7 +27,7 @@ public:
 	virtual void Reset() override;
 	virtual void Update(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
-	virtual void Release() override {}
+	virtual void Release() override { poolTears.Release(); }
 
 	virtual void SetPosition(const sf::Vector2f& position);
 	virtual void SetPosition(float x, float y);
@@ -34,4 +37,6 @@ public:
 
 	bool GetFlipX() const;
 	void SetFlipX(sf::Sprite& sprite, bool flip);
+
+	void TearShoot(const sf::Vector2f& direction);
 };

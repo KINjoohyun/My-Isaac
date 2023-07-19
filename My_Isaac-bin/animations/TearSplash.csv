@@ -1,0 +1,19 @@
+ID,FPS,LOOPTYPE,,
+TearSplash,10,0,,
+,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
+graphics/tear.png,0,0,64,64
+graphics/tear.png,64,0,64,64
+graphics/tear.png,128,0,64,64
+graphics/tear.png,192,0,64,64
+graphics/tear.png,0,64,64,64
+graphics/tear.png,64,64,64,64
+graphics/tear.png,128,64,64,64
+graphics/tear.png,192,64,64,64
+graphics/tear.png,0,128,64,64
+graphics/tear.png,64,128,64,64
+graphics/tear.png,128,128,64,64
+graphics/tear.png,192,128,64,64
+graphics/tear.png,0,192,64,64
+graphics/tear.png,64,192,64,64
+graphics/tear.png,128,192,64,64

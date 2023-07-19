@@ -93,6 +93,9 @@
     <ClCompile Include="GameObjects\UIImageButton.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjects\Tear.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -183,6 +186,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\UIImageButton.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Tear.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

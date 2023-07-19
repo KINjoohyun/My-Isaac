@@ -1,0 +1,10 @@
+BACKGROUND,SIZEX,SIZEY,GRIDX,GRIDY
+graphics/basement_bg1.png,734,414,12,6
+,,,,
+"OBJ TYPE",TEXTURE,X,Y,ORDER
+3,graphics/grid_AttackFly.png,-336,-170,1
+2,graphics/grid_spikes1.png,-274,-171.000015,0
+2,graphics/grid_spikes1.png,-335,-102.000008,0
+3,graphics/grid_AttackFly.png,336,174,1
+2,graphics/grid_spikes1.png,336,104.999985,0
+2,graphics/grid_spikes1.png,275,174,0

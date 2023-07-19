@@ -11,6 +11,7 @@
 #include "Tile.h"
 #include "RectGameObject.h"
 #include "Player.h"
+#include "Poop.h"
 
 #include "Door.h"
 
@@ -81,15 +82,8 @@ void SceneGame::Init()
 	door4->SetDestination({ 0.0f, 0.0f });
 
 	// test code
-	RectGameObject* wall = (RectGameObject*)FindGO("wall");
-	float wallTop = wall->rect.getGlobalBounds().top;
-	float wallBottom = wall->rect.getGlobalBounds().top + wall->rect.getGlobalBounds().height;
-	float wallLeft = wall->rect.getGlobalBounds().left;
-	float wallRight = wall->rect.getGlobalBounds().left + wall->rect.getGlobalBounds().width;
-	if (wall->rect.getGlobalBounds().contains(player->GetPosition()))
-	{
-		player->SetWall(wall->rect.getGlobalBounds());
-	}
+	RectGameObject* wall = (RectGameObject*)FindGO(randomPath1);
+	player->SetWall(wall->rect.getGlobalBounds());
 
 	for (auto go : gameObjects)
 	{
@@ -141,9 +135,9 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 	int sizex = doc.GetCell<int>(1, 1);
 	int sizey = doc.GetCell<int>(2, 1);
 
-	RectGameObject* wall = (RectGameObject*)AddGO(new RectGameObject("wall"));
+	RectGameObject* wall = (RectGameObject*)AddGO(new RectGameObject(roomPath));
 	wall->rect.setSize({ (float)sizex, (float)sizey });
-	wall->rect.setOutlineColor(sf::Color::Blue);
+	wall->rect.setOutlineColor(sf::Color::Red);
 	wall->rect.setOutlineThickness(1);
 	wall->rect.setFillColor(sf::Color::Transparent);
 	wall->SetOrigin(Origins::C);
@@ -152,7 +146,7 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 	for (int i = 4; i < doc.GetRowCount(); i++)
 	{
 		auto rows = doc.GetRow<std::string>(i);
-		Tile* obj = (Tile*)AddGO(new Tile((ObjType)std::stoi(rows[0]), rows[1])); //현재는 Tile을 로드
+		auto obj = LoadObj((ObjType)std::stoi(rows[0]), rows[1]);
 		obj->SetOrigin(Origins::C);
 		obj->SetPosition(position.x + std::stof(rows[2]), position.y + std::stof(rows[3]));
 		obj->sortLayer = 1;
@@ -182,8 +176,60 @@ void SceneGame::RenewLife(int life)
 		lifebar.push_back(ui_heart);
 	}
 }
-
 void SceneGame::ViewSet(const sf::Vector2f& position)
 {
 	worldView.setCenter({position.x, position.y - 100.0f});
+}
+SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& textureId)
+{
+	switch (objtype)
+	{
+	case ObjType::Rock:
+	{
+		Poop* rock = (Poop*)AddGO(new Poop(textureId));
+		return (SpriteGameObject*)rock;
+	}
+	break;
+	case ObjType::Poop:
+	{
+		Poop* poop = (Poop*)AddGO(new Poop(textureId));
+		poops.push_back(poop);
+		return (SpriteGameObject*)poop;
+	}
+	break;
+	case ObjType::Spike:
+	{
+		Poop* spike = (Poop*)AddGO(new Poop(textureId));
+		return (SpriteGameObject*)spike;
+	}
+	break;
+	case ObjType::AttackFly:
+	{
+		Poop* attackfly = (Poop*)AddGO(new Poop(textureId));
+		return (SpriteGameObject*)attackfly;
+	}
+	break;
+	case ObjType::Pooter:
+	{
+		Poop* pooter = (Poop*)AddGO(new Poop(textureId));
+		return (SpriteGameObject*)pooter;
+	}
+	break;
+	case ObjType::Sucker:
+	{
+		Poop* sucker = (Poop*)AddGO(new Poop(textureId));
+		return (SpriteGameObject*)sucker;
+	}
+	break;
+	default:
+	{
+		Tile* tile = (Tile*)AddGO(new Tile(objtype, textureId));
+		return (SpriteGameObject*)tile;
+	}
+	break;
+	}
+}
+const std::list<Poop*>* SceneGame::GetPoopList() const
+{
+	return &poops;
 }

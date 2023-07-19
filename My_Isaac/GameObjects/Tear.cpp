@@ -4,6 +4,7 @@
 #include "SceneMgr.h"
 #include "SceneGame.h"
 #include "Player.h"
+#include "Poop.h"
 
 Tear::Tear(const std::string& textureId, const std::string& name)
 	:SpriteGameObject(textureId, name)
@@ -51,6 +52,24 @@ void Tear::Update(float dt)
 			scene->RemoveGO(this);
 			return;
 		}
+
+		if (poops != nullptr)
+		{
+			for (auto it : *poops)
+			{
+				if (sprite.getGlobalBounds().intersects(it->sprite.getGlobalBounds()) && isActive)
+				{
+					it->OnHit(damage);
+
+					SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+					player->TearSplash(position);
+
+					pool->Return(this);
+					scene->RemoveGO(this);
+					break;
+				}
+			}
+		}
 	}
 }
 
@@ -74,4 +93,8 @@ void Tear::SetWall(const sf::FloatRect& wall)
 void Tear::SetPlayer(Player* player)
 {
 	this->player = player;
+}
+void Tear::SetPoops(const std::list<Poop*>* list)
+{
+	this->poops = list;
 }

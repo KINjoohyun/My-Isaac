@@ -66,6 +66,11 @@ void Player::Reset()
 	poolEffects.AllReturn();
 
 	life = maxLife;
+
+	for (auto it : poolTears.GetPool())
+	{
+		it->SetWall(wall);
+	}
 }
 void Player::Update(float dt)
 {
@@ -162,6 +167,7 @@ void Player::Update(float dt)
 
 		TearShoot({ 0.0f, 1.0f });
 	}
+
 }
 void Player::Draw(sf::RenderWindow& window)
 {
@@ -226,6 +232,7 @@ void Player::TearShoot(const sf::Vector2f& direction)
 	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	if (scene != nullptr)
 	{
+		tear->SetPoops(scene->GetPoopList());
 		scene->AddGO(tear);
 	}
 }

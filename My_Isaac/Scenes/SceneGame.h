@@ -9,6 +9,7 @@ class SceneGame : public Scene
 protected:
 
 	Player* player;
+	std::vector<GameObject*> lifebar;
 
 public:
 	SceneGame();
@@ -22,5 +23,7 @@ public:
 	virtual void Enter() override;
 	virtual void Exit() override;
 
-	void CallRoom(const std::string& roomPath);
+	void CallRoom(const std::string& roomPath, const sf::Vector2f& position);
+
+	void RenewLife(int life);
 };

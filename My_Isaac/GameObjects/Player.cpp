@@ -8,7 +8,7 @@
 Player::Player(const std::string name)
 	:GameObject(name)
 {
-
+	
 }
 
 void Player::Init()
@@ -52,6 +52,8 @@ void Player::Reset()
 		SCENE_MGR.GetCurrentScene()->RemoveGO(bullet);
 	}
 	poolTears.AllReturn();
+
+	life = maxLife;
 }
 void Player::Update(float dt)
 {
@@ -143,7 +145,7 @@ void Player::Update(float dt)
 
 		TearShoot({ 0.0f, 1.0f });
 	}
-	
+
 }
 void Player::Draw(sf::RenderWindow& window)
 {
@@ -203,11 +205,40 @@ void Player::TearShoot(const sf::Vector2f& direction)
 		head.getGlobalBounds().left + head.getGlobalBounds().width/3,
 		head.getGlobalBounds().top + head.getGlobalBounds().height/2
 	};
-	tear->Shoot(headPos, direction, 500.0f, 25.0f);
+	tear->Shoot(headPos, direction, 500.0f, damage);
 
 	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	if (scene != nullptr)
 	{
 		scene->AddGO(tear);
 	}
+}
+void Player::OnHit(int damage)
+{
+	life = std::max(0, life - damage);
+
+	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+	if (scene != nullptr)
+	{
+		scene->RenewLife(life);
+	}
+	if (life <= 0)
+	{
+		OnDiePlayer();
+	}
+}
+void Player::OnDiePlayer()
+{
+	std::cout << "DIE" << std::endl;
+
+	Reset();
+}
+
+int Player::GetMaxLife() const
+{
+	return maxLife;
+}
+int Player::GetLife() const
+{
+	return life;
 }

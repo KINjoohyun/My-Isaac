@@ -16,6 +16,10 @@ protected:
 
 	ObjectPool<Tear> poolTears;
 
+	int maxLife = 3;
+	int life = 0;
+	int damage = 1;
+
 public:
 	sf::Sprite head;
 	sf::Sprite body;
@@ -39,4 +43,9 @@ public:
 	void SetFlipX(sf::Sprite& sprite, bool flip);
 
 	void TearShoot(const sf::Vector2f& direction);
+	void OnHit(int damage);
+	void OnDiePlayer();
+
+	int GetMaxLife() const;
+	int GetLife() const;
 };

@@ -26,6 +26,6 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Release() override { }
 
-	void Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, float speed, float damage);
+	void Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, float speed, int damage);
 	void SetWall();
 };

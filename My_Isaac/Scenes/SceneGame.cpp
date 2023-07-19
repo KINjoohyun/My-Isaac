@@ -27,17 +27,37 @@ void SceneGame::Init()
 	Release();
 
 	worldView.setSize(windowSize);
-	worldView.setCenter(0, 0);
+	worldView.setCenter(0, -100);
 
 	uiView.setSize(windowSize);
 	uiView.setCenter({ windowSize.x * 0.5f, windowSize.y * 0.5f });
 
+	SpriteGameObject* ui_bg = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/ui_bg.png"));
+	ui_bg->SetOrigin(Origins::TL);
+	ui_bg->sortLayer = 100;
+
 	// 하드 코딩으로 랜덤한 Room 호출
-	std::string randomPath = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
-	CallRoom(randomPath);
+	std::string randomPath1 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
+	CallRoom(randomPath1, { 0.0f, 0.0f });
+
+	std::string randomPath2 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
+	CallRoom(randomPath2, { 1100.0f, 0.0f });
+
+	std::string randomPath3 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
+	CallRoom(randomPath3, { -1100.0f, 0.0f });
 
 	player = (Player*)AddGO(new Player());
 	player->sortLayer = 1;
+
+	// 최대체력 그대로 생성중
+	for (int i = 0; i < player->GetMaxLife(); i++)
+	{
+		SpriteGameObject* ui_heart = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/ui_heart0.png"));
+		ui_heart->SetOrigin(Origins::TC);
+		ui_heart->SetPosition({ windowSize.x - 200.0f + (60.0f * i), 50.0f});
+		ui_heart->sortLayer = 100;
+	}
+	RenewLife(player->GetMaxLife());
 
 	for (auto go : gameObjects)
 	{
@@ -64,6 +84,9 @@ void SceneGame::Update(float dt)
 	{
 		player->SetPosition(Utils::Clamp(player->GetPosition(), {wallLeft, wallTop}, {wallRight, wallBottom}));
 	}
+
+	//worldView.setCenter(player->GetPosition());
+
 }
 void SceneGame::Draw(sf::RenderWindow& window)
 {
@@ -89,13 +112,14 @@ void SceneGame::Exit()
 	Scene::Exit();
 }
 
-void SceneGame::CallRoom(const std::string& roomPath)
+void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& position)
 {
 	rapidcsv::Document doc(roomPath, rapidcsv::LabelParams(-1, -1));
 	std::string bg = doc.GetCell<std::string>(0, 1);
 	
 	SpriteGameObject* background = (SpriteGameObject*)AddGO(new SpriteGameObject(bg, "bg"));
 	background->SetOrigin(Origins::C);
+	background->SetPosition(position);
 
 	int sizex = doc.GetCell<int>(1, 1);
 	int sizey = doc.GetCell<int>(2, 1);
@@ -106,17 +130,38 @@ void SceneGame::CallRoom(const std::string& roomPath)
 	wall->rect.setOutlineThickness(1);
 	wall->rect.setFillColor(sf::Color::Transparent);
 	wall->SetOrigin(Origins::C);
-	wall->SetPosition(0.0f, 0.0f);
+	wall->SetPosition(position);
 
 	for (int i = 4; i < doc.GetRowCount(); i++)
 	{
 		auto rows = doc.GetRow<std::string>(i);
 		Tile* obj = (Tile*)AddGO(new Tile((ObjType)std::stoi(rows[0]), rows[1])); //현재는 Tile을 로드
 		obj->SetOrigin(Origins::C);
-		obj->SetPosition(std::stof(rows[2]), std::stof(rows[3]));
+		obj->SetPosition(position.x + std::stof(rows[2]), position.y + std::stof(rows[3]));
 		obj->sortLayer = 1;
 		obj->sortOrder = std::stoi(rows[4]);
 		obj->Init();
 		obj->Reset();
+	}
+}
+
+void SceneGame::RenewLife(int life)
+{
+	for (auto it : lifebar)
+	{
+		RemoveGO(it);
+	}
+	lifebar.clear();
+
+	// 현재 1하트 단위
+	for (int i = 0; i < life; i++)
+	{
+		SpriteGameObject* ui_heart = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/ui_heart2.png"));
+		ui_heart->SetOrigin(Origins::TC);
+		ui_heart->SetPosition({ windowSize.x - 200.0f + (60.0f * i), 50.0f });
+		ui_heart->sortLayer = 101;
+		ui_heart->Init();
+		ui_heart->Reset();
+		lifebar.push_back(ui_heart);
 	}
 }

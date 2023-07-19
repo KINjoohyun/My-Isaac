@@ -58,7 +58,7 @@ void Tear::Update(float dt)
 	}
 }
 
-void Tear::Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, float speed, float damage)
+void Tear::Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, float speed, int damage)
 {
 	SetPosition(position);
 

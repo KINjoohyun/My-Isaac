@@ -36,6 +36,7 @@ void Tile::Reset()
 	Utils::SetOrigin(box, origin);
 	Utils::SetOrigin(order, origin);
 	isHover = false;
+	toggle = false;
 }
 void Tile::Update(float dt)
 {
@@ -47,12 +48,18 @@ void Tile::Update(float dt)
 	bool prevHover = isHover;
 	isHover = sprite.getGlobalBounds().contains(worldMousPos);
 	
-	if (isHover && INPUT_MGR.GetMouseButton(sf::Mouse::Left))
+	if (isHover && INPUT_MGR.GetMouseButtonDown(sf::Mouse::Left))
+	{
+		toggle = true;
+		SetPosition(worldMousPos);
+	}
+	if (isHover && INPUT_MGR.GetMouseButton(sf::Mouse::Left) && toggle)
 	{
 		SetPosition(worldMousPos);
 	}
 	if (isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Right))
 	{
+		toggle = false;
 		SceneEditor* scene = (SceneEditor*)SCENE_MGR.GetCurrentScene();
 		scene->TileRemove(this);
 		return;

@@ -14,8 +14,8 @@ protected:
 	sf::Clock clock;
 
 	int screenWidth = 1280;
-	int screenHeight = 720;
-	std::string title = "SFML Works!";
+	int screenHeight = 800;
+	std::string title = "The Binding Of Isaac";
 public:
 	virtual void Init(int width, int height, const std::string& title);
 	virtual void Update(float dt);

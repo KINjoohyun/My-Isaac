@@ -102,7 +102,7 @@
     <ClCompile Include="GameObjects\TearEffect.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\HitableObject.cpp">
+    <ClCompile Include="GameObjects\RoomObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -206,7 +206,7 @@
     <ClInclude Include="GameObjects\TearEffect.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\HitableObject.h">
+    <ClInclude Include="GameObjects\RoomObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

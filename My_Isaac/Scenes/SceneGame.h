@@ -5,7 +5,7 @@
 
 class Player;
 class SpriteGameObject;
-class HitableObject;
+class RoomObject;
 
 class SceneGame : public Scene
 {
@@ -14,7 +14,7 @@ protected:
 	Player* player;
 	std::vector<GameObject*> lifebar;
 
-	std::list<HitableObject*> hitablelist;
+	std::list<RoomObject*> hitablelist;
 
 public:
 	SceneGame();
@@ -33,7 +33,7 @@ public:
 	void RenewLife(int life);
 	void ViewSet(const sf::Vector2f& position);
 	SpriteGameObject* LoadObj(ObjType objtype, const std::string& textureId);
-	const std::list<HitableObject*>* GetPoopList() const;
+	const std::list<RoomObject*>* GetPoopList() const;
 
 	template <typename T>
 	void ClearPool(ObjectPool<T>& pool);

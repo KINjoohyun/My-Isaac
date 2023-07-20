@@ -4,7 +4,7 @@
 
 class Player;
 
-class HitableObject : public SpriteGameObject
+class RoomObject : public SpriteGameObject
 {
 protected:
 	ObjType objtype = ObjType::Poop;
@@ -15,8 +15,8 @@ protected:
 	Player* player;
 
 public:
-	HitableObject(const std::string& textureId = "", const std::string& name = "");
-	virtual ~HitableObject() override { Release(); }
+	RoomObject(const std::string& textureId = "", const std::string& name = "");
+	virtual ~RoomObject() override { Release(); }
 
 	virtual void Init() override;
 	virtual void Reset() override;
@@ -24,9 +24,10 @@ public:
 	virtual void Release() {}
 
 	std::function<void(int damage)> OnHit; // Tear客 面倒
+	std::function<void()> OnBump; // Player客 面倒
 
 	void SetPlayer(Player* player);
 	void SetMaxHp(int maxHp);
 	void OnDamage(int damage);
-	bool OnBump(); // Player客 面倒
+	bool IsBump();
 };

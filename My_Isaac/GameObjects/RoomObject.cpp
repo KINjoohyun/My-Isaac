@@ -1,44 +1,47 @@
 #include "stdafx.h"
-#include "HitableObject.h"
+#include "RoomObject.h"
 #include "ResourceMgr.h"
 #include "SceneMgr.h"
 #include "Player.h"
 
-HitableObject::HitableObject(const std::string& textureId, const std::string& name)
+RoomObject::RoomObject(const std::string& textureId, const std::string& name)
 	:SpriteGameObject(textureId, name)
 {
 
 }
 
-void HitableObject::Init()
+void RoomObject::Init()
 {
 	SpriteGameObject::Init();
 }
-void HitableObject::Reset()
+void RoomObject::Reset()
 {
 	SpriteGameObject::Reset();
 
 	hp = maxHp;
 }
-void HitableObject::Update(float dt)
+void RoomObject::Update(float dt)
 {
 	SpriteGameObject::Update(dt);
 
-	if (OnBump())
+	if (IsBump())
 	{
-		player->SetPosition(player->GetPosition() - Utils::Normalize(position - player->GetPosition()));
+		if (OnBump != nullptr)
+		{
+			OnBump();
+		}
 	}
 }
 
-void HitableObject::SetPlayer(Player* player)
+void RoomObject::SetPlayer(Player* player)
 {
 	this->player = player;
 }
-void HitableObject::SetMaxHp(int maxHp)
+void RoomObject::SetMaxHp(int maxHp)
 {
 	this->maxHp = maxHp;
 }
-void HitableObject::OnDamage(int damage)
+void RoomObject::OnDamage(int damage)
 {
 	hp = std::max(0, hp - damage);
 
@@ -47,7 +50,7 @@ void HitableObject::OnDamage(int damage)
 		SCENE_MGR.GetCurrentScene()->RemoveGO(this);
 	}
 }
-bool HitableObject::OnBump()
+bool RoomObject::IsBump()
 {
 	if (player == nullptr)	return false;
 	return sprite.getGlobalBounds().intersects(player->body.getGlobalBounds());

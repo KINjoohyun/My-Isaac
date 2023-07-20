@@ -4,7 +4,7 @@
 #include "SceneMgr.h"
 #include "SceneGame.h"
 #include "Player.h"
-#include "HitableObject.h"
+#include "RoomObject.h"
 
 Tear::Tear(const std::string& textureId, const std::string& name)
 	:SpriteGameObject(textureId, name)
@@ -97,7 +97,7 @@ void Tear::SetPlayer(Player* player)
 {
 	this->player = player;
 }
-void Tear::SetPoops(const std::list<HitableObject*>* list)
+void Tear::SetPoops(const std::list<RoomObject*>* list)
 {
 	this->hitablelist = list;
 }

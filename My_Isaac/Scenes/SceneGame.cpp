@@ -11,8 +11,7 @@
 #include "Tile.h"
 #include "RectGameObject.h"
 #include "Player.h"
-#include "HitableObject.h"
-
+#include "RoomObject.h"
 #include "Door.h"
 
 SceneGame::SceneGame() :Scene(SceneId::Game)
@@ -186,54 +185,67 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	{
 	case ObjType::None:
 	{
-		SpriteGameObject* none = (HitableObject*)AddGO(new HitableObject(textureId));
+		SpriteGameObject* none = (RoomObject*)AddGO(new RoomObject(textureId));
 		return (SpriteGameObject*)none;
 	}
 	break;
 	case ObjType::Rock:
 	{
-		HitableObject* rock = (HitableObject*)AddGO(new HitableObject(textureId));
+		RoomObject* rock = (RoomObject*)AddGO(new RoomObject(textureId));
 		rock->SetPlayer(player);
+		rock->OnBump = [this, rock]()
+		{
+			player->SetPosition(player->GetPosition() - Utils::Normalize(rock->GetPosition() - player->GetPosition()));
+		};
 		hitablelist.push_back(rock);
 		return (SpriteGameObject*)rock;
 	}
 	break;
 	case ObjType::Poop:
 	{
-		HitableObject* poop = (HitableObject*)AddGO(new HitableObject(textureId));
+		RoomObject* poop = (RoomObject*)AddGO(new RoomObject(textureId));
 		poop->SetMaxHp(4);
+		poop->SetPlayer(player);
 		poop->OnHit = [poop](int damage)
 		{
 			poop->OnDamage(damage);
 		};
-		poop->SetPlayer(player);
+		poop->OnBump = [this, poop]()
+		{
+			player->SetPosition(player->GetPosition() - Utils::Normalize(poop->GetPosition() - player->GetPosition()));
+		};
 		hitablelist.push_back(poop);
 		return (SpriteGameObject*)poop;
 	}
 	break;
 	case ObjType::Spike:
 	{
-		HitableObject* spike = (HitableObject*)AddGO(new HitableObject(textureId));
+		RoomObject* spike = (RoomObject*)AddGO(new RoomObject(textureId));
+		spike->SetPlayer(player);
+		spike->OnBump = [this, spike]()
+		{
+			player->OnHit(1);
+		};
 		return (SpriteGameObject*)spike;
 	}
 	break;
 	case ObjType::AttackFly:
 	{
-		HitableObject* attackfly = (HitableObject*)AddGO(new HitableObject(textureId));
+		RoomObject* attackfly = (RoomObject*)AddGO(new RoomObject(textureId));
 		hitablelist.push_back(attackfly);
 		return (SpriteGameObject*)attackfly;
 	}
 	break;
 	case ObjType::Pooter:
 	{
-		HitableObject* pooter = (HitableObject*)AddGO(new HitableObject(textureId));
+		RoomObject* pooter = (RoomObject*)AddGO(new RoomObject(textureId));
 		hitablelist.push_back(pooter);
 		return (SpriteGameObject*)pooter;
 	}
 	break;
 	case ObjType::Sucker:
 	{
-		HitableObject* sucker = (HitableObject*)AddGO(new HitableObject(textureId));
+		RoomObject* sucker = (RoomObject*)AddGO(new RoomObject(textureId));
 		hitablelist.push_back(sucker);
 		return (SpriteGameObject*)sucker;
 	}
@@ -246,7 +258,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	break;
 	}
 }
-const std::list<HitableObject*>* SceneGame::GetPoopList() const
+const std::list<RoomObject*>* SceneGame::GetPoopList() const
 {
 	return &hitablelist;
 }

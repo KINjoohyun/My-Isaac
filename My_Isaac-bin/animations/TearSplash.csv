@@ -1,5 +1,5 @@
 ID,FPS,LOOPTYPE,,
-TearSplash,10,0,,
+TearSplash,20,0,,
 ,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
 graphics/tear.png,0,0,64,64

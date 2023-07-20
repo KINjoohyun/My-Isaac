@@ -2,17 +2,15 @@
 #include "Tear.h"
 #include "ResourceMgr.h"
 #include "SceneMgr.h"
+#include "SceneGame.h"
+#include "Player.h"
+#include "Poop.h"
 
 Tear::Tear(const std::string& textureId, const std::string& name)
 	:SpriteGameObject(textureId, name)
 {
 	animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/TearShooting.csv"));
-	animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/TearSplash.csv"));
 	animation.SetTarget(&sprite);
-}
-Tear::~Tear()
-{
-
 }
 
 void Tear::Init()
@@ -20,19 +18,19 @@ void Tear::Init()
 	SpriteGameObject::Init();
 
 	sprite.setScale(1.5f, 1.5f);
-	SetOrigin(Origins::C);
 }
 void Tear::Reset()
 {
 	SpriteGameObject::Reset();
 
-	SetOrigin(origin);
 	SetPosition(0.0f, 0.0f);
+	range = 300.0f;
 	direction = { 0.0f, 0.0f };
 	speed = 0.0f;
 	damage = 0;
 
 	animation.Play("TearShooting");
+	SetOrigin(Origins::C);
 }
 void Tear::Update(float dt)
 {
@@ -42,27 +40,61 @@ void Tear::Update(float dt)
 	SetPosition(position + direction * speed * dt);
 
 	range -= speed * dt;
-	timer += dt;
-	
-	if ((range < 0.0f) && animation.GetCurrentClipId() == "TearShooting")
+
+	if (animation.GetCurrentClipId() == "TearShooting")
 	{
-		animation.Play("TearSplash");
-		SetOrigin(Origins::C);
-		direction = {0.0f, 0.0f};
-	}
-	if (timer >= duration) // 충돌 조건 추가 필요
-	{
-		pool->Return(this);
-		SCENE_MGR.GetCurrentScene()->RemoveGO(this);
-		return;
+		if (!wall.contains(position) || range < 0.0f)
+		{
+			SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+			player->TearSplash(position);
+
+			pool->Return(this);
+			scene->RemoveGO(this);
+			return;
+		}
+
+		if (poops != nullptr)
+		{
+			for (auto it : *poops)
+			{
+				if (sprite.getGlobalBounds().intersects(it->sprite.getGlobalBounds()) && isActive)
+				{
+					it->OnHit(damage);
+
+					SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+					player->TearSplash(position);
+
+					pool->Return(this);
+					scene->RemoveGO(this);
+					break;
+				}
+			}
+		}
 	}
 }
 
-void Tear::Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, float speed, float damage)
+void Tear::Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, float speed, int damage)
 {
 	SetPosition(position);
 
 	this->direction = direction;
 	this->speed = speed;
 	this->damage = damage;
+}
+void Tear::SetWall(const sf::FloatRect& wall)
+{
+	this->wall = wall;
+
+	wallTop = wall.top;
+	wallBottom = wall.top + wall.height;
+	wallLeft = wall.left;
+	wallRight = wall.left + wall.width;
+}
+void Tear::SetPlayer(Player* player)
+{
+	this->player = player;
+}
+void Tear::SetPoops(const std::list<Poop*>* list)
+{
+	this->poops = list;
 }

@@ -2,7 +2,7 @@ BACKGROUND,SIZEX,SIZEY,GRIDX,GRIDY
 graphics/basement_bg2.png,734,414,12,6
 ,,,,
 "OBJ TYPE",TEXTURE,X,Y,ORDER
-2,graphics/grid_spikes1.png,-30,36.0000076,0
-2,graphics/grid_spikes1.png,30.9999847,-32.9999886,0
-2,graphics/grid_spikes1.png,31.9999695,34.9999962,0
-2,graphics/grid_spikes1.png,-30,-31.9999981,0
+2,graphics/grid_spikes1.png,-92,105.000015,0
+2,graphics/grid_spikes1.png,91.9999619,-102,0
+2,graphics/grid_spikes1.png,91.9999619,105.000015,0
+2,graphics/grid_spikes1.png,-90.9999771,-102,0

@@ -7,6 +7,7 @@ protected:
 	ObjType objtype;
 
 	bool isHover = false;
+	bool toggle = false;
 public:
 	sf::RectangleShape box;
 	sf::Text order;

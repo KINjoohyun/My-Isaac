@@ -29,6 +29,16 @@ void SceneTitle::Init()
 	uiView.setSize(windowSize);
 	uiView.setCenter({ windowSize.x * 0.5f, windowSize.y * 0.5f });
 
+	SpriteGameObject* empty = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/emptyscreen.png", "empty"));
+	empty->SetOrigin(Origins::C);
+	empty->SetPosition(0.0f, 0.0f);
+	empty->sortLayer = -100;
+
+	SpriteGameObject* logo = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/logo.png", "logo"));
+	logo->SetOrigin(Origins::TC);
+	logo->SetPosition({ 0.0f, -windowSize.y * 0.5f + 100.0f });
+	logo->sortLayer = 0;
+
 	UITextButton* button1 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
 	button1->SetOrigin(Origins::C);
 	button1->SetText("Game Start", 50);
@@ -65,11 +75,6 @@ void SceneTitle::Init()
 	};
 	button2->sortLayer = 100;
 
-	SpriteGameObject* empty = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/emptyscreen.png", "empty"));
-	empty->SetOrigin(Origins::C);
-	empty->SetPosition(0.0f, 0.0f);
-	empty->sortLayer = -100;
-	
 	for (auto go : gameObjects)
 	{
 		go->Init();

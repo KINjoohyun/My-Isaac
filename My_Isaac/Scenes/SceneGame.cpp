@@ -12,6 +12,7 @@
 #include "RectGameObject.h"
 #include "Player.h"
 #include "RoomObject.h"
+#include "Monster.h"
 #include "Door.h"
 
 SceneGame::SceneGame() :Scene(SceneId::Game)
@@ -231,21 +232,39 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	break;
 	case ObjType::AttackFly:
 	{
-		RoomObject* attackfly = (RoomObject*)AddGO(new RoomObject(textureId));
+		Monster* attackfly = (Monster*)AddGO(new Monster(textureId));
+		attackfly->SetPlayer(player);
+		attackfly->SetMonster(1, 200.0f, 3, 400.0f);
+		attackfly->OnBump = [this, attackfly]()
+		{
+			player->OnHit(1);
+		};
 		hitablelist.push_back(attackfly);
 		return (SpriteGameObject*)attackfly;
 	}
 	break;
 	case ObjType::Pooter:
 	{
-		RoomObject* pooter = (RoomObject*)AddGO(new RoomObject(textureId));
+		Monster* pooter = (Monster*)AddGO(new Monster(textureId));
+		pooter->SetPlayer(player);
+		pooter->SetMonster(1, 200.0f, 4, 400.0f);
+		pooter->OnBump = [this, pooter]()
+		{
+			player->OnHit(1);
+		};
 		hitablelist.push_back(pooter);
 		return (SpriteGameObject*)pooter;
 	}
 	break;
 	case ObjType::Sucker:
 	{
-		RoomObject* sucker = (RoomObject*)AddGO(new RoomObject(textureId));
+		Monster* sucker = (Monster*)AddGO(new Monster(textureId));
+		sucker->SetPlayer(player);
+		sucker->SetMonster(1, 100.0f, 5, 400.0f);
+		sucker->OnBump = [this, sucker]()
+		{
+			player->OnHit(1);
+		};
 		hitablelist.push_back(sucker);
 		return (SpriteGameObject*)sucker;
 	}
@@ -261,4 +280,9 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 const std::list<RoomObject*>* SceneGame::GetPoopList() const
 {
 	return &hitablelist;
+}
+void SceneGame::RemoveRGO(RoomObject* roomGO)
+{
+	hitablelist.remove(roomGO);
+	RemoveGO(roomGO);
 }

@@ -4,7 +4,7 @@
 class SpriteGameObject : public GameObject
 {
 protected:
-
+	bool flipX = false;
 public:
 	std::string textureId;
 	sf::Sprite sprite;
@@ -24,5 +24,6 @@ public:
 	virtual void SetOrigin(Origins origin);
 	virtual void SetOrigin(float x, float y);
 
+	virtual void SetFlipX(sf::Sprite& sprite, bool flip);
 
 };

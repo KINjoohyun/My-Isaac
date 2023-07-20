@@ -31,6 +31,9 @@ protected:
 	float invincibleTimer = 0.0f;
 	float invincibleDuration = 1.0f;
 
+	float attackTimer = 0.0f;
+	float attackDuration = 0.3f;
+
 public:
 	sf::Sprite head;
 	sf::Sprite body;

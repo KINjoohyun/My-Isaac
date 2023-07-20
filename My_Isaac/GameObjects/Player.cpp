@@ -69,6 +69,7 @@ void Player::Reset()
 
 	life = maxLife;
 	invincibleTimer = invincibleDuration;
+	attackTimer = attackDuration;
 
 	for (auto it : poolTears.GetPool())
 	{
@@ -90,6 +91,11 @@ void Player::Update(float dt)
 	{
 		head.setColor(sf::Color::White);
 		body.setColor(sf::Color::White);
+	}
+
+	if (attackTimer < attackDuration)
+	{
+		attackTimer += dt;
 	}
 
 	direction.x = INPUT_MGR.GetAxisRaw(Axis::Horizontal);
@@ -157,26 +163,34 @@ void Player::Update(float dt)
 		SetFlipX(body, direction.x < 0.0f);
 	}
 
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Left))
+	if (INPUT_MGR.GetKey(sf::Keyboard::Left))
 	{
+		if (attackTimer < attackDuration) return;
+
 		headAnimation.Play("HeadShootLeft");
 
 		TearShoot({-1.0f, 0.0f});
 	}
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Right))
+	if (INPUT_MGR.GetKey(sf::Keyboard::Right))
 	{
+		if (attackTimer < attackDuration) return;
+
 		headAnimation.Play("HeadShootRight");
 
 		TearShoot({ 1.0f, 0.0f });
 	}
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Up))
+	if (INPUT_MGR.GetKey(sf::Keyboard::Up))
 	{
+		if (attackTimer < attackDuration) return;
+
 		headAnimation.Play("HeadShootUp");
 
 		TearShoot({ 0.0f, -1.0f });
 	}
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Down))
+	if (INPUT_MGR.GetKey(sf::Keyboard::Down))
 	{
+		if (attackTimer < attackDuration) return;
+
 		headAnimation.Play("HeadShootDown");
 
 		TearShoot({ 0.0f, 1.0f });
@@ -227,6 +241,8 @@ void Player::SetFlipX(sf::Sprite& sprite, bool flip)
 
 void Player::TearShoot(const sf::Vector2f& direction)
 {
+	attackTimer = 0.0f;
+
 	Tear* tear = poolTears.Get();
 	tear->sortLayer = 1;
 	sf::Vector2f headPos =

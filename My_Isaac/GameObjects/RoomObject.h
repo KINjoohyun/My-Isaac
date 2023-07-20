@@ -7,8 +7,6 @@ class Player;
 class RoomObject : public SpriteGameObject
 {
 protected:
-	ObjType objtype = ObjType::Poop;
-
 	int hp = 0;
 	int maxHp = 0;
 

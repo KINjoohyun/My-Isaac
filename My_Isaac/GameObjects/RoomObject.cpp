@@ -2,6 +2,7 @@
 #include "RoomObject.h"
 #include "ResourceMgr.h"
 #include "SceneMgr.h"
+#include "SceneGame.h"
 #include "Player.h"
 
 RoomObject::RoomObject(const std::string& textureId, const std::string& name)
@@ -47,7 +48,8 @@ void RoomObject::OnDamage(int damage)
 
 	if (hp == 0)
 	{
-		SCENE_MGR.GetCurrentScene()->RemoveGO(this);
+		SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+		scene->RemoveRGO(this);
 	}
 }
 bool RoomObject::IsBump()

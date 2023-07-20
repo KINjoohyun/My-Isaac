@@ -4,7 +4,7 @@
 #include "ObjectPool.h"
 
 class Player;
-class Poop;
+class HitableObject;
 
 class Tear : public SpriteGameObject
 {
@@ -24,7 +24,7 @@ protected:
 	float wallLeft = 0.0f;
 	float wallRight = 0.0f;
 
-	const std::list<Poop*>* poops;
+	const std::list<HitableObject*>* hitablelist;
 
 public:
 	ObjectPool<Tear>* pool;
@@ -40,5 +40,5 @@ public:
 	void Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, float speed, int damage);
 	void SetWall(const sf::FloatRect& wall);
 	void SetPlayer(Player* player);
-	void SetPoops(const std::list<Poop*>* list);
+	void SetPoops(const std::list<HitableObject*>* list);
 };

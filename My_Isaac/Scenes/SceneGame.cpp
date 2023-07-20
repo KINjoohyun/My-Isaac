@@ -11,7 +11,7 @@
 #include "Tile.h"
 #include "RectGameObject.h"
 #include "Player.h"
-#include "Poop.h"
+#include "HitableObject.h"
 
 #include "Door.h"
 
@@ -38,8 +38,11 @@ void SceneGame::Init()
 	ui_bg->SetOrigin(Origins::TL);
 	ui_bg->sortLayer = 100;
 
+	player = (Player*)AddGO(new Player());
+	player->sortLayer = 2;
+
 	// 하드 코딩으로 랜덤한 Room 호출
-	std::string randomPath1 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
+	std::string randomPath1 = "room/Spawn.csv";
 	CallRoom(randomPath1, { 0.0f, 0.0f });
 
 	std::string randomPath2 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
@@ -47,9 +50,6 @@ void SceneGame::Init()
 
 	std::string randomPath3 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
 	CallRoom(randomPath3, { -1100.0f, 0.0f });
-
-	player = (Player*)AddGO(new Player());
-	player->sortLayer = 1;
 
 	// 최대체력 그대로 생성중
 	for (int i = 0; i < player->GetMaxLife(); i++)
@@ -184,40 +184,57 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 {
 	switch (objtype)
 	{
+	case ObjType::None:
+	{
+		SpriteGameObject* none = (HitableObject*)AddGO(new HitableObject(textureId));
+		return (SpriteGameObject*)none;
+	}
+	break;
 	case ObjType::Rock:
 	{
-		Poop* rock = (Poop*)AddGO(new Poop(textureId));
+		HitableObject* rock = (HitableObject*)AddGO(new HitableObject(textureId));
+		rock->SetPlayer(player);
+		hitablelist.push_back(rock);
 		return (SpriteGameObject*)rock;
 	}
 	break;
 	case ObjType::Poop:
 	{
-		Poop* poop = (Poop*)AddGO(new Poop(textureId));
-		poops.push_back(poop);
+		HitableObject* poop = (HitableObject*)AddGO(new HitableObject(textureId));
+		poop->SetMaxHp(4);
+		poop->OnHit = [poop](int damage)
+		{
+			poop->OnDamage(damage);
+		};
+		poop->SetPlayer(player);
+		hitablelist.push_back(poop);
 		return (SpriteGameObject*)poop;
 	}
 	break;
 	case ObjType::Spike:
 	{
-		Poop* spike = (Poop*)AddGO(new Poop(textureId));
+		HitableObject* spike = (HitableObject*)AddGO(new HitableObject(textureId));
 		return (SpriteGameObject*)spike;
 	}
 	break;
 	case ObjType::AttackFly:
 	{
-		Poop* attackfly = (Poop*)AddGO(new Poop(textureId));
+		HitableObject* attackfly = (HitableObject*)AddGO(new HitableObject(textureId));
+		hitablelist.push_back(attackfly);
 		return (SpriteGameObject*)attackfly;
 	}
 	break;
 	case ObjType::Pooter:
 	{
-		Poop* pooter = (Poop*)AddGO(new Poop(textureId));
+		HitableObject* pooter = (HitableObject*)AddGO(new HitableObject(textureId));
+		hitablelist.push_back(pooter);
 		return (SpriteGameObject*)pooter;
 	}
 	break;
 	case ObjType::Sucker:
 	{
-		Poop* sucker = (Poop*)AddGO(new Poop(textureId));
+		HitableObject* sucker = (HitableObject*)AddGO(new HitableObject(textureId));
+		hitablelist.push_back(sucker);
 		return (SpriteGameObject*)sucker;
 	}
 	break;
@@ -229,7 +246,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	break;
 	}
 }
-const std::list<Poop*>* SceneGame::GetPoopList() const
+const std::list<HitableObject*>* SceneGame::GetPoopList() const
 {
-	return &poops;
+	return &hitablelist;
 }

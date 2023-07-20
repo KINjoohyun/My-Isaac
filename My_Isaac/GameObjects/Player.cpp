@@ -71,6 +71,12 @@ void Player::Reset()
 	invincibleTimer = invincibleDuration;
 	attackTimer = attackDuration;
 
+	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+	if (scene != nullptr)
+	{
+		scene->RenewLife(life);
+	}
+
 	for (auto it : poolTears.GetPool())
 	{
 		it->SetWall(wall);

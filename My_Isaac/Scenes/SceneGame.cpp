@@ -186,7 +186,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	{
 	case ObjType::None:
 	{
-		SpriteGameObject* none = (RoomObject*)AddGO(new RoomObject(textureId));
+		RoomObject* none = (RoomObject*)AddGO(new RoomObject(textureId));
 		return (SpriteGameObject*)none;
 	}
 	break;
@@ -232,7 +232,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	break;
 	case ObjType::AttackFly:
 	{
-		Monster* attackfly = (Monster*)AddGO(new Monster(textureId));
+		Monster* attackfly = (Monster*)AddGO(new Monster(objtype));
 		attackfly->SetPlayer(player);
 		attackfly->SetMonster(1, 200.0f, 3, 400.0f);
 		attackfly->OnBump = [this, attackfly]()
@@ -245,7 +245,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	break;
 	case ObjType::Pooter:
 	{
-		Monster* pooter = (Monster*)AddGO(new Monster(textureId));
+		Monster* pooter = (Monster*)AddGO(new Monster(objtype));
 		pooter->SetPlayer(player);
 		pooter->SetMonster(1, 200.0f, 4, 400.0f);
 		pooter->OnBump = [this, pooter]()
@@ -258,7 +258,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	break;
 	case ObjType::Sucker:
 	{
-		Monster* sucker = (Monster*)AddGO(new Monster(textureId));
+		Monster* sucker = (Monster*)AddGO(new Monster(objtype));
 		sucker->SetPlayer(player);
 		sucker->SetMonster(1, 100.0f, 5, 400.0f);
 		sucker->OnBump = [this, sucker]()

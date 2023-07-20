@@ -5,6 +5,7 @@
 class Monster : public RoomObject
 {
 protected:
+	ObjType objtype;
 	AnimationController animation;
 
 	int damage = 0;
@@ -15,7 +16,7 @@ protected:
 	float hitedTimer = 0.0f;
 	float hitedDuration = 0.5f;
 public:
-	Monster(const std::string& textureId = "", const std::string& name = "");
+	Monster(ObjType objtype, const std::string& textureId = "", const std::string& name = "");
 	virtual ~Monster() override { Release(); }
 
 	virtual void Init() override;

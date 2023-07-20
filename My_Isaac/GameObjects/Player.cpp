@@ -17,6 +17,7 @@ void Player::Init()
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyIdleRight.csv"));
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyMoveDown.csv"));
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyMoveRight.csv"));
+	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyHurt.csv"));
 	bodyAnimation.SetTarget(&body);
 
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadIdleDown.csv"));
@@ -27,6 +28,7 @@ void Player::Init()
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadShootRight.csv"));
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadShootUp.csv"));
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadShootLeft.csv"));
+	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadHurt.csv"));
 	headAnimation.SetTarget(&head);
 
 	SetOrigin(Origins::C);
@@ -66,6 +68,7 @@ void Player::Reset()
 	poolEffects.AllReturn();
 
 	life = maxLife;
+	invincibleTimer = invincibleDuration;
 
 	for (auto it : poolTears.GetPool())
 	{
@@ -76,6 +79,18 @@ void Player::Update(float dt)
 {
 	headAnimation.Update(dt);
 	bodyAnimation.Update(dt);
+
+	if (invincibleTimer < invincibleDuration)
+	{
+		invincibleTimer += dt;
+		head.setColor((head.getColor() == sf::Color::White) ? sf::Color::Yellow : sf::Color::White);
+		body.setColor((body.getColor() == sf::Color::White) ? sf::Color::Yellow : sf::Color::White);
+	}
+	else if (head.getColor() == sf::Color::Yellow)
+	{
+		head.setColor(sf::Color::White);
+		body.setColor(sf::Color::White);
+	}
 
 	direction.x = INPUT_MGR.GetAxisRaw(Axis::Horizontal);
 	direction.y = INPUT_MGR.GetAxisRaw(Axis::Vertical);
@@ -142,7 +157,6 @@ void Player::Update(float dt)
 		SetFlipX(body, direction.x < 0.0f);
 	}
 
-	// test
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Left))
 	{
 		headAnimation.Play("HeadShootLeft");
@@ -167,7 +181,6 @@ void Player::Update(float dt)
 
 		TearShoot({ 0.0f, 1.0f });
 	}
-
 }
 void Player::Draw(sf::RenderWindow& window)
 {
@@ -197,12 +210,6 @@ void Player::SetOrigin(Origins origin)
 		Utils::SetOrigin(body, Origins::C);
 		Utils::SetOrigin(head, Origins::BC);
 	}
-}
-void Player::SetOrigin(float x, float y)
-{
-	GameObject::SetOrigin(x, y);
-	body.setOrigin(x, y);
-	head.setOrigin(x, y);
 }
 
 bool Player::GetFlipX() const
@@ -250,7 +257,12 @@ void Player::TearSplash(const sf::Vector2f& tearPos)
 }
 void Player::OnHit(int damage)
 {
+	if (invincibleTimer < invincibleDuration) return;
+
 	life = std::max(0, life - damage);
+	invincibleTimer = 0.0f;
+	headAnimation.Play("HeadHurt");
+	bodyAnimation.Play("BodyHurt");
 
 	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	if (scene != nullptr)

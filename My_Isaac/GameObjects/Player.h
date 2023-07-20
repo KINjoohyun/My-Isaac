@@ -28,6 +28,9 @@ protected:
 	float wallLeft = 0.0f;
 	float wallRight = 0.0f;
 
+	float invincibleTimer = 0.0f;
+	float invincibleDuration = 1.0f;
+
 public:
 	sf::Sprite head;
 	sf::Sprite body;
@@ -45,7 +48,6 @@ public:
 	virtual void SetPosition(float x, float y);
 
 	virtual void SetOrigin(Origins origin);
-	virtual void SetOrigin(float x, float y);
 
 	bool GetFlipX() const;
 	void SetFlipX(sf::Sprite& sprite, bool flip);

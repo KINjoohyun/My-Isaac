@@ -154,10 +154,10 @@
   <ItemGroup>
     <ClCompile Include="Animation\AnimationClip.cpp" />
     <ClCompile Include="Animation\AnimationController.cpp" />
+    <ClCompile Include="GameObjects\Boss.cpp" />
     <ClCompile Include="GameObjects\Blood.cpp" />
     <ClCompile Include="GameObjects\EffectObject.cpp" />
     <ClCompile Include="GameObjects\Door.cpp" />
-    <ClCompile Include="GameObjects\Collider.cpp" />
     <ClCompile Include="DataTables\DataTable.cpp" />
     <ClCompile Include="DataTables\StringTable.cpp" />
     <ClCompile Include="Framework\DataTableMgr.cpp" />
@@ -191,10 +191,10 @@
     <ClInclude Include="3rd\rapidcsv.h" />
     <ClInclude Include="Animation\AnimationController.h" />
     <ClInclude Include="Animation\AnimationClip.h" />
+    <ClInclude Include="GameObjects\Boss.h" />
     <ClInclude Include="GameObjects\Blood.h" />
     <ClInclude Include="GameObjects\EffectObject.h" />
     <ClInclude Include="GameObjects\Door.h" />
-    <ClInclude Include="GameObjects\Collider.h" />
     <ClInclude Include="DataTables\DataTable.h" />
     <ClInclude Include="DataTables\StringTable.h" />
     <ClInclude Include="Framework\DataTableMgr.h" />

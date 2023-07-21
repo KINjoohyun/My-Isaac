@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Tile.h"
-#include "Collider.h"
 #include "InputMgr.h"
 #include "SceneMgr.h"
 #include "SceneEditor.h"

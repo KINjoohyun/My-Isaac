@@ -15,6 +15,7 @@
 #include "Monster.h"
 #include "Door.h"
 #include "Blood.h"
+#include "Boss.h"
 
 SceneGame::SceneGame() :Scene(SceneId::Game)
 {
@@ -52,6 +53,9 @@ void SceneGame::Init()
 	std::string randomPath3 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
 	CallRoom(randomPath3, { -1100.0f, 0.0f });
 
+	std::string randomPath4 = "room/Boss1.csv";
+	CallRoom(randomPath4, { 0.0f, -1100.0f });
+
 	// 최대체력 그대로 생성중
 	for (int i = 0; i < player->GetMaxLife(); i++)
 	{
@@ -81,6 +85,15 @@ void SceneGame::Init()
 	door4->SetPlayer(player);
 	door4->Open();
 	door4->SetDestination({ 0.0f, 0.0f });
+
+	Door* door5 = (Door*)AddGO(new Door("graphics/door_open.png", { 0.0f, -250.0f }, Door::Look::Up));
+	Door* door6 = (Door*)AddGO(new Door("graphics/door_open.png", { 0.0f, -850.0f }, Door::Look::Down));
+	door5->SetPlayer(player);
+	door6->SetPlayer(player);
+	door5->Open();
+	door6->Open();
+	door5->SetDestination({ 0.0f, -1100.0f });
+	door6->SetDestination({ 0.0f, -0.0f });
 
 	// test code
 	RectGameObject* wall = (RectGameObject*)FindGO(randomPath1);
@@ -261,7 +274,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		attackfly->SetMonster(1, 150.0f, 3, 500.0f);
 		attackfly->OnBump = [this, attackfly]()
 		{
-			player->OnHit(1);
+			player->OnHit(attackfly->GetDamage());
 		};
 		attackfly->SetWall(wall);
 		hitablelist.push_back(attackfly);
@@ -275,7 +288,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		pooter->SetMonster(1, 100.0f, 4, 400.0f);
 		pooter->OnBump = [this, pooter]()
 		{
-			player->OnHit(1);
+			player->OnHit(pooter->GetDamage());
 		};
 		pooter->BloodShoot = [this, pooter, wall]()
 		{
@@ -296,7 +309,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		sucker->SetMonster(1, 100.0f, 5, 400.0f);
 		sucker->OnBump = [this, sucker]()
 		{
-			player->OnHit(1);
+			player->OnHit(sucker->GetDamage());
 		};
 		sucker->OnDie = [this, sucker, wall]()
 		{
@@ -333,6 +346,51 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		return (SpriteGameObject*)tile;
 	}
 	break;
+	case ObjType::DukeOfFlies:
+	{
+		Boss* duke = (Boss*)AddGO(new Boss(objtype, textureId));
+		duke->SetPlayer(player);
+		duke->SetMonster(1, 100.0f, 50, 800.0f, true);
+		duke->OnBump = [this, duke]()
+		{
+			player->SetPosition(player->GetPosition() - Utils::Normalize(duke->GetPosition() - player->GetPosition()));
+			player->OnHit(duke->GetDamage());
+		};
+		duke->Pattern1 = [this, duke, wall]()
+		{
+			if (Utils::Distance(duke->GetPosition(), player->GetPosition()) > 200.0f)
+			{
+				return false;
+			}
+			else
+			{
+				for (int i = 0; i < 2; i++)
+				{
+					Monster* attackfly = (Monster*)AddGO(new Monster(ObjType::AttackFly));
+					attackfly->SetPlayer(player);
+					attackfly->SetMonster(1, 150.0f, 3, 500.0f);
+					attackfly->OnBump = [this, attackfly]()
+					{
+						player->OnHit(1);
+					};
+					attackfly->SetWall(wall);
+					attackfly->SetOrigin(Origins::C);
+					attackfly->SetPosition(duke->GetPosition().x - 100.0f + (200.0f * i), duke->GetPosition().y);
+					attackfly->sortLayer = 1;
+					attackfly->sortOrder = 1;
+					hitablelist.push_back(attackfly);
+					attackfly->Init();
+					attackfly->Reset();
+				}
+				
+				return true;
+			}
+		};
+		duke->SetCooltime(3.0f, 5.0f);
+		duke->SetWall(wall);
+		hitablelist.push_back(duke);
+		return (SpriteGameObject*)duke;
+	}
 	}
 }
 const std::list<RoomObject*>* SceneGame::GetPoopList() const

@@ -6,9 +6,6 @@
 0,graphics/grid_rocks1.png
 0,graphics/grid_poop1.png
 0,graphics/grid_spikes1.png
-0,graphics/grid_Pooter.png
-0,graphics/grid_Sucker.png
-0,graphics/grid_AttackFly.png
 0,graphics/tear.png
 0,graphics/ui/ui_bg.png
 0,graphics/ui/ui_heart0.png
@@ -21,3 +18,4 @@
 0,graphics/Pooter.png
 0,graphics/Sucker.png
 0,graphics/blood.png
+0,graphics/Duke_Of_Flies.png

@@ -43,7 +43,7 @@ void Tear::Update(float dt)
 	if (!wall.contains(position) || range < 0.0f)
 	{
 		SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
-		player->TearSplash(position);
+		player->Splash(position, "TearSplash");
 
 		pool->Return(this);
 		scene->RemoveGO(this);
@@ -62,7 +62,7 @@ void Tear::Update(float dt)
 				}
 
 				SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
-				player->TearSplash(position);
+				player->Splash(position, "TearSplash");
 
 				pool->Return(this);
 				scene->RemoveGO(this);

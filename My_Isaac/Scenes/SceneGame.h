@@ -6,6 +6,7 @@
 class Player;
 class SpriteGameObject;
 class RoomObject;
+class Blood;
 
 class SceneGame : public Scene
 {
@@ -15,6 +16,8 @@ protected:
 	std::vector<GameObject*> lifebar;
 
 	std::list<RoomObject*> hitablelist;
+
+	ObjectPool<Blood> poolBloods;
 
 public:
 	SceneGame();
@@ -32,7 +35,7 @@ public:
 
 	void RenewLife(int life);
 	void ViewSet(const sf::Vector2f& position);
-	SpriteGameObject* LoadObj(ObjType objtype, const std::string& textureId);
+	SpriteGameObject* LoadObj(ObjType objtype, const std::string& textureId, const sf::FloatRect& wall);
 	const std::list<RoomObject*>* GetPoopList() const;
 	void RemoveRGO(RoomObject* roomGO);
 	

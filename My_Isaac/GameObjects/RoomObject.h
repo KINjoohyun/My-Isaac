@@ -12,6 +12,12 @@ protected:
 
 	Player* player;
 
+	sf::FloatRect wall;
+	float wallTop = 0.0f;
+	float wallBottom = 0.0f;
+	float wallLeft = 0.0f;
+	float wallRight = 0.0f;
+
 public:
 	RoomObject(const std::string& textureId = "", const std::string& name = "");
 	virtual ~RoomObject() override { Release(); }
@@ -28,4 +34,5 @@ public:
 	void SetMaxHp(int maxHp);
 	void OnDamage(int damage);
 	bool IsBump();
+	void SetWall(const sf::FloatRect& wall);
 };

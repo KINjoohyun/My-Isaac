@@ -3,7 +3,7 @@
 #include "AnimationController.h"
 #include "ObjectPool.h"
 #include "Tear.h"
-#include "TearEffect.h"
+#include "EffectObject.h"
 
 class Player : public GameObject
 {
@@ -16,7 +16,7 @@ protected:
 	bool flipX = false;
 
 	ObjectPool<Tear> poolTears;
-	ObjectPool<TearEffect> poolEffects;
+	ObjectPool<EffectObject> poolEffects;
 
 	int maxLife = 3;
 	int life = 0;
@@ -56,7 +56,7 @@ public:
 	void SetFlipX(sf::Sprite& sprite, bool flip);
 
 	void TearShoot(const sf::Vector2f& direction);
-	void TearSplash(const sf::Vector2f& tearPos);
+	void Splash(const sf::Vector2f& tearPos, const std::string& anim);
 	void OnHit(int damage);
 	void OnDiePlayer();
 	void SetWall(const sf::FloatRect& wall);

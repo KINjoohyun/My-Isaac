@@ -38,9 +38,10 @@ void Player::Init()
 	};
 	poolTears.Init();
 
-	poolEffects.OnCreate = [this](TearEffect* effect)
+	poolEffects.OnCreate = [this](EffectObject* effect)
 	{
 		effect->pool = &poolEffects;
+		effect->sortLayer = 3;
 	};
 	poolEffects.Init();
 }
@@ -263,11 +264,12 @@ void Player::TearShoot(const sf::Vector2f& direction)
 		scene->AddGO(tear);
 	}
 }
-void Player::TearSplash(const sf::Vector2f& tearPos)
+void Player::Splash(const sf::Vector2f& tearPos, const std::string& anim)
 {
-	TearEffect* effect = poolEffects.Get();
+	EffectObject* effect = poolEffects.Get();
 	effect->sortLayer = 1;
 	effect->SetPosition(tearPos);
+	effect->SetAnimation(anim);
 
 	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	if (scene != nullptr)

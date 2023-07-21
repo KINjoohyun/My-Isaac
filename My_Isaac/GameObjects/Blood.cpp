@@ -42,6 +42,8 @@ void Blood::Update(float dt)
 
 	if (!wall.contains(position) || range < 0.0f)
 	{
+		player->Splash(position, "BloodSplash");
+
 		SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 		// blood effect
 
@@ -53,6 +55,7 @@ void Blood::Update(float dt)
 	if (sprite.getGlobalBounds().intersects(player->head.getGlobalBounds()) && isActive)
 	{
 		player->OnHit(damage);
+		player->Splash(position, "BloodSplash");
 
 		SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 		// blood effect
@@ -63,11 +66,12 @@ void Blood::Update(float dt)
 	}
 }
 
-void Blood::Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, int damage)
+void Blood::Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, float speed, int damage)
 {
 	SetPosition(position);
 
 	this->direction = direction;
+	this->speed = speed;
 	this->damage = damage;
 }
 void Blood::SetWall(const sf::FloatRect& wall)

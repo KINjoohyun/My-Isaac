@@ -13,7 +13,7 @@ protected:
 
 	AnimationController animation;
 
-	float speed = 500.0f;
+	float speed = 0.0f;
 	float range = 300.0f;
 	int damage = 0;
 	sf::Vector2f direction;

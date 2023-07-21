@@ -89,6 +89,15 @@ void SceneGame::Init()
 	RectGameObject* wall = (RectGameObject*)FindGO(randomPath1);
 	player->SetWall(wall->rect.getGlobalBounds());
 
+	poolBloods.OnCreate = [this, wall](Blood* blood)
+	{
+		blood->pool = &poolBloods;
+		blood->SetPlayer(player);
+		blood->sortLayer = 1;
+		blood->SetWall(wall->rect.getGlobalBounds());
+	};
+	poolBloods.Init();
+
 	for (auto go : gameObjects)
 	{
 		go->Init();
@@ -102,6 +111,14 @@ void SceneGame::Update(float dt)
 	{
 		SCENE_MGR.ChangeScene(SceneId::Title);
 	}
+
+	// test
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::T))
+	{
+		Blood* blood = poolBloods.Get();
+		blood->Shoot({ 0.0f, 0.0f }, { 1.0f, 0.0f }, 300.0f, 1);
+		AddGO(blood);
+	}
 }
 void SceneGame::Draw(sf::RenderWindow& window)
 {
@@ -109,6 +126,8 @@ void SceneGame::Draw(sf::RenderWindow& window)
 }
 void SceneGame::Release()
 {
+	poolBloods.Release();
+
 	for (auto go : gameObjects)
 	{
 		//go->Release();
@@ -119,9 +138,12 @@ void SceneGame::Release()
 void SceneGame::Enter()
 {
 	Scene::Enter();
+
+	ClearPool(poolBloods);
 }
 void SceneGame::Exit()
 {
+	ClearPool(poolBloods);
 	player->Reset();
 
 	Scene::Exit();
@@ -150,7 +172,7 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 	for (int i = 4; i < doc.GetRowCount(); i++)
 	{
 		auto rows = doc.GetRow<std::string>(i);
-		auto obj = LoadObj((ObjType)std::stoi(rows[0]), rows[1]);
+		auto obj = LoadObj((ObjType)std::stoi(rows[0]), rows[1], wall->rect.getGlobalBounds());
 		obj->SetOrigin(Origins::C);
 		obj->SetPosition(position.x + std::stof(rows[2]), position.y + std::stof(rows[3]));
 		obj->sortLayer = 1;
@@ -182,7 +204,7 @@ void SceneGame::ViewSet(const sf::Vector2f& position)
 {
 	worldView.setCenter({position.x, position.y - 100.0f});
 }
-SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& textureId)
+SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& textureId, const sf::FloatRect& wall)
 {
 	switch (objtype)
 	{
@@ -200,6 +222,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		{
 			player->SetPosition(player->GetPosition() - Utils::Normalize(rock->GetPosition() - player->GetPosition()));
 		};
+		rock->SetWall(wall);
 		hitablelist.push_back(rock);
 		return (SpriteGameObject*)rock;
 	}
@@ -217,6 +240,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		{
 			player->SetPosition(player->GetPosition() - Utils::Normalize(poop->GetPosition() - player->GetPosition()));
 		};
+		poop->SetWall(wall);
 		hitablelist.push_back(poop);
 		return (SpriteGameObject*)poop;
 	}
@@ -229,6 +253,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		{
 			player->OnHit(1);
 		};
+		spike->SetWall(wall);
 		return (SpriteGameObject*)spike;
 	}
 	break;
@@ -236,11 +261,12 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	{
 		Monster* attackfly = (Monster*)AddGO(new Monster(objtype));
 		attackfly->SetPlayer(player);
-		attackfly->SetMonster(1, 150.0f, 3, 400.0f);
+		attackfly->SetMonster(1, 150.0f, 3, 500.0f);
 		attackfly->OnBump = [this, attackfly]()
 		{
 			player->OnHit(1);
 		};
+		attackfly->SetWall(wall);
 		hitablelist.push_back(attackfly);
 		return (SpriteGameObject*)attackfly;
 	}
@@ -254,6 +280,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		{
 			player->OnHit(1);
 		};
+		pooter->SetWall(wall);
 		hitablelist.push_back(pooter);
 		return (SpriteGameObject*)pooter;
 	}
@@ -267,6 +294,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		{
 			player->OnHit(1);
 		};
+		sucker->SetWall(wall);
 		hitablelist.push_back(sucker);
 		return (SpriteGameObject*)sucker;
 	}

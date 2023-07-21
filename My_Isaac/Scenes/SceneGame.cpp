@@ -43,10 +43,7 @@ void SceneGame::Init()
 	player->sortLayer = 2;
 
 	// 하드 코딩으로 랜덤한 Room 호출
-	//std::string randomPath1 = "room/Spawn.csv";
-	//CallRoom(randomPath1, { 0.0f, 0.0f });
-
-	std::string randomPath1 = "room/Room5.csv";
+	std::string randomPath1 = "room/Spawn.csv";
 	CallRoom(randomPath1, { 0.0f, 0.0f });
 
 	std::string randomPath2 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
@@ -280,6 +277,13 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		{
 			player->OnHit(1);
 		};
+		pooter->BloodShoot = [this, pooter, wall]()
+		{
+			Blood* blood = poolBloods.Get();
+			blood->SetWall(wall);
+			blood->Shoot(pooter->GetPosition(), pooter->GetDirection(), 300.0f, 1);
+			AddGO(blood);
+		};
 		pooter->SetWall(wall);
 		hitablelist.push_back(pooter);
 		return (SpriteGameObject*)pooter;
@@ -293,6 +297,30 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		sucker->OnBump = [this, sucker]()
 		{
 			player->OnHit(1);
+		};
+		sucker->OnDie = [this, sucker, wall]()
+		{
+			Blood* blood1 = poolBloods.Get();
+			blood1->SetWall(wall);
+			blood1->Shoot(sucker->GetPosition(), { -1.0f, 0.0f }, 300.0f, 1);
+			AddGO(blood1);
+
+			Blood* blood2 = poolBloods.Get();
+			blood2->SetWall(wall);
+			blood2->Shoot(sucker->GetPosition(), { 0.0f, -1.0f }, 300.0f, 1);
+			AddGO(blood2);
+
+			Blood* blood3 = poolBloods.Get();
+			blood3->SetWall(wall);
+			blood3->Shoot(sucker->GetPosition(), { 1.0f, 0.0f }, 300.0f, 1);
+			AddGO(blood3);
+
+			Blood* blood4 = poolBloods.Get();
+			blood4->SetWall(wall);
+			blood4->Shoot(sucker->GetPosition(), { 0.0f, 1.0f }, 300.0f, 1);
+			AddGO(blood4);
+
+			RemoveRGO(sucker);
 		};
 		sucker->SetWall(wall);
 		hitablelist.push_back(sucker);

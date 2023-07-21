@@ -1,5 +1,5 @@
 ID,FPS,LOOPTYPE,,
-MonsterIdle,10,1,,
+Idle,10,1,,
 ,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
 graphics/Pooter.png,0,0,32,32

@@ -1,5 +1,5 @@
 ID,FPS,LOOPTYPE,,
-Shoot,10,0,,
+Shoot,20,0,,
 ,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
 graphics/Pooter.png,0,0,32,32

@@ -29,6 +29,7 @@ public:
 
 	std::function<void(int damage)> OnHit; // Tear와 충돌
 	std::function<void()> OnBump; // Player와 충돌
+	std::function<void()> OnDie; //사망 시
 
 	void SetPlayer(Player* player);
 	void SetMaxHp(int maxHp);

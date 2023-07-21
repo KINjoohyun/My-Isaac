@@ -42,10 +42,11 @@ void Monster::Reset()
 {
 	RoomObject::Reset();
 
-	animation.Play("MonsterIdle");
+	animation.Play("Idle");
 	SetOrigin(origin);
 	sprite.setColor(sf::Color::White);
 	hitedTimer = hitedDuration;
+	attackTimer = attackDuration;
 }
 void Monster::Update(float dt)
 {
@@ -62,7 +63,6 @@ void Monster::Update(float dt)
 		sprite.setColor(sf::Color::White);
 	}
 
-
 	if (isChase)
 	{
 		direction = Utils::Normalize(player->GetPosition() - position);
@@ -72,6 +72,22 @@ void Monster::Update(float dt)
 	{
 		SetFlipX(sprite, direction.x < 0.0f);
 		SetPosition(position + direction * speed * dt);
+
+		if (BloodShoot != nullptr)
+		{
+			if (attackTimer < attackDuration)
+			{
+				attackTimer += dt;
+				return;
+			}
+			if (animation.GetCurrentClipId() == "Idle")
+			{
+				animation.Play("Shoot");
+				animation.PlayQueue("Idle");
+				attackTimer = 0.0f;
+				BloodShoot();
+			}
+		}
 	}
 }
 

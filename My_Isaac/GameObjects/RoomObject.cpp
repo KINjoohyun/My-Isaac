@@ -53,8 +53,15 @@ void RoomObject::OnDamage(int damage)
 
 	if (hp == 0)
 	{
-		SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
-		scene->RemoveRGO(this);
+		if (OnDie != nullptr)
+		{
+			OnDie();
+		}
+		else
+		{
+			SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+			scene->RemoveRGO(this);
+		}
 	}
 }
 bool RoomObject::IsBump()

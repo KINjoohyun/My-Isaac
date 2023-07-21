@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="Animation\AnimationClip.cpp" />
     <ClCompile Include="Animation\AnimationController.cpp" />
+    <ClCompile Include="GameObjects\Blood.cpp" />
     <ClCompile Include="GameObjects\TearEffect.cpp" />
     <ClCompile Include="GameObjects\Door.cpp" />
     <ClCompile Include="GameObjects\Collider.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="3rd\rapidcsv.h" />
     <ClInclude Include="Animation\AnimationController.h" />
     <ClInclude Include="Animation\AnimationClip.h" />
+    <ClInclude Include="GameObjects\Blood.h" />
     <ClInclude Include="GameObjects\TearEffect.h" />
     <ClInclude Include="GameObjects\Door.h" />
     <ClInclude Include="GameObjects\Collider.h" />

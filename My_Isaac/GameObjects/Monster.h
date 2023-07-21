@@ -12,6 +12,7 @@ protected:
 	float speed = 0.0f;
 	float recognize = 0.0f;
 	bool isChase = false;
+	sf::Vector2f direction;
 
 	float hitedTimer = 0.0f;
 	float hitedDuration = 0.5f;
@@ -25,4 +26,8 @@ public:
 	virtual void Release() override {}
 
 	void SetMonster(int damage = 0, float speed = 0.0f, int maxHp = 0, float recognize = 0.0f, bool isChase = true);
+	const sf::Vector2f& GetDirection();
+	const int& GetDamage();
+
+	std::function<void()>OnDieMonster;
 };

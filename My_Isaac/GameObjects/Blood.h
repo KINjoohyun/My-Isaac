@@ -4,16 +4,15 @@
 #include "ObjectPool.h"
 
 class Player;
-class RoomObject;
 
-class Tear : public SpriteGameObject
+class Blood : public SpriteGameObject
 {
 protected:
 	Player* player;
 
 	AnimationController animation;
 
-	float speed = 500.0f;
+	float speed = 0.0f;
 	float range = 300.0f;
 	int damage = 0;
 	sf::Vector2f direction;
@@ -24,21 +23,18 @@ protected:
 	float wallLeft = 0.0f;
 	float wallRight = 0.0f;
 
-	const std::list<RoomObject*>* hitablelist;
-
 public:
-	ObjectPool<Tear>* pool;
+	ObjectPool<Blood>* pool;
 
-	Tear(const std::string& textureId = "", const std::string& name = "tear");
-	virtual ~Tear() override { Release(); }
+	Blood(const std::string& textureId = "", const std::string& name = "");
+	virtual ~Blood() override { Release(); }
 
 	virtual void Init() override;
 	virtual void Reset() override;
 	virtual void Update(float dt) override;
 	virtual void Release() override { }
 
-	void Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, float speed, int damage);
+	void Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, int damage);
 	void SetWall(const sf::FloatRect& wall);
 	void SetPlayer(Player* player);
-	void SetHitlist(const std::list<RoomObject*>* list);
 };

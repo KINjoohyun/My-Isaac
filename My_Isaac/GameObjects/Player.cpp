@@ -8,11 +8,6 @@
 Player::Player(const std::string name)
 	:GameObject(name)
 {
-	
-}
-
-void Player::Init()
-{
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyIdleDown.csv"));
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyIdleRight.csv"));
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyMoveDown.csv"));
@@ -30,7 +25,10 @@ void Player::Init()
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadShootLeft.csv"));
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadHurt.csv"));
 	headAnimation.SetTarget(&head);
+}
 
+void Player::Init()
+{
 	SetOrigin(Origins::C);
 
 	poolTears.OnCreate = [this](Tear* tear)
@@ -93,7 +91,7 @@ void Player::Update(float dt)
 		head.setColor((head.getColor() == sf::Color::White) ? sf::Color::Yellow : sf::Color::White);
 		body.setColor((body.getColor() == sf::Color::White) ? sf::Color::Yellow : sf::Color::White);
 	}
-	else if (head.getColor() == sf::Color::Yellow)
+	else if (head.getColor() != sf::Color::White)
 	{
 		head.setColor(sf::Color::White);
 		body.setColor(sf::Color::White);
@@ -261,7 +259,7 @@ void Player::TearShoot(const sf::Vector2f& direction)
 	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	if (scene != nullptr)
 	{
-		tear->SetPoops(scene->GetPoopList());
+		tear->SetHitlist(scene->GetPoopList());
 		scene->AddGO(tear);
 	}
 }

@@ -14,6 +14,7 @@
 #include "RoomObject.h"
 #include "Monster.h"
 #include "Door.h"
+#include "Blood.h"
 
 SceneGame::SceneGame() :Scene(SceneId::Game)
 {
@@ -42,7 +43,10 @@ void SceneGame::Init()
 	player->sortLayer = 2;
 
 	// 하드 코딩으로 랜덤한 Room 호출
-	std::string randomPath1 = "room/Spawn.csv";
+	//std::string randomPath1 = "room/Spawn.csv";
+	//CallRoom(randomPath1, { 0.0f, 0.0f });
+
+	std::string randomPath1 = "room/Room5.csv";
 	CallRoom(randomPath1, { 0.0f, 0.0f });
 
 	std::string randomPath2 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
@@ -151,8 +155,6 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 		obj->SetPosition(position.x + std::stof(rows[2]), position.y + std::stof(rows[3]));
 		obj->sortLayer = 1;
 		obj->sortOrder = std::stoi(rows[4]);
-		obj->Init();
-		obj->Reset();
 	}
 }
 
@@ -234,7 +236,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	{
 		Monster* attackfly = (Monster*)AddGO(new Monster(objtype));
 		attackfly->SetPlayer(player);
-		attackfly->SetMonster(1, 200.0f, 3, 400.0f);
+		attackfly->SetMonster(1, 150.0f, 3, 400.0f);
 		attackfly->OnBump = [this, attackfly]()
 		{
 			player->OnHit(1);
@@ -247,7 +249,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	{
 		Monster* pooter = (Monster*)AddGO(new Monster(objtype));
 		pooter->SetPlayer(player);
-		pooter->SetMonster(1, 200.0f, 4, 400.0f);
+		pooter->SetMonster(1, 100.0f, 4, 400.0f);
 		pooter->OnBump = [this, pooter]()
 		{
 			player->OnHit(1);

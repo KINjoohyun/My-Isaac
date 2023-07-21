@@ -1,5 +1,5 @@
 ID,FPS,LOOPTYPE,,
-Sucker1,10,1,,
+MonsterIdle,10,1,,
 ,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
 graphics/Sucker.png,0,0,32,32

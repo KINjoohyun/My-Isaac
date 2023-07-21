@@ -2,5 +2,5 @@ ID,FPS,LOOPTYPE,,
 MonsterIdle,10,1,,
 ,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
-graphics/AttackFly.png,0,0,19,17
-graphics/AttackFly.png,19,0,19,17
+graphics/Pooter.png,0,0,32,32
+graphics/Pooter.png,32,0,32,32

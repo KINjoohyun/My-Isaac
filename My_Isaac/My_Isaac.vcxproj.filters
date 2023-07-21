@@ -99,10 +99,16 @@
     <ClCompile Include="GameObjects\Door.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\TearEffect.cpp">
+    <ClCompile Include="GameObjects\EffectObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\Poop.cpp">
+    <ClCompile Include="GameObjects\RoomObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Monster.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Blood.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -203,10 +209,16 @@
     <ClInclude Include="GameObjects\Door.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\TearEffect.h">
+    <ClInclude Include="GameObjects\EffectObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\Poop.h">
+    <ClInclude Include="GameObjects\RoomObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Monster.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Blood.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -58,3 +58,12 @@ void SpriteGameObject::SetOrigin(float x, float y)
 	GameObject::SetOrigin(x, y);
 	sprite.setOrigin(x, y);
 }
+
+void SpriteGameObject::SetFlipX(sf::Sprite& sprite, bool flip)
+{
+	flipX = flip;
+
+	sf::Vector2f scale = sprite.getScale();
+	scale.x = !flipX ? abs(scale.x) : -abs(scale.x);
+	sprite.setScale(scale);
+}

@@ -1,0 +1,5 @@
+ID,FPS,LOOPTYPE,,
+BloodShooting,10,0,,
+,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
+graphics/blood.png,25,23,15,15

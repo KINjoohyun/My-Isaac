@@ -1,4 +1,5 @@
 "RESOURCES TYPES (Texture, Font, SoundBuffer, AnimationClip)",PATH
+1,fonts/DNFBitBitOTF.otf
 3,animations/BodyIdleDown.csv
 3,animations/BodyIdleRight.csv
 3,animations/BodyMoveDown.csv
@@ -13,4 +14,11 @@
 3,animations/HeadShootLeft.csv
 3,animations/TearShooting.csv
 3,animations/TearSplash.csv
-1,fonts/DNFBitBitOTF.otf
+3,animations/BodyHurt.csv
+3,animations/HeadHurt.csv
+3,animations/AttackFly1.csv
+3,animations/Pooter1.csv
+3,animations/Pooter2.csv
+3,animations/Sucker1.csv
+3,animations/BloodShooting.csv
+3,animations/BloodSplash.csv

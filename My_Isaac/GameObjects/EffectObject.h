@@ -3,21 +3,24 @@
 #include "AnimationController.h"
 #include "ObjectPool.h"
 
-class TearEffect : public SpriteGameObject
+class EffectObject : public SpriteGameObject
 {
 protected:
 	AnimationController animation;
 
 	float timer = 0.0f;
 	float duration = 0.8f;
+	std::string anim;
 public:
-	ObjectPool<TearEffect>* pool;
+	ObjectPool<EffectObject>* pool;
 
-	TearEffect(const std::string& textureId = "", const std::string& name = "");
-	virtual ~TearEffect() override { Release(); }
+	EffectObject(const std::string& textureId = "", const std::string& name = "");
+	virtual ~EffectObject() override { Release(); }
 
 	virtual void Init() override;
 	virtual void Reset() override;
 	virtual void Update(float dt) override;
 	virtual void Release() override { }
+
+	void SetAnimation(const std::string& anim);
 };

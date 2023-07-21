@@ -8,15 +8,11 @@
 Player::Player(const std::string name)
 	:GameObject(name)
 {
-	
-}
-
-void Player::Init()
-{
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyIdleDown.csv"));
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyIdleRight.csv"));
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyMoveDown.csv"));
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyMoveRight.csv"));
+	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyHurt.csv"));
 	bodyAnimation.SetTarget(&body);
 
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadIdleDown.csv"));
@@ -27,8 +23,12 @@ void Player::Init()
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadShootRight.csv"));
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadShootUp.csv"));
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadShootLeft.csv"));
+	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadHurt.csv"));
 	headAnimation.SetTarget(&head);
+}
 
+void Player::Init()
+{
 	SetOrigin(Origins::C);
 
 	poolTears.OnCreate = [this](Tear* tear)
@@ -38,9 +38,10 @@ void Player::Init()
 	};
 	poolTears.Init();
 
-	poolEffects.OnCreate = [this](TearEffect* effect)
+	poolEffects.OnCreate = [this](EffectObject* effect)
 	{
 		effect->pool = &poolEffects;
+		effect->sortLayer = 3;
 	};
 	poolEffects.Init();
 }
@@ -66,6 +67,14 @@ void Player::Reset()
 	poolEffects.AllReturn();
 
 	life = maxLife;
+	invincibleTimer = invincibleDuration;
+	attackTimer = attackDuration;
+
+	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+	if (scene != nullptr)
+	{
+		scene->RenewLife(life);
+	}
 
 	for (auto it : poolTears.GetPool())
 	{
@@ -76,6 +85,23 @@ void Player::Update(float dt)
 {
 	headAnimation.Update(dt);
 	bodyAnimation.Update(dt);
+
+	if (invincibleTimer < invincibleDuration)
+	{
+		invincibleTimer += dt;
+		head.setColor((head.getColor() == sf::Color::White) ? sf::Color::Yellow : sf::Color::White);
+		body.setColor((body.getColor() == sf::Color::White) ? sf::Color::Yellow : sf::Color::White);
+	}
+	else if (head.getColor() != sf::Color::White)
+	{
+		head.setColor(sf::Color::White);
+		body.setColor(sf::Color::White);
+	}
+
+	if (attackTimer < attackDuration)
+	{
+		attackTimer += dt;
+	}
 
 	direction.x = INPUT_MGR.GetAxisRaw(Axis::Horizontal);
 	direction.y = INPUT_MGR.GetAxisRaw(Axis::Vertical);
@@ -142,32 +168,38 @@ void Player::Update(float dt)
 		SetFlipX(body, direction.x < 0.0f);
 	}
 
-	// test
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Left))
+	if (INPUT_MGR.GetKey(sf::Keyboard::Left))
 	{
+		if (attackTimer < attackDuration) return;
+
 		headAnimation.Play("HeadShootLeft");
 
 		TearShoot({-1.0f, 0.0f});
 	}
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Right))
+	if (INPUT_MGR.GetKey(sf::Keyboard::Right))
 	{
+		if (attackTimer < attackDuration) return;
+
 		headAnimation.Play("HeadShootRight");
 
 		TearShoot({ 1.0f, 0.0f });
 	}
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Up))
+	if (INPUT_MGR.GetKey(sf::Keyboard::Up))
 	{
+		if (attackTimer < attackDuration) return;
+
 		headAnimation.Play("HeadShootUp");
 
 		TearShoot({ 0.0f, -1.0f });
 	}
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Down))
+	if (INPUT_MGR.GetKey(sf::Keyboard::Down))
 	{
+		if (attackTimer < attackDuration) return;
+
 		headAnimation.Play("HeadShootDown");
 
 		TearShoot({ 0.0f, 1.0f });
 	}
-
 }
 void Player::Draw(sf::RenderWindow& window)
 {
@@ -198,12 +230,6 @@ void Player::SetOrigin(Origins origin)
 		Utils::SetOrigin(head, Origins::BC);
 	}
 }
-void Player::SetOrigin(float x, float y)
-{
-	GameObject::SetOrigin(x, y);
-	body.setOrigin(x, y);
-	head.setOrigin(x, y);
-}
 
 bool Player::GetFlipX() const
 {
@@ -220,6 +246,8 @@ void Player::SetFlipX(sf::Sprite& sprite, bool flip)
 
 void Player::TearShoot(const sf::Vector2f& direction)
 {
+	attackTimer = 0.0f;
+
 	Tear* tear = poolTears.Get();
 	tear->sortLayer = 1;
 	sf::Vector2f headPos =
@@ -232,15 +260,16 @@ void Player::TearShoot(const sf::Vector2f& direction)
 	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	if (scene != nullptr)
 	{
-		tear->SetPoops(scene->GetPoopList());
+		tear->SetHitlist(scene->GetPoopList());
 		scene->AddGO(tear);
 	}
 }
-void Player::TearSplash(const sf::Vector2f& tearPos)
+void Player::Splash(const sf::Vector2f& tearPos, const std::string& anim)
 {
-	TearEffect* effect = poolEffects.Get();
+	EffectObject* effect = poolEffects.Get();
 	effect->sortLayer = 1;
 	effect->SetPosition(tearPos);
+	effect->SetAnimation(anim);
 
 	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	if (scene != nullptr)
@@ -250,7 +279,12 @@ void Player::TearSplash(const sf::Vector2f& tearPos)
 }
 void Player::OnHit(int damage)
 {
+	if (invincibleTimer < invincibleDuration) return;
+
 	life = std::max(0, life - damage);
+	invincibleTimer = 0.0f;
+	headAnimation.Play("HeadHurt");
+	bodyAnimation.Play("BodyHurt");
 
 	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	if (scene != nullptr)

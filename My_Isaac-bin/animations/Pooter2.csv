@@ -1,0 +1,20 @@
+ID,FPS,LOOPTYPE,,
+Shoot,20,0,,
+,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
+graphics/Pooter.png,0,0,32,32
+graphics/Pooter.png,32,0,32,32
+graphics/Pooter.png,64,0,32,32
+graphics/Pooter.png,96,0,32,32
+graphics/Pooter.png,0,32,32,32
+graphics/Pooter.png,32,32,32,32
+graphics/Pooter.png,64,32,32,32
+graphics/Pooter.png,96,32,32,32
+graphics/Pooter.png,0,64,32,32
+graphics/Pooter.png,32,64,32,32
+graphics/Pooter.png,64,64,32,32
+graphics/Pooter.png,96,64,32,32
+graphics/Pooter.png,0,96,32,32
+graphics/Pooter.png,32,96,32,32
+graphics/Pooter.png,64,96,32,32
+graphics/Pooter.png,96,96,32,32

@@ -11,9 +11,10 @@
 #include "Tile.h"
 #include "RectGameObject.h"
 #include "Player.h"
-#include "Poop.h"
-
+#include "RoomObject.h"
+#include "Monster.h"
 #include "Door.h"
+#include "Blood.h"
 
 SceneGame::SceneGame() :Scene(SceneId::Game)
 {
@@ -38,8 +39,11 @@ void SceneGame::Init()
 	ui_bg->SetOrigin(Origins::TL);
 	ui_bg->sortLayer = 100;
 
+	player = (Player*)AddGO(new Player());
+	player->sortLayer = 2;
+
 	// 하드 코딩으로 랜덤한 Room 호출
-	std::string randomPath1 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
+	std::string randomPath1 = "room/Spawn.csv";
 	CallRoom(randomPath1, { 0.0f, 0.0f });
 
 	std::string randomPath2 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
@@ -47,9 +51,6 @@ void SceneGame::Init()
 
 	std::string randomPath3 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
 	CallRoom(randomPath3, { -1100.0f, 0.0f });
-
-	player = (Player*)AddGO(new Player());
-	player->sortLayer = 1;
 
 	// 최대체력 그대로 생성중
 	for (int i = 0; i < player->GetMaxLife(); i++)
@@ -85,6 +86,15 @@ void SceneGame::Init()
 	RectGameObject* wall = (RectGameObject*)FindGO(randomPath1);
 	player->SetWall(wall->rect.getGlobalBounds());
 
+	poolBloods.OnCreate = [this, wall](Blood* blood)
+	{
+		blood->pool = &poolBloods;
+		blood->SetPlayer(player);
+		blood->sortLayer = 1;
+		blood->SetWall(wall->rect.getGlobalBounds());
+	};
+	poolBloods.Init();
+
 	for (auto go : gameObjects)
 	{
 		go->Init();
@@ -98,6 +108,14 @@ void SceneGame::Update(float dt)
 	{
 		SCENE_MGR.ChangeScene(SceneId::Title);
 	}
+
+	// test
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::T))
+	{
+		Blood* blood = poolBloods.Get();
+		blood->Shoot({ 0.0f, 0.0f }, { 1.0f, 0.0f }, 300.0f, 1);
+		AddGO(blood);
+	}
 }
 void SceneGame::Draw(sf::RenderWindow& window)
 {
@@ -105,6 +123,8 @@ void SceneGame::Draw(sf::RenderWindow& window)
 }
 void SceneGame::Release()
 {
+	poolBloods.Release();
+
 	for (auto go : gameObjects)
 	{
 		//go->Release();
@@ -115,9 +135,12 @@ void SceneGame::Release()
 void SceneGame::Enter()
 {
 	Scene::Enter();
+
+	ClearPool(poolBloods);
 }
 void SceneGame::Exit()
 {
+	ClearPool(poolBloods);
 	player->Reset();
 
 	Scene::Exit();
@@ -146,13 +169,11 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 	for (int i = 4; i < doc.GetRowCount(); i++)
 	{
 		auto rows = doc.GetRow<std::string>(i);
-		auto obj = LoadObj((ObjType)std::stoi(rows[0]), rows[1]);
+		auto obj = LoadObj((ObjType)std::stoi(rows[0]), rows[1], wall->rect.getGlobalBounds());
 		obj->SetOrigin(Origins::C);
 		obj->SetPosition(position.x + std::stof(rows[2]), position.y + std::stof(rows[3]));
 		obj->sortLayer = 1;
 		obj->sortOrder = std::stoi(rows[4]);
-		obj->Init();
-		obj->Reset();
 	}
 }
 
@@ -180,44 +201,129 @@ void SceneGame::ViewSet(const sf::Vector2f& position)
 {
 	worldView.setCenter({position.x, position.y - 100.0f});
 }
-SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& textureId)
+SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& textureId, const sf::FloatRect& wall)
 {
 	switch (objtype)
 	{
+	case ObjType::None:
+	{
+		RoomObject* none = (RoomObject*)AddGO(new RoomObject(textureId));
+		return (SpriteGameObject*)none;
+	}
+	break;
 	case ObjType::Rock:
 	{
-		Poop* rock = (Poop*)AddGO(new Poop(textureId));
+		RoomObject* rock = (RoomObject*)AddGO(new RoomObject(textureId));
+		rock->SetPlayer(player);
+		rock->OnBump = [this, rock]()
+		{
+			player->SetPosition(player->GetPosition() - Utils::Normalize(rock->GetPosition() - player->GetPosition()));
+		};
+		rock->SetWall(wall);
+		hitablelist.push_back(rock);
 		return (SpriteGameObject*)rock;
 	}
 	break;
 	case ObjType::Poop:
 	{
-		Poop* poop = (Poop*)AddGO(new Poop(textureId));
-		poops.push_back(poop);
+		RoomObject* poop = (RoomObject*)AddGO(new RoomObject(textureId));
+		poop->SetMaxHp(4);
+		poop->SetPlayer(player);
+		poop->OnHit = [poop](int damage)
+		{
+			poop->OnDamage(damage);
+		};
+		poop->OnBump = [this, poop]()
+		{
+			player->SetPosition(player->GetPosition() - Utils::Normalize(poop->GetPosition() - player->GetPosition()));
+		};
+		poop->SetWall(wall);
+		hitablelist.push_back(poop);
 		return (SpriteGameObject*)poop;
 	}
 	break;
 	case ObjType::Spike:
 	{
-		Poop* spike = (Poop*)AddGO(new Poop(textureId));
+		RoomObject* spike = (RoomObject*)AddGO(new RoomObject(textureId));
+		spike->SetPlayer(player);
+		spike->OnBump = [this, spike]()
+		{
+			player->OnHit(1);
+		};
+		spike->SetWall(wall);
 		return (SpriteGameObject*)spike;
 	}
 	break;
 	case ObjType::AttackFly:
 	{
-		Poop* attackfly = (Poop*)AddGO(new Poop(textureId));
+		Monster* attackfly = (Monster*)AddGO(new Monster(objtype));
+		attackfly->SetPlayer(player);
+		attackfly->SetMonster(1, 150.0f, 3, 500.0f);
+		attackfly->OnBump = [this, attackfly]()
+		{
+			player->OnHit(1);
+		};
+		attackfly->SetWall(wall);
+		hitablelist.push_back(attackfly);
 		return (SpriteGameObject*)attackfly;
 	}
 	break;
 	case ObjType::Pooter:
 	{
-		Poop* pooter = (Poop*)AddGO(new Poop(textureId));
+		Monster* pooter = (Monster*)AddGO(new Monster(objtype));
+		pooter->SetPlayer(player);
+		pooter->SetMonster(1, 100.0f, 4, 400.0f);
+		pooter->OnBump = [this, pooter]()
+		{
+			player->OnHit(1);
+		};
+		pooter->BloodShoot = [this, pooter, wall]()
+		{
+			Blood* blood = poolBloods.Get();
+			blood->SetWall(wall);
+			blood->Shoot(pooter->GetPosition(), pooter->GetDirection(), 300.0f, 1);
+			AddGO(blood);
+		};
+		pooter->SetWall(wall);
+		hitablelist.push_back(pooter);
 		return (SpriteGameObject*)pooter;
 	}
 	break;
 	case ObjType::Sucker:
 	{
-		Poop* sucker = (Poop*)AddGO(new Poop(textureId));
+		Monster* sucker = (Monster*)AddGO(new Monster(objtype));
+		sucker->SetPlayer(player);
+		sucker->SetMonster(1, 100.0f, 5, 400.0f);
+		sucker->OnBump = [this, sucker]()
+		{
+			player->OnHit(1);
+		};
+		sucker->OnDie = [this, sucker, wall]()
+		{
+			Blood* blood1 = poolBloods.Get();
+			blood1->SetWall(wall);
+			blood1->Shoot(sucker->GetPosition(), { -1.0f, 0.0f }, 300.0f, 1);
+			AddGO(blood1);
+
+			Blood* blood2 = poolBloods.Get();
+			blood2->SetWall(wall);
+			blood2->Shoot(sucker->GetPosition(), { 0.0f, -1.0f }, 300.0f, 1);
+			AddGO(blood2);
+
+			Blood* blood3 = poolBloods.Get();
+			blood3->SetWall(wall);
+			blood3->Shoot(sucker->GetPosition(), { 1.0f, 0.0f }, 300.0f, 1);
+			AddGO(blood3);
+
+			Blood* blood4 = poolBloods.Get();
+			blood4->SetWall(wall);
+			blood4->Shoot(sucker->GetPosition(), { 0.0f, 1.0f }, 300.0f, 1);
+			AddGO(blood4);
+
+			RemoveRGO(sucker);
+		};
+		sucker->SetWall(wall);
+		hitablelist.push_back(sucker);
 		return (SpriteGameObject*)sucker;
 	}
 	break;
@@ -229,7 +335,12 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	break;
 	}
 }
-const std::list<Poop*>* SceneGame::GetPoopList() const
+const std::list<RoomObject*>* SceneGame::GetPoopList() const
 {
-	return &poops;
+	return &hitablelist;
+}
+void SceneGame::RemoveRGO(RoomObject* roomGO)
+{
+	hitablelist.remove(roomGO);
+	RemoveGO(roomGO);
 }

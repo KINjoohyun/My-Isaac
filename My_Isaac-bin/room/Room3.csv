@@ -4,3 +4,6 @@ graphics/basement_bg1.png,734,414,12,6
 "OBJ TYPE",TEXTURE,X,Y,ORDER
 2,graphics/grid_spikes1.png,-152,36.9999771,0
 2,graphics/grid_spikes1.png,151.999969,36.9999771,0
+3,graphics/grid_AttackFly.png,-335.999939,-172,0
+4,graphics/grid_Pooter.png,-335.999939,173.999969,0
+5,graphics/grid_Sucker.png,335.999939,-172,0

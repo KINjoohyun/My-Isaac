@@ -1,0 +1,8 @@
+ID,FPS,LOOPTYPE,,
+Pattern2,5,0,,
+,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
+graphics/Duke_Of_Flies.png,80,64,80,64
+graphics/Duke_Of_Flies.png,0,0,80,64
+graphics/Duke_Of_Flies.png,0,0,80,64
+graphics/Duke_Of_Flies.png,0,64,80,64

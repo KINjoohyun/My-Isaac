@@ -246,6 +246,12 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		{
 			poop->OnDamage(damage);
 		};
+		poop->OnDie = [this, poop]()
+		{
+			poop->OnBump = nullptr;
+			poop->OnHit = nullptr;
+			hitablelist.remove(poop);
+		};
 		poop->OnBump = [this, poop]()
 		{
 			player->SetPosition(player->GetPosition() - Utils::Normalize(poop->GetPosition() - player->GetPosition()));
@@ -340,17 +346,11 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		return (SpriteGameObject*)sucker;
 	}
 	break;
-	default:
-	{
-		Tile* tile = (Tile*)AddGO(new Tile(objtype, textureId));
-		return (SpriteGameObject*)tile;
-	}
-	break;
 	case ObjType::DukeOfFlies:
 	{
 		Boss* duke = (Boss*)AddGO(new Boss(objtype, textureId));
 		duke->SetPlayer(player);
-		duke->SetMonster(1, 100.0f, 50, 800.0f, true);
+		duke->SetMonster(1, 50.0f, 50, 800.0f);
 		duke->OnBump = [this, duke]()
 		{
 			player->SetPosition(player->GetPosition() - Utils::Normalize(duke->GetPosition() - player->GetPosition()));
@@ -362,35 +362,72 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 			{
 				return false;
 			}
-			else
+			for (int i = 0; i < 2; i++)
 			{
-				for (int i = 0; i < 2; i++)
+				Monster* attackfly = (Monster*)AddGO(new Monster(ObjType::AttackFly));
+				attackfly->SetPlayer(player);
+				attackfly->SetMonster(1, 150.0f, 3, 500.0f);
+				attackfly->OnBump = [this, attackfly]()
 				{
-					Monster* attackfly = (Monster*)AddGO(new Monster(ObjType::AttackFly));
-					attackfly->SetPlayer(player);
-					attackfly->SetMonster(1, 150.0f, 3, 500.0f);
-					attackfly->OnBump = [this, attackfly]()
-					{
-						player->OnHit(1);
-					};
-					attackfly->SetWall(wall);
-					attackfly->SetOrigin(Origins::C);
-					attackfly->SetPosition(duke->GetPosition().x - 100.0f + (200.0f * i), duke->GetPosition().y);
-					attackfly->sortLayer = 1;
-					attackfly->sortOrder = 1;
-					hitablelist.push_back(attackfly);
-					attackfly->Init();
-					attackfly->Reset();
-				}
-				
-				return true;
+					player->OnHit(1);
+				};
+				attackfly->SetWall(wall);
+				attackfly->SetOrigin(Origins::C);
+				attackfly->SetPosition(duke->GetPosition().x - 100.0f + (200.0f * i), duke->GetPosition().y);
+				attackfly->sortLayer = 1;
+				attackfly->sortOrder = 1;
+				attackfly->Init();
+				attackfly->Reset();
+				hitablelist.push_back(attackfly);
 			}
+				
+			return true;
 		};
-		duke->SetCooltime(3.0f, 5.0f);
+		duke->Pattern2 = [this, duke, wall]()
+		{
+			if (Utils::Distance(duke->GetPosition(), player->GetPosition()) >  700.0f)
+			{
+				return false;
+			}
+			for (int i = 0; i < 2; i++)
+			{
+				Monster* pooter = (Monster*)AddGO(new Monster(ObjType::Pooter));
+				pooter->SetPlayer(player);
+				pooter->SetMonster(1, 100.0f, 4, 400.0f);
+				pooter->OnBump = [this, pooter]()
+				{
+					player->OnHit(1);
+				};
+				pooter->BloodShoot = [this, pooter, wall]()
+				{
+					Blood* blood = poolBloods.Get();
+					blood->SetWall(wall);
+					blood->Shoot(pooter->GetPosition(), pooter->GetDirection(), 300.0f, 1);
+					AddGO(blood);
+				};
+				pooter->SetWall(wall);
+				pooter->SetOrigin(Origins::C);
+				pooter->SetPosition(duke->GetPosition().x - 100.0f + (200.0f * i), duke->GetPosition().y);
+				pooter->sortLayer = 1;
+				pooter->sortOrder = 1;
+				pooter->Init();
+				pooter->Reset();
+				hitablelist.push_back(pooter);
+			}
+
+			return true;
+		};
+		duke->SetCooltime(2.0f, 5.0f);
 		duke->SetWall(wall);
 		hitablelist.push_back(duke);
 		return (SpriteGameObject*)duke;
 	}
+	default:
+	{
+		Tile* tile = (Tile*)AddGO(new Tile(objtype, textureId));
+		return (SpriteGameObject*)tile;
+	}
+	break;
 	}
 }
 const std::list<RoomObject*>* SceneGame::GetPoopList() const

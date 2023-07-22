@@ -13,6 +13,7 @@ Boss::Boss(ObjType objtype, const std::string& textureId, const std::string& nam
 	case ObjType::DukeOfFlies:
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/Duke_Of_Flies1.csv"));
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/Duke_Of_Flies2.csv"));
+		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/Duke_Of_Flies3.csv"));
 		break;
 	}
 

@@ -18,7 +18,7 @@ protected:
 	float hitedDuration = 0.5f;
 
 	float attackTimer = 0.0f;
-	float attackDuration = 2.0f;
+	float attackDuration = 1.0f;
 public:
 	Monster(ObjType objtype, const std::string& textureId = "", const std::string& name = "");
 	virtual ~Monster() override { Release(); }

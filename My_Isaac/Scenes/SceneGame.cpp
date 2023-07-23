@@ -46,23 +46,15 @@ void SceneGame::Init()
 	// 하드 코딩으로 랜덤한 Room 호출
 	std::string randomPath1 = "room/Spawn.csv";
 	CallRoom(randomPath1, { 0.0f, 0.0f });
-	stage1[4][4].pos = { 0.0f, 0.0f };
-	stage1[4][4].isHave = true;
 
 	std::string randomPath2 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
 	CallRoom(randomPath2, { 1100.0f, 0.0f });
-	stage1[5][4].pos = { 1100.0f, 0.0f };
-	stage1[5][4].isHave = true;
 
 	std::string randomPath3 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
 	CallRoom(randomPath3, { -1100.0f, 0.0f });
-	stage1[3][4].pos = { -1100.0f, 0.0f };
-	stage1[3][4].isHave = true;
 
 	std::string randomPath4 = "room/Boss1.csv";
 	CallRoom(randomPath4, { 0.0f, -1100.0f });
-	stage1[4][3].pos = { 0.0f, -1100.0f };
-	stage1[4][3].isHave = true;
 
 
 
@@ -173,15 +165,33 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 		obj->sortLayer = 1;
 		obj->sortOrder = std::stoi(rows[4]);
 	}
+
+	int r = position.x / 1100.0f;
+	int c = position.y / 1100.0f;
+
+	stage1[4 + r][4 + c].isHave = true;
+	stage1[4 + r][4 + c].pos = position;
 }
 void SceneGame::CreateRooms(int row, int column)
 {
-	int r = Utils::RandomRange(1, row) - 1;
-	int c = Utils::RandomRange(1, column) - 1;
-
-	stage1[r][c].isHave = true; //spawn room
+	int r = 0;
+	int c = 0;
+	do
+	{
+		r = Utils::RandomRange(1, row) - 1;
+		c = Utils::RandomRange(1, column) - 1;
+	} while (stage1[r][c].isHave);
+	stage1[r][c].isHave = true;
 
 	// 여기부터 진행 예정
+	for (int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < column; j++)
+		{
+			std::cout << stage1[j][i].isHave;
+		}
+		std::cout << std::endl;
+	}
 }
 void SceneGame::SetDoor()
 {

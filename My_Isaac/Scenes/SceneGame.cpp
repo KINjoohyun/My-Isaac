@@ -46,57 +46,42 @@ void SceneGame::Init()
 	// 하드 코딩으로 랜덤한 Room 호출
 	std::string randomPath1 = "room/Spawn.csv";
 	CallRoom(randomPath1, { 0.0f, 0.0f });
+	stage1[4][4].pos = { 0.0f, 0.0f };
+	stage1[4][4].isHave = true;
 
 	std::string randomPath2 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
 	CallRoom(randomPath2, { 1100.0f, 0.0f });
+	stage1[5][4].pos = { 1100.0f, 0.0f };
+	stage1[5][4].isHave = true;
 
 	std::string randomPath3 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
 	CallRoom(randomPath3, { -1100.0f, 0.0f });
+	stage1[3][4].pos = { -1100.0f, 0.0f };
+	stage1[3][4].isHave = true;
 
 	std::string randomPath4 = "room/Boss1.csv";
 	CallRoom(randomPath4, { 0.0f, -1100.0f });
+	stage1[4][3].pos = { 0.0f, -1100.0f };
+	stage1[4][3].isHave = true;
+
+
+
+	// test code
+	CreateRooms(9, 9);
+	SetDoor();
 
 	// 최대체력 그대로 생성중
 	for (int i = 0; i < player->GetMaxLife(); i++)
 	{
 		SpriteGameObject* ui_heart = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/ui_heart0.png"));
 		ui_heart->SetOrigin(Origins::TC);
-		ui_heart->SetPosition({ windowSize.x - 200.0f + (60.0f * i), 50.0f});
+		ui_heart->SetPosition({ windowSize.x - 200.0f + (60.0f * i), 50.0f });
 		ui_heart->sortLayer = 100;
 	}
 	RenewLife(player->GetMaxLife());
 
 	// test code
-	Door* door1 = (Door*)AddGO(new Door("graphics/door_open.png", {400.0f, 0.0f}, Door::Look::Right));
-	Door* door2 = (Door*)AddGO(new Door("graphics/door_open.png", {-400.0f, 0.0f}, Door::Look::Left));
-	door1->SetPlayer(player);
-	door2->SetPlayer(player);
-	door1->Open();
-	door2->Open();
-	door1->SetDestination({ 1100.0f, 0.0f });
-	door2->SetDestination({ -1100.0f, 0.0f });
-
-	Door* door3 = (Door*)AddGO(new Door("graphics/door_open.png", { -700.0f, 0.0f }, Door::Look::Right));
-	door3->SetPlayer(player);
-	door3->Open();
-	door3->SetDestination({ 0.0f, 0.0f });
-
-	Door* door4 = (Door*)AddGO(new Door("graphics/door_open.png", { 700.0f, 0.0f }, Door::Look::Left));
-	door4->SetPlayer(player);
-	door4->Open();
-	door4->SetDestination({ 0.0f, 0.0f });
-
-	Door* door5 = (Door*)AddGO(new Door("graphics/door_open.png", { 0.0f, -250.0f }, Door::Look::Up));
-	Door* door6 = (Door*)AddGO(new Door("graphics/door_open.png", { 0.0f, -850.0f }, Door::Look::Down));
-	door5->SetPlayer(player);
-	door6->SetPlayer(player);
-	door5->Open();
-	door6->Open();
-	door5->SetDestination({ 0.0f, -1100.0f });
-	door6->SetDestination({ 0.0f, -0.0f });
-
-	// test code
-	RectGameObject* wall = (RectGameObject*)FindGO(randomPath1);
+	RectGameObject* wall = (RectGameObject*)FindGO("room/Spawn.csv");
 	player->SetWall(wall->rect.getGlobalBounds());
 
 	poolBloods.OnCreate = [this, wall](Blood* blood)
@@ -189,6 +174,45 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 		obj->sortOrder = std::stoi(rows[4]);
 	}
 }
+void SceneGame::CreateRooms(int row, int column)
+{
+	int r = Utils::RandomRange(1, row) - 1;
+	int c = Utils::RandomRange(1, column) - 1;
+
+	stage1[r][c].isHave = true; //spawn room
+
+	// 여기부터 진행 예정
+}
+void SceneGame::SetDoor()
+{
+	Door* door1 = (Door*)AddGO(new Door("graphics/door_open.png", { 400.0f, 0.0f }, Door::Look::Right));
+	Door* door2 = (Door*)AddGO(new Door("graphics/door_open.png", { -400.0f, 0.0f }, Door::Look::Left));
+	door1->SetPlayer(player);
+	door2->SetPlayer(player);
+	door1->Open();
+	door2->Open();
+	door1->SetDestination({ 1100.0f, 0.0f });
+	door2->SetDestination({ -1100.0f, 0.0f });
+
+	Door* door3 = (Door*)AddGO(new Door("graphics/door_open.png", { -700.0f, 0.0f }, Door::Look::Right));
+	door3->SetPlayer(player);
+	door3->Open();
+	door3->SetDestination({ 0.0f, 0.0f });
+
+	Door* door4 = (Door*)AddGO(new Door("graphics/door_open.png", { 700.0f, 0.0f }, Door::Look::Left));
+	door4->SetPlayer(player);
+	door4->Open();
+	door4->SetDestination({ 0.0f, 0.0f });
+
+	Door* door5 = (Door*)AddGO(new Door("graphics/door_open.png", { 0.0f, -250.0f }, Door::Look::Up));
+	Door* door6 = (Door*)AddGO(new Door("graphics/door_open.png", { 0.0f, -850.0f }, Door::Look::Down));
+	door5->SetPlayer(player);
+	door6->SetPlayer(player);
+	door5->Open();
+	door6->Open();
+	door5->SetDestination({ 0.0f, -1100.0f });
+	door6->SetDestination({ 0.0f, -0.0f });
+}
 
 void SceneGame::RenewLife(int life)
 {
@@ -251,6 +275,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 			poop->OnBump = nullptr;
 			poop->OnHit = nullptr;
 			hitablelist.remove(poop);
+			poop->SetActive(false);
 		};
 		poop->OnBump = [this, poop]()
 		{

@@ -47,7 +47,7 @@ void Tile::Update(float dt)
 	bool prevHover = isHover;
 	isHover = sprite.getGlobalBounds().contains(worldMousPos);
 	
-	if (isHover && INPUT_MGR.GetMouseButtonDown(sf::Mouse::Left))
+	if (isHover && INPUT_MGR.GetMouseButtonDown(sf::Mouse::Left) && !toggle)
 	{
 		toggle = true;
 		SetPosition(worldMousPos);
@@ -56,6 +56,12 @@ void Tile::Update(float dt)
 	{
 		SetPosition(worldMousPos);
 	}
+	if (isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left) && toggle)
+	{
+		toggle = false;
+		SetPosition(worldMousPos);
+	}
+
 	if (isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Right))
 	{
 		toggle = false;

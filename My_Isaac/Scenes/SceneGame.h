@@ -7,6 +7,13 @@ class Player;
 class SpriteGameObject;
 class RoomObject;
 class Blood;
+class Door;
+
+struct Room
+{
+	bool isHave = false;
+	sf::Vector2f pos;
+};
 
 class SceneGame : public Scene
 {
@@ -18,6 +25,8 @@ protected:
 	std::list<RoomObject*> hitablelist;
 
 	ObjectPool<Blood> poolBloods;
+
+	Room stage1[9][9];
 
 public:
 	SceneGame();
@@ -32,13 +41,15 @@ public:
 	virtual void Exit() override;
 
 	void CallRoom(const std::string& roomPath, const sf::Vector2f& position);
+	void CreateRooms(int row, int column);
+	void SetDoor();
 
 	void RenewLife(int life);
 	void ViewSet(const sf::Vector2f& position);
 	SpriteGameObject* LoadObj(ObjType objtype, const std::string& textureId, const sf::FloatRect& wall);
 	const std::list<RoomObject*>* GetPoopList() const;
 	void RemoveRGO(RoomObject* roomGO);
-	
+
 	template <typename T>
 	void ClearPool(ObjectPool<T>& pool);
 };

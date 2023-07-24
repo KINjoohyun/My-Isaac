@@ -47,13 +47,13 @@ void SceneGame::Init()
 	CallRoom(randomPath1, { 0.0f, 0.0f });
 
 	std::string randomPath2 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
-	CallRoom(randomPath2, { 1100.0f, 0.0f });
+	CallRoom(randomPath2, { ROOM_INTERVAL, 0.0f });
 
 	std::string randomPath3 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
-	CallRoom(randomPath3, { -1100.0f, 0.0f });
+	CallRoom(randomPath3, { -ROOM_INTERVAL, 0.0f });
 
 	std::string randomPath4 = "room/Boss1.csv";
-	CallRoom(randomPath4, { 0.0f, -1100.0f });
+	CallRoom(randomPath4, { 0.0f, -ROOM_INTERVAL });
 
 	for (int i = 0; i < 9; i++)
 	{
@@ -179,8 +179,8 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 		obj->sortOrder = std::stoi(rows[4]);
 	}
 
-	int r = 4 + position.x / 1100.0f;
-	int c = 4 + position.y / 1100.0f;
+	int r = 4 + position.x / ROOM_INTERVAL;
+	int c = 4 + position.y / ROOM_INTERVAL;
 
 	(roomPath == "room/Spawn.csv") ? stage1[r][c].tag = 'S' : stage1[r][c].tag = 'N';
 	stage1[r][c].pos = position;
@@ -197,8 +197,6 @@ void SceneGame::SetDoor(int r, int c)
 		door1->Open();
 		door1->SetDestination(stage1[r][c - 1].pos);
 		door1->SetWall(stage1[r][c].wall);
-
-		std::cout << r << "," << c << std::endl;
 	}
 	if (stage1[r][c + 1].tag != NULL)
 	{
@@ -207,8 +205,6 @@ void SceneGame::SetDoor(int r, int c)
 		door->Open();
 		door->SetDestination(stage1[r][c + 1].pos);
 		door->SetWall(stage1[r][c].wall);
-
-		std::cout << r << "," << c << std::endl;
 	}
 	if (stage1[r - 1][c].tag != NULL)
 	{
@@ -217,8 +213,6 @@ void SceneGame::SetDoor(int r, int c)
 		door->Open();
 		door->SetDestination(stage1[r - 1][c].pos);
 		door->SetWall(stage1[r][c].wall);
-
-		std::cout << r << "," << c << std::endl;
 	}
 	if (stage1[r + 1][c].tag != NULL)
 	{
@@ -227,8 +221,6 @@ void SceneGame::SetDoor(int r, int c)
 		door->Open();
 		door->SetDestination(stage1[r + 1][c].pos);
 		door->SetWall(stage1[r][c].wall);
-
-		std::cout << r << "," << c << std::endl;
 	}
 }
 

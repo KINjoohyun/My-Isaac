@@ -1,4 +1,6 @@
 #pragma once
+#define ROOM_INTERVAL (1200.0f)
+
 #include "Scene.h"
 #include "GameObject.h"
 #include "ObjectPool.h"

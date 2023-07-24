@@ -78,3 +78,8 @@ void RoomObject::SetWall(const sf::FloatRect& wall)
 	wallLeft = wall.left;
 	wallRight = wall.left + wall.width;
 }
+
+const int RoomObject::GetHp() const
+{
+	return hp;
+}

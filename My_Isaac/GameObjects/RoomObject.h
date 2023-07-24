@@ -36,4 +36,6 @@ public:
 	void OnDamage(int damage);
 	bool IsBump();
 	void SetWall(const sf::FloatRect& wall);
+
+	const int GetHp() const;
 };

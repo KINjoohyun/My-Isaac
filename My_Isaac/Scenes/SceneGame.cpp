@@ -43,60 +43,29 @@ void SceneGame::Init()
 	player = (Player*)AddGO(new Player());
 	player->sortLayer = 2;
 
-	// 하드 코딩으로 랜덤한 Room 호출
-	std::string randomPath1 = "room/Spawn.csv";
-	CallRoom(randomPath1, { 0.0f, 0.0f });
+	// test
+	RandomRooms();
 
-	std::string randomPath2 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
-	CallRoom(randomPath2, { 1100.0f, 0.0f });
-
-	std::string randomPath3 = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
-	CallRoom(randomPath3, { -1100.0f, 0.0f });
-
-	std::string randomPath4 = "room/Boss1.csv";
-	CallRoom(randomPath4, { 0.0f, -1100.0f });
-
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			SetDoor(i, j);
+		}
+	}
+	
 	// 최대체력 그대로 생성중
 	for (int i = 0; i < player->GetMaxLife(); i++)
 	{
 		SpriteGameObject* ui_heart = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/ui_heart0.png"));
 		ui_heart->SetOrigin(Origins::TC);
-		ui_heart->SetPosition({ windowSize.x - 200.0f + (60.0f * i), 50.0f});
+		ui_heart->SetPosition({ windowSize.x - 200.0f + (60.0f * i), 50.0f });
 		ui_heart->sortLayer = 100;
 	}
 	RenewLife(player->GetMaxLife());
 
 	// test code
-	Door* door1 = (Door*)AddGO(new Door("graphics/door_open.png", {400.0f, 0.0f}, Door::Look::Right));
-	Door* door2 = (Door*)AddGO(new Door("graphics/door_open.png", {-400.0f, 0.0f}, Door::Look::Left));
-	door1->SetPlayer(player);
-	door2->SetPlayer(player);
-	door1->Open();
-	door2->Open();
-	door1->SetDestination({ 1100.0f, 0.0f });
-	door2->SetDestination({ -1100.0f, 0.0f });
-
-	Door* door3 = (Door*)AddGO(new Door("graphics/door_open.png", { -700.0f, 0.0f }, Door::Look::Right));
-	door3->SetPlayer(player);
-	door3->Open();
-	door3->SetDestination({ 0.0f, 0.0f });
-
-	Door* door4 = (Door*)AddGO(new Door("graphics/door_open.png", { 700.0f, 0.0f }, Door::Look::Left));
-	door4->SetPlayer(player);
-	door4->Open();
-	door4->SetDestination({ 0.0f, 0.0f });
-
-	Door* door5 = (Door*)AddGO(new Door("graphics/door_open.png", { 0.0f, -250.0f }, Door::Look::Up));
-	Door* door6 = (Door*)AddGO(new Door("graphics/door_open.png", { 0.0f, -850.0f }, Door::Look::Down));
-	door5->SetPlayer(player);
-	door6->SetPlayer(player);
-	door5->Open();
-	door6->Open();
-	door5->SetDestination({ 0.0f, -1100.0f });
-	door6->SetDestination({ 0.0f, -0.0f });
-
-	// test code
-	RectGameObject* wall = (RectGameObject*)FindGO(randomPath1);
+	RectGameObject* wall = (RectGameObject*)FindGO("room/Spawn.csv");
 	player->SetWall(wall->rect.getGlobalBounds());
 
 	poolBloods.OnCreate = [this, wall](Blood* blood)
@@ -121,14 +90,6 @@ void SceneGame::Update(float dt)
 	{
 		SCENE_MGR.ChangeScene(SceneId::Title);
 	}
-
-	// test
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::T))
-	{
-		Blood* blood = poolBloods.Get();
-		blood->Shoot({ 0.0f, 0.0f }, { 1.0f, 0.0f }, 300.0f, 1);
-		AddGO(blood);
-	}
 }
 void SceneGame::Draw(sf::RenderWindow& window)
 {
@@ -150,6 +111,19 @@ void SceneGame::Enter()
 	Scene::Enter();
 
 	ClearPool(poolBloods);
+
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{ 
+			if (stage1[i][j].tag == 'S')
+			{
+				player->SetPosition(stage1[i][j].pos);
+				break;
+			}
+		}
+	}
+	ViewSet(player->GetPosition());
 }
 void SceneGame::Exit()
 {
@@ -159,7 +133,7 @@ void SceneGame::Exit()
 	Scene::Exit();
 }
 
-void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& position)
+void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& position, int r, int c)
 {
 	rapidcsv::Document doc(roomPath, rapidcsv::LabelParams(-1, -1));
 	std::string bg = doc.GetCell<std::string>(0, 1);
@@ -187,6 +161,142 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 		obj->SetPosition(position.x + std::stof(rows[2]), position.y + std::stof(rows[3]));
 		obj->sortLayer = 1;
 		obj->sortOrder = std::stoi(rows[4]);
+	}
+
+	(roomPath == "room/Spawn.csv") ? stage1[r][c].tag = 'S' : stage1[r][c].tag = 'N';
+	stage1[r][c].wall = wall->rect.getGlobalBounds();
+	stage1[r][c].pos = position;
+}
+void SceneGame::SetDoor(int r, int c)
+{
+	if (stage1[r][c].tag == NULL) return;
+
+	if (stage1[r][c - 1].tag != NULL)
+	{
+		Door* door1 = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Up));
+		door1->SetPlayer(player);
+		door1->Open();
+		door1->SetDestination(stage1[r][c - 1].pos);
+		door1->SetWall(stage1[r][c].wall);
+	}
+	if (stage1[r][c + 1].tag != NULL)
+	{
+		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Down));
+		door->SetPlayer(player);
+		door->Open();
+		door->SetDestination(stage1[r][c + 1].pos);
+		door->SetWall(stage1[r][c].wall);
+	}
+	if (stage1[r - 1][c].tag != NULL)
+	{
+		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Left));
+		door->SetPlayer(player);
+		door->Open();
+		door->SetDestination(stage1[r - 1][c].pos);
+		door->SetWall(stage1[r][c].wall);
+	}
+	if (stage1[r + 1][c].tag != NULL)
+	{
+		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Right));
+		door->SetPlayer(player);
+		door->Open();
+		door->SetDestination(stage1[r + 1][c].pos);
+		door->SetWall(stage1[r][c].wall);
+	}
+}
+void SceneGame::RandomRooms()
+{
+	int r = 0;
+	int c = 0;
+
+	do
+	{
+		r = Utils::RandomRange(1, 9) - 1;
+		c = Utils::RandomRange(1, 9) - 1;
+	} while (stage1[r][c].tag != NULL);
+
+	stage1[r][c].pos = { 0.0f, 0.0f };
+	CallRoom("room/Spawn.csv", { 0.0f, 0.0f }, r, c);
+
+	//std::string randomPath4 = "room/Boss1.csv";
+	//CallRoom(randomPath4, { 0.0f, ROOM_INTERVAL }, r, c + 1);
+
+	int count = 0;
+	int maxcount = 7;
+
+	enum class Dir
+	{
+		Up,
+		Right,
+		Down,
+		Left,
+	};
+
+	while (count < maxcount)
+	{
+		do
+		{
+			r = Utils::RandomRange(1, 9) - 1;
+			c = Utils::RandomRange(1, 9) - 1;
+		} while (stage1[r][c].tag == NULL);
+
+		Dir d = (Dir)Utils::RandomRange(0, 3);
+
+		switch (d)
+		{
+		case Dir::Up:
+			if (c - 1 < 0) break; //배열 최대 범위
+			if (stage1[r][c - 1].tag != NULL) break; //존재하면 다시
+
+			{
+				std::string randomPath = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
+				CallRoom(randomPath, { stage1[r][c].pos.x, stage1[r][c].pos.y - ROOM_INTERVAL }, r, c - 1);
+			}
+			c--;
+			
+			count++;
+
+			break;
+		case Dir::Right:
+			if (r + 1 > 8) break;
+			if (stage1[r + 1][c].tag != NULL) break;
+
+			{
+				std::string randomPath = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
+				CallRoom(randomPath, { stage1[r][c].pos.x + ROOM_INTERVAL, stage1[r][c].pos.y }, r + 1, c);
+			}
+			r++;
+
+			count++;
+
+			break;
+		case Dir::Down:
+			if (c + 1 > 8) break;
+			if (stage1[r][c + 1].tag != NULL) break;
+
+			{
+				std::string randomPath = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
+				CallRoom(randomPath, { stage1[r][c].pos.x, stage1[r][c].pos.y + ROOM_INTERVAL }, r, c + 1);
+			}
+			c++;
+
+			count++;
+
+			break;
+		case Dir::Left:
+			if (r - 1 < 0) break;
+			if (stage1[r - 1][c].tag != NULL) break;
+
+			{
+				std::string randomPath = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
+				CallRoom(randomPath, { stage1[r][c].pos.x - ROOM_INTERVAL, stage1[r][c].pos.y }, r - 1, c);
+			}
+			r--;
+
+			count++;
+
+			break;
+		}
 	}
 }
 
@@ -220,7 +330,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	{
 	case ObjType::None:
 	{
-		RoomObject* none = (RoomObject*)AddGO(new RoomObject(textureId));
+		SpriteGameObject* none = (SpriteGameObject*)AddGO(new SpriteGameObject(textureId));
 		return (SpriteGameObject*)none;
 	}
 	break;
@@ -251,6 +361,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 			poop->OnBump = nullptr;
 			poop->OnHit = nullptr;
 			hitablelist.remove(poop);
+			poop->SetActive(false);
 		};
 		poop->OnBump = [this, poop]()
 		{

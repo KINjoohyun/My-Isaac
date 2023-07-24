@@ -11,8 +11,9 @@ class Door;
 
 struct Room
 {
-	bool isHave = false;
+	char tag = NULL;
 	sf::Vector2f pos;
+	sf::FloatRect wall;
 };
 
 class SceneGame : public Scene
@@ -41,8 +42,7 @@ public:
 	virtual void Exit() override;
 
 	void CallRoom(const std::string& roomPath, const sf::Vector2f& position);
-	void CreateRooms(int row, int column);
-	void SetDoor();
+	void SetDoor(int r, int c);
 
 	void RenewLife(int life);
 	void ViewSet(const sf::Vector2f& position);

@@ -5,11 +5,9 @@
 #include "SceneMgr.h"
 #include "SceneGame.h"
 
-Door::Door(const std::string& textureId, const sf::Vector2f& position, Look look)
+Door::Door(const std::string& textureId, Look look)
 	:SpriteGameObject(textureId), look(look)
 {
-	SetPosition(position);
-
 	
 }
 
@@ -17,7 +15,7 @@ void Door::Init()
 {
 	SpriteGameObject::Init();
 
-	SetOrigin(Origins::C);
+	SetOrigin(Origins::BC);
 }
 void Door::Reset()
 {
@@ -27,15 +25,19 @@ void Door::Reset()
 	{
 	case Look::Up:
 		sprite.setRotation(0);
+		SetPosition(wallLeft + wall.width * 0.5f, wallTop);
 		break;
 	case Look::Right:
 		sprite.setRotation(90);
+		SetPosition(wallRight, wallTop + wall.height * 0.5f);
 		break;
 	case Look::Down:
 		sprite.setRotation(180);
+		SetPosition(wallLeft + wall.width * 0.5f, wallBottom);
 		break;
 	case Look::Left:
 		sprite.setRotation(270);
+		SetPosition(wallLeft, wallTop + wall.height * 0.5f);
 		break;
 	}
 }
@@ -56,6 +58,15 @@ void Door::SetPlayer(Player* player)
 void Door::SetDestination(const sf::Vector2f& destination)
 {
 	this->destination = destination;
+}
+void Door::SetWall(const sf::FloatRect& wall)
+{
+	this->wall = wall;
+
+	wallTop = wall.top;
+	wallBottom = wall.top + wall.height;
+	wallLeft = wall.left;
+	wallRight = wall.left + wall.width;
 }
 void Door::Open()
 {

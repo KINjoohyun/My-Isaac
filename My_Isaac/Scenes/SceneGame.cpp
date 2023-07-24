@@ -43,7 +43,6 @@ void SceneGame::Init()
 	player = (Player*)AddGO(new Player());
 	player->sortLayer = 2;
 
-	// 하드 코딩으로 랜덤한 Room 호출
 	std::string randomPath1 = "room/Spawn.csv";
 	CallRoom(randomPath1, { 0.0f, 0.0f });
 
@@ -56,12 +55,14 @@ void SceneGame::Init()
 	std::string randomPath4 = "room/Boss1.csv";
 	CallRoom(randomPath4, { 0.0f, -1100.0f });
 
-
-
-	// test code
-	CreateRooms(9, 9);
-	SetDoor();
-
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			SetDoor(i, j);
+		}
+	}
+	
 	// 최대체력 그대로 생성중
 	for (int i = 0; i < player->GetMaxLife(); i++)
 	{
@@ -127,6 +128,18 @@ void SceneGame::Enter()
 	Scene::Enter();
 
 	ClearPool(poolBloods);
+
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{ 
+			if (stage1[i][j].tag == 'S')
+			{
+				player->SetPosition(stage1[i][j].pos);
+				break;
+			}
+		}
+	}
 }
 void SceneGame::Exit()
 {
@@ -166,62 +179,57 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 		obj->sortOrder = std::stoi(rows[4]);
 	}
 
-	int r = position.x / 1100.0f;
-	int c = position.y / 1100.0f;
+	int r = 4 + position.x / 1100.0f;
+	int c = 4 + position.y / 1100.0f;
 
-	stage1[4 + r][4 + c].isHave = true;
-	stage1[4 + r][4 + c].pos = position;
+	(roomPath == "room/Spawn.csv") ? stage1[r][c].tag = 'S' : stage1[r][c].tag = 'N';
+	stage1[r][c].pos = position;
+	stage1[r][c].wall = wall->rect.getGlobalBounds();
 }
-void SceneGame::CreateRooms(int row, int column)
+void SceneGame::SetDoor(int r, int c)
 {
-	int r = 0;
-	int c = 0;
-	do
-	{
-		r = Utils::RandomRange(1, row) - 1;
-		c = Utils::RandomRange(1, column) - 1;
-	} while (stage1[r][c].isHave);
-	stage1[r][c].isHave = true;
+	if (stage1[r][c].tag == NULL) return;
 
-	// 여기부터 진행 예정
-	for (int i = 0; i < row; i++)
+	if (stage1[r][c - 1].tag != NULL)
 	{
-		for (int j = 0; j < column; j++)
-		{
-			std::cout << stage1[j][i].isHave;
-		}
-		std::cout << std::endl;
+		Door* door1 = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Up));
+		door1->SetPlayer(player);
+		door1->Open();
+		door1->SetDestination(stage1[r][c - 1].pos);
+		door1->SetWall(stage1[r][c].wall);
+
+		std::cout << r << "," << c << std::endl;
 	}
-}
-void SceneGame::SetDoor()
-{
-	Door* door1 = (Door*)AddGO(new Door("graphics/door_open.png", { 400.0f, 0.0f }, Door::Look::Right));
-	Door* door2 = (Door*)AddGO(new Door("graphics/door_open.png", { -400.0f, 0.0f }, Door::Look::Left));
-	door1->SetPlayer(player);
-	door2->SetPlayer(player);
-	door1->Open();
-	door2->Open();
-	door1->SetDestination({ 1100.0f, 0.0f });
-	door2->SetDestination({ -1100.0f, 0.0f });
+	if (stage1[r][c + 1].tag != NULL)
+	{
+		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Down));
+		door->SetPlayer(player);
+		door->Open();
+		door->SetDestination(stage1[r][c + 1].pos);
+		door->SetWall(stage1[r][c].wall);
 
-	Door* door3 = (Door*)AddGO(new Door("graphics/door_open.png", { -700.0f, 0.0f }, Door::Look::Right));
-	door3->SetPlayer(player);
-	door3->Open();
-	door3->SetDestination({ 0.0f, 0.0f });
+		std::cout << r << "," << c << std::endl;
+	}
+	if (stage1[r - 1][c].tag != NULL)
+	{
+		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Left));
+		door->SetPlayer(player);
+		door->Open();
+		door->SetDestination(stage1[r - 1][c].pos);
+		door->SetWall(stage1[r][c].wall);
 
-	Door* door4 = (Door*)AddGO(new Door("graphics/door_open.png", { 700.0f, 0.0f }, Door::Look::Left));
-	door4->SetPlayer(player);
-	door4->Open();
-	door4->SetDestination({ 0.0f, 0.0f });
+		std::cout << r << "," << c << std::endl;
+	}
+	if (stage1[r + 1][c].tag != NULL)
+	{
+		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Right));
+		door->SetPlayer(player);
+		door->Open();
+		door->SetDestination(stage1[r + 1][c].pos);
+		door->SetWall(stage1[r][c].wall);
 
-	Door* door5 = (Door*)AddGO(new Door("graphics/door_open.png", { 0.0f, -250.0f }, Door::Look::Up));
-	Door* door6 = (Door*)AddGO(new Door("graphics/door_open.png", { 0.0f, -850.0f }, Door::Look::Down));
-	door5->SetPlayer(player);
-	door6->SetPlayer(player);
-	door5->Open();
-	door6->Open();
-	door5->SetDestination({ 0.0f, -1100.0f });
-	door6->SetDestination({ 0.0f, -0.0f });
+		std::cout << r << "," << c << std::endl;
+	}
 }
 
 void SceneGame::RenewLife(int life)

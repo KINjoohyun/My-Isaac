@@ -43,8 +43,9 @@ public:
 	virtual void Enter() override;
 	virtual void Exit() override;
 
-	void CallRoom(const std::string& roomPath, const sf::Vector2f& position);
+	void CallRoom(const std::string& roomPath, const sf::Vector2f& position, int r, int c);
 	void SetDoor(int r, int c);
+	void RandomRooms();
 
 	void RenewLife(int life);
 	void ViewSet(const sf::Vector2f& position);

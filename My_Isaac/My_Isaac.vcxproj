@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./MapEditor;./Animation;./DataTables;./3rd;./;./SFML-2.5.1/include;./Global;./Framework;./Scenes;./GameObjects;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./UI;./MapEditor;./Animation;./DataTables;./3rd;./;./SFML-2.5.1/include;./Global;./Framework;./Scenes;./GameObjects;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -140,7 +140,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./Animation;./DataTables;./3rd;./SFML-2.5.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./UI;./Animation;./DataTables;./3rd;./SFML-2.5.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -182,9 +182,9 @@
     <ClCompile Include="Scenes\SceneTitle.cpp" />
     <ClCompile Include="GameObjects\SpriteGameObject.cpp" />
     <ClCompile Include="Global\Variables.cpp" />
-    <ClCompile Include="GameObjects\UITextButton.cpp" />
+    <ClCompile Include="UI\UITextButton.cpp" />
     <ClCompile Include="MapEditor\Tile.cpp" />
-    <ClCompile Include="GameObjects\UIImageButton.cpp" />
+    <ClCompile Include="UI\UIImageButton.cpp" />
     <ClCompile Include="GameObjects\Tear.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -220,9 +220,9 @@
     <ClInclude Include="GameObjects\SpriteGameObject.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Global\Variables.h" />
-    <ClInclude Include="GameObjects\UITextButton.h" />
+    <ClInclude Include="UI\UITextButton.h" />
     <ClInclude Include="MapEditor\Tile.h" />
-    <ClInclude Include="GameObjects\UIImageButton.h" />
+    <ClInclude Include="UI\UIImageButton.h" />
     <ClInclude Include="GameObjects\Tear.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

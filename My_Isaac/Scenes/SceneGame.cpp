@@ -52,6 +52,47 @@ void SceneGame::Init()
 			SetDoor(i, j);
 		}
 	}
+
+	SpriteGameObject* minimap_bg = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/minimap1.png"));
+	minimap_bg->SetOrigin(Origins::C);
+	minimap_bg->sprite.setTextureRect({0, 0, 55, 49});
+	minimap_bg->SetPosition(110.0f, 105.0f);
+	minimap_bg->sprite.setScale(3.5f, 3.5f);
+	minimap_bg->sortLayer = 101;
+	minimap_bg->sortOrder = -1;
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			if (stage1[i][j].tag != NULL)
+			{
+				SpriteGameObject* test = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/minimap1.png"));
+				test->SetOrigin(Origins::C);
+				test->sprite.setTextureRect({0, 224, 17, 15});
+				test->SetPosition({ 40.0f + 17 * i, 40.0f + 15 * j});
+				test->sortLayer = 101;
+				test->sortOrder = 0;
+			}
+			if (stage1[i][j].tag == 'S')
+			{
+				SpriteGameObject* test = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/minimap1.png"));
+				test->SetOrigin(Origins::C);
+				test->sprite.setTextureRect({ 0, 192, 17, 15 });
+				test->SetPosition({ 40.0f + 17 * i, 40.0f + 15 * j });
+				test->sortLayer = 101;
+				test->sortOrder = 1;
+			}
+			else if (stage1[i][j].tag == 'B')
+			{
+				SpriteGameObject* test = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/minimap1.png"));
+				test->SetOrigin(Origins::C);
+				test->sprite.setTextureRect({ 34, 82, 9, 8 });
+				test->SetPosition({ 40.0f + 17 * i, 40.0f + 15 * j });
+				test->sortLayer = 101;
+				test->sortOrder = 2;
+			}
+		}
+	}
 	
 	// 최대체력 그대로 생성중
 	for (int i = 0; i < player->GetMaxLife(); i++)
@@ -287,8 +328,8 @@ void SceneGame::RandomRooms()
 			break;
 		}
 
-		if (count == maxcount) stage1[r][c].tag = 'B';
 	}
+	stage1[r][c].tag = 'B';
 }
 
 void SceneGame::RenewLife(int life)
@@ -340,19 +381,36 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	break;
 	case ObjType::Poop:
 	{
-		RoomObject* poop = (RoomObject*)AddGO(new RoomObject(textureId));
+		std::string poopPath = "graphics/poop" + std::to_string(Utils::RandomRange(1, 3)) + ".png";
+		RoomObject* poop = (RoomObject*)AddGO(new RoomObject(poopPath));
+		poop->sprite.setTextureRect(sf::IntRect{0, 0, 58, 65});
 		poop->SetMaxHp(4);
 		poop->SetPlayer(player);
 		poop->OnHit = [poop](int damage)
 		{
 			poop->OnDamage(damage);
+
+			switch (poop->GetHp())
+			{
+			case 3:
+				poop->sprite.setTextureRect(sf::IntRect{58, 0, 58, 65});
+				break;
+			case 2:
+				poop->sprite.setTextureRect(sf::IntRect{116, 0, 58, 65});
+				break;
+			case 1:
+				poop->sprite.setTextureRect(sf::IntRect{174, 0, 58, 65});
+				break;
+			case 0:
+				poop->sprite.setTextureRect(sf::IntRect{232, 0, 58, 65});
+				break;
+			}
 		};
 		poop->OnDie = [this, poop]()
 		{
 			poop->OnBump = nullptr;
 			poop->OnHit = nullptr;
 			hitablelist.remove(poop);
-			poop->SetActive(false);
 		};
 		poop->OnBump = [this, poop]()
 		{

@@ -215,7 +215,7 @@ void SceneGame::SetDoor(int r, int c)
 {
 	if (stage1[r][c].tag == NULL) return;
 
-	if (stage1[r][c - 1].tag != NULL)
+	if (stage1[r][c - 1].tag != NULL && c > 0)
 	{
 		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Up));
 		door->SetPlayer(player);
@@ -224,7 +224,7 @@ void SceneGame::SetDoor(int r, int c)
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
 	}
-	if (stage1[r][c + 1].tag != NULL)
+	if (stage1[r][c + 1].tag != NULL && c < 8)
 	{
 		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Down));
 		door->SetPlayer(player);
@@ -233,7 +233,7 @@ void SceneGame::SetDoor(int r, int c)
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
 	}
-	if (stage1[r - 1][c].tag != NULL)
+	if (stage1[r - 1][c].tag != NULL && r > 0)
 	{
 		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Left));
 		door->SetPlayer(player);
@@ -242,7 +242,7 @@ void SceneGame::SetDoor(int r, int c)
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
 	}
-	if (stage1[r + 1][c].tag != NULL)
+	if (stage1[r + 1][c].tag != NULL && c < 8)
 	{
 		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Right));
 		door->SetPlayer(player);

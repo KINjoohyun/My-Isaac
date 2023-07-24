@@ -11,6 +11,7 @@ class RoomObject;
 class Blood;
 class Door;
 class Monster;
+class TextGameObject;
 
 struct Room
 {
@@ -34,6 +35,9 @@ protected:
 
 	Room stage1[9][9];
 
+	float fps = 0.0f;
+	float fpstimer = 0.0f;
+	TextGameObject* fpstext;
 public:
 	SceneGame();
 	virtual ~SceneGame() override;

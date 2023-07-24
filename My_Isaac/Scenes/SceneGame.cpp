@@ -7,6 +7,7 @@
 #include "StringTable.h"
 #include "Variables.h"
 #include "SpriteGameObject.h"
+#include "TextGameObject.h"
 #include "rapidcsv.h"
 #include "Tile.h"
 #include "RectGameObject.h"
@@ -35,6 +36,20 @@ void SceneGame::Init()
 
 	uiView.setSize(windowSize);
 	uiView.setCenter({ windowSize.x * 0.5f, windowSize.y * 0.5f });
+
+	fpstext = (TextGameObject*)AddGO(new TextGameObject("fonts/DNFBitBitOTF.otf"));
+	fpstext->SetOrigin(Origins::TL);
+	fpstext->text.setCharacterSize(10);
+	fpstext->text.setFillColor(sf::Color::Green);
+	fpstext->sortLayer = 105;
+	fpstext->action = [&]()
+	{
+		if (INPUT_MGR.GetKeyDown(sf::Keyboard::F5))
+		{
+			fpstext->SetActive(!fpstext->GetActive());
+		}
+	};
+	fpstext->SetActive(false);
 
 	SpriteGameObject* ui_bg = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/ui_bg.png"));
 	ui_bg->SetOrigin(Origins::TL);
@@ -80,7 +95,7 @@ void SceneGame::Init()
 				test->sprite.setTextureRect({ 0, 192, 17, 15 });
 				test->SetPosition({ 40.0f + 17 * i, 40.0f + 15 * j });
 				test->sortLayer = 101;
-				test->sortOrder = 1;
+				test->sortOrder = 2;
 			}
 			else if (stage1[i][j].tag == 'B')
 			{
@@ -89,7 +104,7 @@ void SceneGame::Init()
 				test->sprite.setTextureRect({ 34, 82, 9, 8 });
 				test->SetPosition({ 40.0f + 17 * i, 40.0f + 15 * j });
 				test->sortLayer = 101;
-				test->sortOrder = 2;
+				test->sortOrder = 3;
 			}
 		}
 	}
@@ -121,6 +136,15 @@ void SceneGame::Init()
 void SceneGame::Update(float dt)
 {
 	Scene::Update(dt);
+
+	fps++;
+	fpstimer += dt;
+	if (fpstimer >= 1.0f)
+	{
+		fpstext->text.setString("FPS : " + std::to_string(fps));
+		fpstimer = 0.0f;
+		fps = 0.0f;
+	}
 
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Escape))
 	{

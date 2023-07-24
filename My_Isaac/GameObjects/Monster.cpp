@@ -5,8 +5,8 @@
 #include "SceneMgr.h"
 #include "SceneGame.h"
 
-Monster::Monster(ObjType objtype, const std::string& textureId, const std::string& name)
-	:RoomObject(textureId, name), objtype(objtype)
+Monster::Monster(ObjType objtype, int r, int c, const std::string& textureId, const std::string& name)
+	:RoomObject(textureId, name), objtype(objtype), r(r), c(c)
 {
 	switch (objtype)
 	{
@@ -91,6 +91,23 @@ void Monster::Update(float dt)
 	}
 }
 
+void Monster::OnDamage(int damage)
+{
+	hp = std::max(0, hp - damage);
+
+	if (hp == 0)
+	{
+		if (OnDie != nullptr)
+		{
+			OnDie();
+		}
+		else
+		{
+			SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+			scene->RemoveMonster(this, r, c);
+		}
+	}
+}
 void Monster::SetMonster(int damage, float speed, int maxHp, float recognize, bool isChase)
 {
 	this->damage = damage;

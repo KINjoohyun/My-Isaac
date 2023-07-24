@@ -33,7 +33,7 @@ public:
 
 	void SetPlayer(Player* player);
 	void SetMaxHp(int maxHp);
-	void OnDamage(int damage);
+	virtual void OnDamage(int damage);
 	bool IsBump();
 	void SetWall(const sf::FloatRect& wall);
 

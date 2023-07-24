@@ -5,8 +5,8 @@
 #include "SceneMgr.h"
 #include "SceneGame.h"
 
-Boss::Boss(ObjType objtype, const std::string& textureId, const std::string& name)
-	:Monster(objtype, textureId, name)
+Boss::Boss(ObjType objtype, int r, int c, const std::string& textureId, const std::string& name)
+	:Monster(objtype, r, c, textureId, name)
 {
 	switch (objtype)
 	{

@@ -43,7 +43,6 @@ void SceneGame::Init()
 	player = (Player*)AddGO(new Player());
 	player->sortLayer = 2;
 
-	// test
 	RandomRooms();
 
 	for (int i = 0; i < 9; i++)
@@ -64,16 +63,12 @@ void SceneGame::Init()
 	}
 	RenewLife(player->GetMaxLife());
 
-	// test code
 	RectGameObject* wall = (RectGameObject*)FindGO("room/Spawn.csv");
-	player->SetWall(wall->rect.getGlobalBounds());
-
 	poolBloods.OnCreate = [this, wall](Blood* blood)
 	{
 		blood->pool = &poolBloods;
 		blood->SetPlayer(player);
 		blood->sortLayer = 1;
-		blood->SetWall(wall->rect.getGlobalBounds());
 	};
 	poolBloods.Init();
 
@@ -89,6 +84,12 @@ void SceneGame::Update(float dt)
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Escape))
 	{
 		SCENE_MGR.ChangeScene(SceneId::Title);
+	}
+
+	// Debug Mode
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::F5))
+	{
+		
 	}
 }
 void SceneGame::Draw(sf::RenderWindow& window)
@@ -112,6 +113,8 @@ void SceneGame::Enter()
 
 	ClearPool(poolBloods);
 
+	RectGameObject* wall = (RectGameObject*)FindGO("room/Spawn.csv");
+	player->SetWall(wall->rect.getGlobalBounds());
 	for (int i = 0; i < 9; i++)
 	{
 		for (int j = 0; j < 9; j++)
@@ -156,7 +159,7 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 	for (int i = 4; i < doc.GetRowCount(); i++)
 	{
 		auto rows = doc.GetRow<std::string>(i);
-		auto obj = LoadObj((ObjType)std::stoi(rows[0]), rows[1], wall->rect.getGlobalBounds());
+		auto obj = LoadObj((ObjType)std::stoi(rows[0]), rows[1], wall->rect.getGlobalBounds(), r, c);
 		obj->SetOrigin(Origins::C);
 		obj->SetPosition(position.x + std::stof(rows[2]), position.y + std::stof(rows[3]));
 		obj->sortLayer = 1;
@@ -173,35 +176,39 @@ void SceneGame::SetDoor(int r, int c)
 
 	if (stage1[r][c - 1].tag != NULL)
 	{
-		Door* door1 = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Up));
-		door1->SetPlayer(player);
-		door1->Open();
-		door1->SetDestination(stage1[r][c - 1].pos);
-		door1->SetWall(stage1[r][c].wall);
+		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Up));
+		door->SetPlayer(player);
+		door->SetDestination(stage1[r][c - 1].pos);
+		door->SetWall(stage1[r][c].wall);
+		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
+		stage1[r][c].doors.push_back(door);
 	}
 	if (stage1[r][c + 1].tag != NULL)
 	{
 		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Down));
 		door->SetPlayer(player);
-		door->Open();
 		door->SetDestination(stage1[r][c + 1].pos);
 		door->SetWall(stage1[r][c].wall);
+		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
+		stage1[r][c].doors.push_back(door);
 	}
 	if (stage1[r - 1][c].tag != NULL)
 	{
 		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Left));
 		door->SetPlayer(player);
-		door->Open();
 		door->SetDestination(stage1[r - 1][c].pos);
 		door->SetWall(stage1[r][c].wall);
+		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
+		stage1[r][c].doors.push_back(door);
 	}
 	if (stage1[r + 1][c].tag != NULL)
 	{
 		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Right));
 		door->SetPlayer(player);
-		door->Open();
 		door->SetDestination(stage1[r + 1][c].pos);
 		door->SetWall(stage1[r][c].wall);
+		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
+		stage1[r][c].doors.push_back(door);
 	}
 }
 void SceneGame::RandomRooms()
@@ -218,9 +225,6 @@ void SceneGame::RandomRooms()
 	stage1[r][c].pos = { 0.0f, 0.0f };
 	CallRoom("room/Spawn.csv", { 0.0f, 0.0f }, r, c);
 
-	//std::string randomPath4 = "room/Boss1.csv";
-	//CallRoom(randomPath4, { 0.0f, ROOM_INTERVAL }, r, c + 1);
-
 	int count = 0;
 	int maxcount = 7;
 
@@ -232,7 +236,7 @@ void SceneGame::RandomRooms()
 		Left,
 	};
 
-	while (count < maxcount)
+	while (count <= maxcount)
 	{
 		do
 		{
@@ -241,6 +245,8 @@ void SceneGame::RandomRooms()
 		} while (stage1[r][c].tag == NULL);
 
 		Dir d = (Dir)Utils::RandomRange(0, 3);
+		std::string randomPath = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
+		if (count == maxcount) randomPath = "room/Boss1.csv";
 
 		switch (d)
 		{
@@ -248,12 +254,8 @@ void SceneGame::RandomRooms()
 			if (c - 1 < 0) break; //배열 최대 범위
 			if (stage1[r][c - 1].tag != NULL) break; //존재하면 다시
 
-			{
-				std::string randomPath = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
-				CallRoom(randomPath, { stage1[r][c].pos.x, stage1[r][c].pos.y - ROOM_INTERVAL }, r, c - 1);
-			}
+			CallRoom(randomPath, { stage1[r][c].pos.x, stage1[r][c].pos.y - ROOM_INTERVAL }, r, c - 1);
 			c--;
-			
 			count++;
 
 			break;
@@ -261,12 +263,8 @@ void SceneGame::RandomRooms()
 			if (r + 1 > 8) break;
 			if (stage1[r + 1][c].tag != NULL) break;
 
-			{
-				std::string randomPath = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
-				CallRoom(randomPath, { stage1[r][c].pos.x + ROOM_INTERVAL, stage1[r][c].pos.y }, r + 1, c);
-			}
+			CallRoom(randomPath, { stage1[r][c].pos.x + ROOM_INTERVAL, stage1[r][c].pos.y }, r + 1, c);
 			r++;
-
 			count++;
 
 			break;
@@ -274,29 +272,22 @@ void SceneGame::RandomRooms()
 			if (c + 1 > 8) break;
 			if (stage1[r][c + 1].tag != NULL) break;
 
-			{
-				std::string randomPath = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
-				CallRoom(randomPath, { stage1[r][c].pos.x, stage1[r][c].pos.y + ROOM_INTERVAL }, r, c + 1);
-			}
+			CallRoom(randomPath, { stage1[r][c].pos.x, stage1[r][c].pos.y + ROOM_INTERVAL }, r, c + 1);
 			c++;
-
 			count++;
 
 			break;
 		case Dir::Left:
 			if (r - 1 < 0) break;
 			if (stage1[r - 1][c].tag != NULL) break;
-
-			{
-				std::string randomPath = "room/Room" + std::to_string(Utils::RandomRange(1, 9)) + ".csv";
-				CallRoom(randomPath, { stage1[r][c].pos.x - ROOM_INTERVAL, stage1[r][c].pos.y }, r - 1, c);
-			}
+			CallRoom(randomPath, { stage1[r][c].pos.x - ROOM_INTERVAL, stage1[r][c].pos.y }, r - 1, c);
 			r--;
-
 			count++;
 
 			break;
 		}
+
+		if (count == maxcount) stage1[r][c].tag = 'B';
 	}
 }
 
@@ -324,7 +315,7 @@ void SceneGame::ViewSet(const sf::Vector2f& position)
 {
 	worldView.setCenter({position.x, position.y - 100.0f});
 }
-SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& textureId, const sf::FloatRect& wall)
+SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& textureId, const sf::FloatRect& wall, int r, int c)
 {
 	switch (objtype)
 	{
@@ -386,7 +377,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	break;
 	case ObjType::AttackFly:
 	{
-		Monster* attackfly = (Monster*)AddGO(new Monster(objtype));
+		Monster* attackfly = (Monster*)AddGO(new Monster(objtype, r, c));
 		attackfly->SetPlayer(player);
 		attackfly->SetMonster(1, 150.0f, 3, 500.0f);
 		attackfly->OnBump = [this, attackfly]()
@@ -395,12 +386,13 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		};
 		attackfly->SetWall(wall);
 		hitablelist.push_back(attackfly);
+		stage1[r][c].monsters.push_back(attackfly);
 		return (SpriteGameObject*)attackfly;
 	}
 	break;
 	case ObjType::Pooter:
 	{
-		Monster* pooter = (Monster*)AddGO(new Monster(objtype));
+		Monster* pooter = (Monster*)AddGO(new Monster(objtype, r, c));
 		pooter->SetPlayer(player);
 		pooter->SetMonster(1, 100.0f, 4, 400.0f);
 		pooter->OnBump = [this, pooter]()
@@ -416,19 +408,20 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		};
 		pooter->SetWall(wall);
 		hitablelist.push_back(pooter);
+		stage1[r][c].monsters.push_back(pooter);
 		return (SpriteGameObject*)pooter;
 	}
 	break;
 	case ObjType::Sucker:
 	{
-		Monster* sucker = (Monster*)AddGO(new Monster(objtype));
+		Monster* sucker = (Monster*)AddGO(new Monster(objtype, r, c));
 		sucker->SetPlayer(player);
 		sucker->SetMonster(1, 100.0f, 5, 400.0f);
 		sucker->OnBump = [this, sucker]()
 		{
 			player->OnHit(sucker->GetDamage());
 		};
-		sucker->OnDie = [this, sucker, wall]()
+		sucker->OnDie = [this, sucker, wall, r, c]()
 		{
 			Blood* blood1 = poolBloods.Get();
 			blood1->SetWall(wall);
@@ -450,16 +443,17 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 			blood4->Shoot(sucker->GetPosition(), { 0.0f, 1.0f }, 300.0f, 1);
 			AddGO(blood4);
 
-			RemoveRGO(sucker);
+			RemoveMonster(sucker, r, c);
 		};
 		sucker->SetWall(wall);
 		hitablelist.push_back(sucker);
+		stage1[r][c].monsters.push_back(sucker);
 		return (SpriteGameObject*)sucker;
 	}
 	break;
 	case ObjType::DukeOfFlies:
 	{
-		Boss* duke = (Boss*)AddGO(new Boss(objtype, textureId));
+		Boss* duke = (Boss*)AddGO(new Boss(objtype, r, c, textureId));
 		duke->SetPlayer(player);
 		duke->SetMonster(1, 50.0f, 50, 800.0f);
 		duke->OnBump = [this, duke]()
@@ -467,7 +461,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 			player->SetPosition(player->GetPosition() - Utils::Normalize(duke->GetPosition() - player->GetPosition()));
 			player->OnHit(duke->GetDamage());
 		};
-		duke->Pattern1 = [this, duke, wall]()
+		duke->Pattern1 = [this, duke, wall, r, c]()
 		{
 			if (Utils::Distance(duke->GetPosition(), player->GetPosition()) > 200.0f)
 			{
@@ -475,7 +469,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 			}
 			for (int i = 0; i < 2; i++)
 			{
-				Monster* attackfly = (Monster*)AddGO(new Monster(ObjType::AttackFly));
+				Monster* attackfly = (Monster*)AddGO(new Monster(ObjType::AttackFly, r, c));
 				attackfly->SetPlayer(player);
 				attackfly->SetMonster(1, 150.0f, 3, 500.0f);
 				attackfly->OnBump = [this, attackfly]()
@@ -490,11 +484,12 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 				attackfly->Init();
 				attackfly->Reset();
 				hitablelist.push_back(attackfly);
+				stage1[r][c].monsters.push_back(attackfly);
 			}
-				
+			
 			return true;
 		};
-		duke->Pattern2 = [this, duke, wall]()
+		duke->Pattern2 = [this, duke, wall, r, c]()
 		{
 			if (Utils::Distance(duke->GetPosition(), player->GetPosition()) >  700.0f)
 			{
@@ -502,7 +497,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 			}
 			for (int i = 0; i < 2; i++)
 			{
-				Monster* pooter = (Monster*)AddGO(new Monster(ObjType::Pooter));
+				Monster* pooter = (Monster*)AddGO(new Monster(ObjType::Pooter, r, c));
 				pooter->SetPlayer(player);
 				pooter->SetMonster(1, 100.0f, 4, 400.0f);
 				pooter->OnBump = [this, pooter]()
@@ -524,6 +519,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 				pooter->Init();
 				pooter->Reset();
 				hitablelist.push_back(pooter);
+				stage1[r][c].monsters.push_back(pooter);
 			}
 
 			return true;
@@ -531,6 +527,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		duke->SetCooltime(2.0f, 5.0f);
 		duke->SetWall(wall);
 		hitablelist.push_back(duke);
+		stage1[r][c].monsters.push_back(duke);
 		return (SpriteGameObject*)duke;
 	}
 	default:
@@ -549,4 +546,22 @@ void SceneGame::RemoveRGO(RoomObject* roomGO)
 {
 	hitablelist.remove(roomGO);
 	RemoveGO(roomGO);
+}
+void SceneGame::RemoveMonster(Monster* monster, int r, int c)
+{
+	stage1[r][c].monsters.remove(monster);
+	hitablelist.remove(monster);
+	RemoveGO(monster);
+
+	DoorControl(r, c);
+}
+void SceneGame::DoorControl(int r, int c)
+{
+	if (stage1[r][c].monsters.empty())
+	{
+		for (auto it : stage1[r][c].doors)
+		{
+			it->Open();
+		}
+	}
 }

@@ -13,7 +13,7 @@ protected:
 	float p3Timer = 0.0f;
 	float p3Cooltime = 0.0f;
 public:
-	Boss(ObjType objtype, const std::string& textureId = "", const std::string& name = "");
+	Boss(ObjType objtype, int r, int c, const std::string& textureId = "", const std::string& name = "");
 	virtual ~Boss() override { Release(); }
 
 	virtual void Init() override;

@@ -7,6 +7,8 @@ class Monster : public RoomObject
 protected:
 	ObjType objtype;
 	AnimationController animation;
+	int r = 0;
+	int c = 0;
 
 	int damage = 0;
 	float speed = 0.0f;
@@ -20,7 +22,7 @@ protected:
 	float attackTimer = 0.0f;
 	float attackDuration = 1.0f;
 public:
-	Monster(ObjType objtype, const std::string& textureId = "", const std::string& name = "");
+	Monster(ObjType objtype, int r, int c, const std::string& textureId = "", const std::string& name = "");
 	virtual ~Monster() override { Release(); }
 
 	virtual void Init() override;
@@ -28,6 +30,7 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Release() override {}
 
+	virtual void OnDamage(int damage) override;
 	void SetMonster(int damage = 0, float speed = 0.0f, int maxHp = 0, float recognize = 0.0f, bool isChase = true);
 	const sf::Vector2f& GetDirection();
 	const int& GetDamage();

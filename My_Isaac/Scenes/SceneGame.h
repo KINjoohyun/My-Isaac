@@ -10,12 +10,15 @@ class SpriteGameObject;
 class RoomObject;
 class Blood;
 class Door;
+class Monster;
 
 struct Room
 {
 	char tag = NULL;
 	sf::Vector2f pos;
 	sf::FloatRect wall;
+	std::list<Monster*> monsters;
+	std::vector<Door*> doors;
 };
 
 class SceneGame : public Scene
@@ -49,9 +52,11 @@ public:
 
 	void RenewLife(int life);
 	void ViewSet(const sf::Vector2f& position);
-	SpriteGameObject* LoadObj(ObjType objtype, const std::string& textureId, const sf::FloatRect& wall);
+	SpriteGameObject* LoadObj(ObjType objtype, const std::string& textureId, const sf::FloatRect& wall, int r, int c);
 	const std::list<RoomObject*>* GetPoopList() const;
 	void RemoveRGO(RoomObject* roomGO);
+	void RemoveMonster(Monster* monster, int r, int c);
+	void DoorControl(int r, int c);
 
 	template <typename T>
 	void ClearPool(ObjectPool<T>& pool);

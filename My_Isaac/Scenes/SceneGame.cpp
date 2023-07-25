@@ -59,8 +59,8 @@ void SceneGame::Init()
 	{
 		if (isDebug)
 		{
-			player->bodyCol.setOutlineColor(sf::Color::Red);
-			player->headCol.setOutlineColor(sf::Color::Red);
+			player->bodyCol.setOutlineColor(sf::Color::White);
+			player->headCol.setOutlineColor(sf::Color::White);
 		}
 		else
 		{
@@ -489,24 +489,6 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		};
 		poop->OnDie = [this, poop]()
 		{
-			Pill* pill = (Pill*)AddGO(new Pill());
-			pill->SetType((Pill::PillType)Utils::RandomRange(0, (int)Pill::PillType::Count - 1));
-			pill->SetPlayer(player);
-			pill->SetPosition(poop->GetPosition());
-			pill->OnDebug = [this, pill]()
-			{
-				if (isDebug)
-				{
-					pill->col.setOutlineColor(sf::Color::Green);
-				}
-				else
-				{
-					pill->col.setOutlineColor(sf::Color::Transparent);
-				}
-			};
-			pill->Init();
-			pill->Reset();
-
 			poop->sortLayer = 0;
 			poop->OnBump = nullptr;
 			poop->OnHit = nullptr;
@@ -621,7 +603,8 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		};
 		duke->Pattern1 = [this, duke, wall, r, c]()
 		{
-			if (Utils::Distance(duke->GetPosition(), player->GetPosition()) > 200.0f)
+			if (Utils::Distance(duke->GetPosition(), player->GetPosition()) > 200.0f
+				|| stage1[r][c].monsters.size() > 6)
 			{
 				return false;
 			}
@@ -649,7 +632,8 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		};
 		duke->Pattern2 = [this, duke, wall, r, c]()
 		{
-			if (Utils::Distance(duke->GetPosition(), player->GetPosition()) >  700.0f)
+			if (Utils::Distance(duke->GetPosition(), player->GetPosition()) >  700.0f
+				|| stage1[r][c].monsters.size() > 6)
 			{
 				return false;
 			}
@@ -720,6 +704,28 @@ void SceneGame::DoorControl(int r, int c)
 		for (auto it : stage1[r][c].doors)
 		{
 			it->Open();
+		}
+
+		int per = Utils::RandomRange(1, 100);
+		if (per >= 50) // 50%
+		{
+			Pill* pill = (Pill*)AddGO(new Pill());
+			pill->SetType((Pill::PillType)Utils::RandomRange(0, (int)Pill::PillType::Count - 1));
+			pill->SetPlayer(player);
+			pill->SetPosition(stage1[r][c].pos);
+			pill->OnDebug = [this, pill]()
+			{
+				if (isDebug)
+				{
+					pill->col.setOutlineColor(sf::Color::Green);
+				}
+				else
+				{
+					pill->col.setOutlineColor(sf::Color::Transparent);
+				}
+			};
+			pill->Init();
+			pill->Reset();
 		}
 	}
 }

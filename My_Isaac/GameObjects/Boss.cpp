@@ -26,12 +26,11 @@ void Boss::Init()
 }
 void Boss::Reset()
 {
-	Monster::Reset();
-
 	p1Timer = 0.0f;
 	p2Timer = 0.0f;
 	p3Timer = 0.0f;
-	animation.Play("Idle");
+
+	Monster::Reset();
 }
 void Boss::Update(float dt)
 {

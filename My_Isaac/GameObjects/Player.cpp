@@ -89,7 +89,7 @@ void Player::Reset()
 		{
 			if (scene->isDebug)
 			{
-				it->col.setOutlineColor(sf::Color::Blue);
+				it->col.setOutlineColor(sf::Color::White);
 			}
 			else
 			{

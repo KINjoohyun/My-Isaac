@@ -90,7 +90,7 @@ void Pill::Update(float dt)
 			std::cout << "SpeedUp" << std::endl;
 			break;
 		default:
-			std::cerr << "ERROR: Pill Update(dt)" << std::endl;
+			std::cout << "WARNING: Not Exist PillType" << std::endl;
 			break;
 		}
 

@@ -12,6 +12,7 @@ class Blood;
 class Door;
 class Monster;
 class TextGameObject;
+class MiniMap;
 
 struct Room
 {
@@ -20,6 +21,10 @@ struct Room
 	sf::FloatRect wall;
 	std::list<Monster*> monsters;
 	std::vector<Door*> doors;
+
+	bool isHear = false;
+	bool isPassed = false;
+	bool isClarify = false;
 };
 
 class SceneGame : public Scene
@@ -33,12 +38,14 @@ protected:
 
 	ObjectPool<Blood> poolBloods;
 
-	Room stage1[9][9];
-
 	float fps = 0.0f;
 	float fpstimer = 0.0f;
 	TextGameObject* fpstext;
+
 public:
+	MiniMap* minimap;
+	Room stage1[9][9];
+
 	SceneGame();
 	virtual ~SceneGame() override;
 

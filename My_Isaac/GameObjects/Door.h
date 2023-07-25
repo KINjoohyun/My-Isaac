@@ -20,6 +20,8 @@ protected:
 
 	Player* player;
 	sf::Vector2f destination;
+	sf::Vector2i currRoom;
+	sf::Vector2i nextRoom;
 
 	sf::FloatRect wall;
 	float wallTop = 0.0f;
@@ -28,7 +30,7 @@ protected:
 	float wallRight = 0.0f;
 
 public:
-	Door(const std::string& textureId = "", Look look = Look::Up);
+	Door(const std::string& textureId, Look look, const sf::Vector2i& currRoom);
 	virtual ~Door() override { Release(); }
 
 	virtual void Init() override;
@@ -37,7 +39,7 @@ public:
 	virtual void Release() override { }
 	
 	void SetPlayer(Player* player);
-	void SetDestination(const sf::Vector2f& destination);
+	void SetDestination(const sf::Vector2f& destination, const sf::Vector2i& nextRoom);
 	void SetWall(const sf::FloatRect& wall);
 	void Open();
 	void Close();

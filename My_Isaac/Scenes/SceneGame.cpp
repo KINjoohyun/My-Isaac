@@ -17,6 +17,7 @@
 #include "Door.h"
 #include "Blood.h"
 #include "Boss.h"
+#include "MiniMap.h"
 
 SceneGame::SceneGame() :Scene(SceneId::Game)
 {
@@ -68,46 +69,9 @@ void SceneGame::Init()
 		}
 	}
 
-	SpriteGameObject* minimap_bg = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/minimap1.png"));
-	minimap_bg->SetOrigin(Origins::C);
-	minimap_bg->sprite.setTextureRect({0, 0, 55, 49});
-	minimap_bg->SetPosition(110.0f, 105.0f);
-	minimap_bg->sprite.setScale(3.5f, 3.5f);
-	minimap_bg->sortLayer = 101;
-	minimap_bg->sortOrder = -1;
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
-			if (stage1[i][j].tag != NULL)
-			{
-				SpriteGameObject* test = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/minimap1.png"));
-				test->SetOrigin(Origins::C);
-				test->sprite.setTextureRect({0, 224, 17, 15});
-				test->SetPosition({ 40.0f + 17 * i, 40.0f + 15 * j});
-				test->sortLayer = 101;
-				test->sortOrder = 0;
-			}
-			if (stage1[i][j].tag == 'S')
-			{
-				SpriteGameObject* test = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/minimap1.png"));
-				test->SetOrigin(Origins::C);
-				test->sprite.setTextureRect({ 0, 192, 17, 15 });
-				test->SetPosition({ 40.0f + 17 * i, 40.0f + 15 * j });
-				test->sortLayer = 101;
-				test->sortOrder = 2;
-			}
-			else if (stage1[i][j].tag == 'B')
-			{
-				SpriteGameObject* test = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/minimap1.png"));
-				test->SetOrigin(Origins::C);
-				test->sprite.setTextureRect({ 34, 82, 9, 8 });
-				test->SetPosition({ 40.0f + 17 * i, 40.0f + 15 * j });
-				test->sortLayer = 101;
-				test->sortOrder = 3;
-			}
-		}
-	}
+	minimap = (MiniMap*)AddGO(new MiniMap("graphics/ui/minimap1.png"));
+	minimap->SetPosition({ 110.0f, 100.0f });
+	minimap->sortLayer = 101;
 	
 	// 최대체력 그대로 생성중
 	for (int i = 0; i < player->GetMaxLife(); i++)
@@ -231,7 +195,9 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 		obj->sortOrder = std::stoi(rows[4]);
 	}
 
-	(roomPath == "room/Spawn.csv") ? stage1[r][c].tag = 'S' : stage1[r][c].tag = 'N';
+	(roomPath == "room/Spawn.csv") ?
+		(stage1[r][c].tag = 'S', stage1[r][c].isHear = true) :
+		stage1[r][c].tag = 'N';
 	stage1[r][c].wall = wall->rect.getGlobalBounds();
 	stage1[r][c].pos = position;
 }
@@ -242,9 +208,9 @@ void SceneGame::SetDoor(int r, int c)
 	if (stage1[r][c - 1].tag != NULL && c > 0)
 	{
 		std::string doorPath = (stage1[r][c - 1].tag == 'B') ? "graphics/door_boss.png" : "graphics/door1.png";
-		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Up));
+		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Up, {r, c}));
 		door->SetPlayer(player);
-		door->SetDestination(stage1[r][c - 1].pos);
+		door->SetDestination(stage1[r][c - 1].pos, { r, c - 1 });
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
@@ -252,9 +218,9 @@ void SceneGame::SetDoor(int r, int c)
 	if (stage1[r][c + 1].tag != NULL && c < 8)
 	{
 		std::string doorPath = (stage1[r][c + 1].tag == 'B') ? "graphics/door_boss.png" : "graphics/door1.png";
-		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Down));
+		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Down, {r, c}));
 		door->SetPlayer(player);
-		door->SetDestination(stage1[r][c + 1].pos);
+		door->SetDestination(stage1[r][c + 1].pos, { r, c + 1 });
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
@@ -262,19 +228,19 @@ void SceneGame::SetDoor(int r, int c)
 	if (stage1[r - 1][c].tag != NULL && r > 0)
 	{
 		std::string doorPath = (stage1[r - 1][c].tag == 'B') ? "graphics/door_boss.png" : "graphics/door1.png";
-		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Left));
+		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Left, {r, c}));
 		door->SetPlayer(player);
-		door->SetDestination(stage1[r - 1][c].pos);
+		door->SetDestination(stage1[r - 1][c].pos, { r - 1, c });
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
 	}
-	if (stage1[r + 1][c].tag != NULL && c < 8)
+	if (stage1[r + 1][c].tag != NULL && r < 8)
 	{
 		std::string doorPath = (stage1[r + 1][c].tag == 'B') ? "graphics/door_boss.png" : "graphics/door1.png";
-		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Right));
+		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Right, {r, c}));
 		door->SetPlayer(player);
-		door->SetDestination(stage1[r + 1][c].pos);
+		door->SetDestination(stage1[r + 1][c].pos, { r + 1, c });
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);

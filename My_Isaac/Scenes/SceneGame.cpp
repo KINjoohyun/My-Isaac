@@ -241,7 +241,8 @@ void SceneGame::SetDoor(int r, int c)
 
 	if (stage1[r][c - 1].tag != NULL && c > 0)
 	{
-		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Up));
+		std::string doorPath = (stage1[r][c - 1].tag == 'B') ? "graphics/door_boss.png" : "graphics/door1.png";
+		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Up));
 		door->SetPlayer(player);
 		door->SetDestination(stage1[r][c - 1].pos);
 		door->SetWall(stage1[r][c].wall);
@@ -250,7 +251,8 @@ void SceneGame::SetDoor(int r, int c)
 	}
 	if (stage1[r][c + 1].tag != NULL && c < 8)
 	{
-		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Down));
+		std::string doorPath = (stage1[r][c + 1].tag == 'B') ? "graphics/door_boss.png" : "graphics/door1.png";
+		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Down));
 		door->SetPlayer(player);
 		door->SetDestination(stage1[r][c + 1].pos);
 		door->SetWall(stage1[r][c].wall);
@@ -259,7 +261,8 @@ void SceneGame::SetDoor(int r, int c)
 	}
 	if (stage1[r - 1][c].tag != NULL && r > 0)
 	{
-		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Left));
+		std::string doorPath = (stage1[r - 1][c].tag == 'B') ? "graphics/door_boss.png" : "graphics/door1.png";
+		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Left));
 		door->SetPlayer(player);
 		door->SetDestination(stage1[r - 1][c].pos);
 		door->SetWall(stage1[r][c].wall);
@@ -268,7 +271,8 @@ void SceneGame::SetDoor(int r, int c)
 	}
 	if (stage1[r + 1][c].tag != NULL && c < 8)
 	{
-		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Right));
+		std::string doorPath = (stage1[r + 1][c].tag == 'B') ? "graphics/door_boss.png" : "graphics/door1.png";
+		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Right));
 		door->SetPlayer(player);
 		door->SetDestination(stage1[r + 1][c].pos);
 		door->SetWall(stage1[r][c].wall);

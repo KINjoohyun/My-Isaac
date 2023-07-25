@@ -71,13 +71,13 @@ void Door::SetWall(const sf::FloatRect& wall)
 void Door::Open()
 {
 	isOpen = true;
-	textureId = "graphics/door_open.png";
+	sprite.setTextureRect({0, 0, 100, 80});
 	Reset();
 }
 void Door::Close()
 {
 	isOpen = false;
-	textureId = "graphics/door_close.png";
+	sprite.setTextureRect({ 100, 0, 100, 80 });
 	Reset();
 }
 

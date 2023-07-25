@@ -294,6 +294,7 @@ void Player::OnHit(int damage)
 
 	if (life <= 0)
 	{
+
 		OnDiePlayer();
 	}
 }

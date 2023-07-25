@@ -11,11 +11,14 @@
 0,graphics/ui/ui_heart0.png
 0,graphics/ui/ui_heart1.png
 0,graphics/ui/ui_heart2.png
-0,graphics/door_open.png
-0,graphics/door_close.png
+0,graphics/door1.png
+0,graphics/door_boss.png
 0,graphics/poop1.png
+0,graphics/poop2.png
+0,graphics/poop3.png
 0,graphics/AttackFly.png
 0,graphics/Pooter.png
 0,graphics/Sucker.png
 0,graphics/blood.png
 0,graphics/Duke_Of_Flies.png
+0,graphics/ui/minimap1.png

@@ -23,4 +23,6 @@ public:
 
 	virtual void SetOrigin(Origins origin);
 	virtual void SetOrigin(float x, float y);
+
+	std::function<void()> action;
 };

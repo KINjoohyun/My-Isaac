@@ -78,7 +78,7 @@
     <ClCompile Include="Animation\AnimationClip.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\UITextButton.cpp">
+    <ClCompile Include="UI\UITextButton.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\SceneEditor.cpp">
@@ -87,7 +87,7 @@
     <ClCompile Include="MapEditor\Tile.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\UIImageButton.cpp">
+    <ClCompile Include="UI\UIImageButton.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="GameObjects\Tear.cpp">
@@ -109,6 +109,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="GameObjects\Boss.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\MiniMap.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -188,7 +191,7 @@
     <ClInclude Include="GameObjects\RectGameObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\UITextButton.h">
+    <ClInclude Include="UI\UITextButton.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\SceneEditor.h">
@@ -197,7 +200,7 @@
     <ClInclude Include="MapEditor\Tile.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\UIImageButton.h">
+    <ClInclude Include="UI\UIImageButton.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Tear.h">
@@ -219,6 +222,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Boss.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\MiniMap.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

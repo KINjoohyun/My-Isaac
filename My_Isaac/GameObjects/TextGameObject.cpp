@@ -26,7 +26,10 @@ void TextGameObject::Reset()
 }
 void TextGameObject::Update(float dt)
 {
-
+	if (action != nullptr)
+	{
+		action();
+	}
 }
 void TextGameObject::Draw(sf::RenderWindow& window)
 {

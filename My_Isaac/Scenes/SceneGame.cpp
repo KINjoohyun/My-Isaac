@@ -7,6 +7,7 @@
 #include "StringTable.h"
 #include "Variables.h"
 #include "SpriteGameObject.h"
+#include "TextGameObject.h"
 #include "rapidcsv.h"
 #include "Tile.h"
 #include "RectGameObject.h"
@@ -16,6 +17,7 @@
 #include "Door.h"
 #include "Blood.h"
 #include "Boss.h"
+#include "MiniMap.h"
 
 SceneGame::SceneGame() :Scene(SceneId::Game)
 {
@@ -36,6 +38,20 @@ void SceneGame::Init()
 	uiView.setSize(windowSize);
 	uiView.setCenter({ windowSize.x * 0.5f, windowSize.y * 0.5f });
 
+	fpstext = (TextGameObject*)AddGO(new TextGameObject("fonts/DNFBitBitOTF.otf"));
+	fpstext->SetOrigin(Origins::TL);
+	fpstext->text.setCharacterSize(10);
+	fpstext->text.setFillColor(sf::Color::Green);
+	fpstext->sortLayer = 105;
+	fpstext->action = [&]()
+	{
+		if (INPUT_MGR.GetKeyDown(sf::Keyboard::F5))
+		{
+			fpstext->SetActive(!fpstext->GetActive());
+		}
+	};
+	fpstext->SetActive(false);
+
 	SpriteGameObject* ui_bg = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/ui_bg.png"));
 	ui_bg->SetOrigin(Origins::TL);
 	ui_bg->sortLayer = 100;
@@ -52,6 +68,10 @@ void SceneGame::Init()
 			SetDoor(i, j);
 		}
 	}
+
+	minimap = (MiniMap*)AddGO(new MiniMap("graphics/ui/minimap1.png"));
+	minimap->SetPosition({ 110.0f, 100.0f });
+	minimap->sortLayer = 101;
 	
 	// 최대체력 그대로 생성중
 	for (int i = 0; i < player->GetMaxLife(); i++)
@@ -80,6 +100,15 @@ void SceneGame::Init()
 void SceneGame::Update(float dt)
 {
 	Scene::Update(dt);
+
+	fps++;
+	fpstimer += dt;
+	if (fpstimer >= 1.0f)
+	{
+		fpstext->text.setString("FPS : " + std::to_string(fps));
+		fpstimer = 0.0f;
+		fps = 0.0f;
+	}
 
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Escape))
 	{
@@ -166,7 +195,9 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 		obj->sortOrder = std::stoi(rows[4]);
 	}
 
-	(roomPath == "room/Spawn.csv") ? stage1[r][c].tag = 'S' : stage1[r][c].tag = 'N';
+	(roomPath == "room/Spawn.csv") ?
+		(stage1[r][c].tag = 'S', stage1[r][c].isHear = true) :
+		stage1[r][c].tag = 'N';
 	stage1[r][c].wall = wall->rect.getGlobalBounds();
 	stage1[r][c].pos = position;
 }
@@ -174,38 +205,42 @@ void SceneGame::SetDoor(int r, int c)
 {
 	if (stage1[r][c].tag == NULL) return;
 
-	if (stage1[r][c - 1].tag != NULL)
+	if (stage1[r][c - 1].tag != NULL && c > 0)
 	{
-		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Up));
+		std::string doorPath = (stage1[r][c - 1].tag == 'B') ? "graphics/door_boss.png" : "graphics/door1.png";
+		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Up, {r, c}));
 		door->SetPlayer(player);
-		door->SetDestination(stage1[r][c - 1].pos);
+		door->SetDestination(stage1[r][c - 1].pos, { r, c - 1 });
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
 	}
-	if (stage1[r][c + 1].tag != NULL)
+	if (stage1[r][c + 1].tag != NULL && c < 8)
 	{
-		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Down));
+		std::string doorPath = (stage1[r][c + 1].tag == 'B') ? "graphics/door_boss.png" : "graphics/door1.png";
+		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Down, {r, c}));
 		door->SetPlayer(player);
-		door->SetDestination(stage1[r][c + 1].pos);
+		door->SetDestination(stage1[r][c + 1].pos, { r, c + 1 });
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
 	}
-	if (stage1[r - 1][c].tag != NULL)
+	if (stage1[r - 1][c].tag != NULL && r > 0)
 	{
-		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Left));
+		std::string doorPath = (stage1[r - 1][c].tag == 'B') ? "graphics/door_boss.png" : "graphics/door1.png";
+		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Left, {r, c}));
 		door->SetPlayer(player);
-		door->SetDestination(stage1[r - 1][c].pos);
+		door->SetDestination(stage1[r - 1][c].pos, { r - 1, c });
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
 	}
-	if (stage1[r + 1][c].tag != NULL)
+	if (stage1[r + 1][c].tag != NULL && r < 8)
 	{
-		Door* door = (Door*)AddGO(new Door("graphics/door_open.png", Door::Look::Right));
+		std::string doorPath = (stage1[r + 1][c].tag == 'B') ? "graphics/door_boss.png" : "graphics/door1.png";
+		Door* door = (Door*)AddGO(new Door(doorPath, Door::Look::Right, {r, c}));
 		door->SetPlayer(player);
-		door->SetDestination(stage1[r + 1][c].pos);
+		door->SetDestination(stage1[r + 1][c].pos, { r + 1, c });
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
@@ -287,8 +322,8 @@ void SceneGame::RandomRooms()
 			break;
 		}
 
-		if (count == maxcount) stage1[r][c].tag = 'B';
 	}
+	stage1[r][c].tag = 'B';
 }
 
 void SceneGame::RenewLife(int life)
@@ -340,19 +375,36 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	break;
 	case ObjType::Poop:
 	{
-		RoomObject* poop = (RoomObject*)AddGO(new RoomObject(textureId));
+		std::string poopPath = "graphics/poop" + std::to_string(Utils::RandomRange(1, 3)) + ".png";
+		RoomObject* poop = (RoomObject*)AddGO(new RoomObject(poopPath));
+		poop->sprite.setTextureRect(sf::IntRect{0, 0, 58, 65});
 		poop->SetMaxHp(4);
 		poop->SetPlayer(player);
 		poop->OnHit = [poop](int damage)
 		{
 			poop->OnDamage(damage);
+
+			switch (poop->GetHp())
+			{
+			case 3:
+				poop->sprite.setTextureRect(sf::IntRect{58, 0, 58, 65});
+				break;
+			case 2:
+				poop->sprite.setTextureRect(sf::IntRect{116, 0, 58, 65});
+				break;
+			case 1:
+				poop->sprite.setTextureRect(sf::IntRect{174, 0, 58, 65});
+				break;
+			case 0:
+				poop->sprite.setTextureRect(sf::IntRect{232, 0, 58, 65});
+				break;
+			}
 		};
 		poop->OnDie = [this, poop]()
 		{
 			poop->OnBump = nullptr;
 			poop->OnHit = nullptr;
 			hitablelist.remove(poop);
-			poop->SetActive(false);
 		};
 		poop->OnBump = [this, poop]()
 		{

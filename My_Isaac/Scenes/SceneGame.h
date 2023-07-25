@@ -42,6 +42,10 @@ protected:
 	float fpstimer = 0.0f;
 	TextGameObject* fpstext;
 	TextGameObject* guidetext;
+	SpriteGameObject* pauseObject;
+
+	bool isAlive = true;
+	int test = 0;
 
 public:
 	
@@ -72,6 +76,7 @@ public:
 	void RemoveRGO(RoomObject* roomGO);
 	void RemoveMonster(Monster* monster, int r, int c);
 	void DoorControl(int r, int c);
+	void OnDiePlayer();
 
 	template <typename T>
 	void ClearPool(ObjectPool<T>& pool);

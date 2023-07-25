@@ -11,6 +11,9 @@
 0,graphics/ui/ui_heart0.png
 0,graphics/ui/ui_heart1.png
 0,graphics/ui/ui_heart2.png
+0,graphics/ui/ui_pause.png
+0,graphics/ui/gameover.png
+0,graphics/ui/gameclear.png
 0,graphics/door1.png
 0,graphics/door_boss.png
 0,graphics/poop1.png

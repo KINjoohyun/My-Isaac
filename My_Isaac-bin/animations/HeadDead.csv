@@ -1,0 +1,12 @@
+ID,FPS,LOOPTYPE,,
+HeadDead,10,0,,
+,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
+graphics/player.png,10,290,30,33
+graphics/player.png,9,290,30,33
+graphics/player.png,10,290,30,33
+graphics/player.png,11,290,30,33
+graphics/player.png,10,290,30,33
+graphics/player.png,9,290,30,33
+graphics/player.png,10,290,30,33
+graphics/player.png,10,290,1,1

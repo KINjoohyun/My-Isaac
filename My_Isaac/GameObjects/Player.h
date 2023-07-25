@@ -34,6 +34,8 @@ protected:
 	float attackTimer = 0.0f;
 	float attackDuration = 0.3f;
 
+	bool isAlive = true;
+
 public:
 	sf::Sprite head;
 	sf::RectangleShape headCol;
@@ -60,7 +62,6 @@ public:
 	void TearShoot(const sf::Vector2f& direction);
 	void Splash(const sf::Vector2f& tearPos, const std::string& anim);
 	void OnHit(int damage);
-	void OnDiePlayer();
 	void SetWall(const sf::FloatRect& wall);
 
 	int GetMaxLife() const;

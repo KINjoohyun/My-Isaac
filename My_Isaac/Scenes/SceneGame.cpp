@@ -114,6 +114,18 @@ void SceneGame::Init()
 	};
 	poolBloods.Init();
 
+	pauseObject = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/ui_pause.png"));
+	pauseObject->SetOrigin(Origins::C);
+	pauseObject->sortLayer = 100;
+	pauseObject->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f);
+	pauseObject->SetActive(false);
+
+	SpriteGameObject* gameover = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/gameover.png", "gameover"));
+	gameover->SetOrigin(Origins::C);
+	gameover->sortLayer = 100;
+	gameover->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f);
+	gameover->SetActive(false);
+
 	for (auto go : gameObjects)
 	{
 		go->Init();
@@ -132,9 +144,9 @@ void SceneGame::Update(float dt)
 		fps = 0.0f;
 	}
 
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Escape))
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Escape) && isAlive)
 	{
-		SCENE_MGR.ChangeScene(SceneId::Title);
+		pauseObject->SetActive(!pauseObject->GetActive());
 	}
 
 	// Debug Mode
@@ -164,6 +176,7 @@ void SceneGame::Enter()
 
 	ClearPool(poolBloods);
 
+	isAlive = true;
 	RectGameObject* wall = (RectGameObject*)FindGO("room/Spawn.csv");
 	player->SetWall(wall->rect.getGlobalBounds());
 	for (int i = 0; i < 9; i++)
@@ -728,4 +741,11 @@ void SceneGame::DoorControl(int r, int c)
 			pill->Reset();
 		}
 	}
+}
+void SceneGame::OnDiePlayer()
+{
+	isAlive = false;
+
+	SpriteGameObject* gameover = (SpriteGameObject*)FindGO("gameover");
+	gameover->SetActive(true);
 }

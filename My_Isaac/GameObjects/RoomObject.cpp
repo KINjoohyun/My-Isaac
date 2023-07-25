@@ -5,12 +5,6 @@
 #include "SceneGame.h"
 #include "Player.h"
 
-RoomObject::RoomObject(const std::string& textureId, const std::string& name)
-	:SpriteGameObject(textureId, name)
-{
-
-}
-
 void RoomObject::Init()
 {
 	SpriteGameObject::Init();

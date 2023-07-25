@@ -35,7 +35,6 @@ public:
 	virtual void Init() override;
 	virtual void Reset() override;
 	virtual void Update(float dt) override;
-	virtual void Release() override { }
 
 	void Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, float speed, int damage);
 	void SetWall(const sf::FloatRect& wall);

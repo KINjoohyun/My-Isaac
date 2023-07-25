@@ -9,6 +9,7 @@
 #include "StringTable.h"
 #include "Variables.h"
 #include "UITextButton.h"
+#include "Title.h"
 
 SceneTitle::SceneTitle() : Scene(SceneId::Title)
 {
@@ -32,11 +33,11 @@ void SceneTitle::Init()
 	SpriteGameObject* empty = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/emptyscreen.png", "empty"));
 	empty->SetOrigin(Origins::C);
 	empty->SetPosition(0.0f, 0.0f);
-	empty->sortLayer = -100;
+	empty->sortLayer = -1;
 
 	SpriteGameObject* logo = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/logo.png", "logo"));
 	logo->SetOrigin(Origins::TC);
-	logo->SetPosition({ 0.0f, -windowSize.y * 0.5f + 100.0f });
+	logo->SetPosition({ 0.0f, -windowSize.y * 0.5f + 50.0f });
 	logo->sortLayer = 0;
 
 	UITextButton* button1 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
@@ -74,6 +75,8 @@ void SceneTitle::Init()
 		SCENE_MGR.ChangeScene(SceneId::Editor);
 	};
 	button2->sortLayer = 100;
+
+	Title* title = (Title*)AddGO(new Title());
 
 	for (auto go : gameObjects)
 	{

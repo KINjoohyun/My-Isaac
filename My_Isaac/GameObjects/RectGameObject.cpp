@@ -1,16 +1,6 @@
 #include "stdafx.h"
 #include "RectGameObject.h"
 
-RectGameObject::RectGameObject(const std::string name)
-	:GameObject(name)
-{
-
-}
-RectGameObject::~RectGameObject()
-{
-
-}
-
 void RectGameObject::Init()
 {
 	
@@ -21,7 +11,7 @@ void RectGameObject::Reset()
 }
 void RectGameObject::Update(float dt)
 {
-	
+	if (OnDebug != nullptr) OnDebug();
 }
 void RectGameObject::Draw(sf::RenderWindow& window)
 {

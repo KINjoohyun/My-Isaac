@@ -36,7 +36,9 @@ protected:
 
 public:
 	sf::Sprite head;
+	sf::RectangleShape headCol;
 	sf::Sprite body;
+	sf::RectangleShape bodyCol;
 
 	Player(const std::string name = "");
 	virtual ~Player() override { Release(); }
@@ -63,4 +65,9 @@ public:
 
 	int GetMaxLife() const;
 	int GetLife() const;
+
+	void IncreaseLife(int life);
+	void ChangeSpeed(float value);
+
+	std::function<void()> OnDebug;
 };

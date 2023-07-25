@@ -18,6 +18,7 @@
 #include "Blood.h"
 #include "Boss.h"
 #include "MiniMap.h"
+#include "Pill.h"
 
 SceneGame::SceneGame() :Scene(SceneId::Game)
 {
@@ -43,12 +44,9 @@ void SceneGame::Init()
 	fpstext->text.setCharacterSize(10);
 	fpstext->text.setFillColor(sf::Color::Green);
 	fpstext->sortLayer = 105;
-	fpstext->action = [&]()
+	fpstext->action = [&]() // & capture
 	{
-		if (INPUT_MGR.GetKeyDown(sf::Keyboard::F5))
-		{
-			fpstext->SetActive(!fpstext->GetActive());
-		}
+		fpstext->SetActive(isDebug);
 	};
 	fpstext->SetActive(false);
 
@@ -57,6 +55,19 @@ void SceneGame::Init()
 	ui_bg->sortLayer = 100;
 
 	player = (Player*)AddGO(new Player());
+	player->OnDebug = [this]()
+	{
+		if (isDebug)
+		{
+			player->bodyCol.setOutlineColor(sf::Color::White);
+			player->headCol.setOutlineColor(sf::Color::White);
+		}
+		else
+		{
+			player->bodyCol.setOutlineColor(sf::Color::Transparent);
+			player->headCol.setOutlineColor(sf::Color::Transparent);
+		}
+	};
 	player->sortLayer = 2;
 
 	RandomRooms();
@@ -89,6 +100,17 @@ void SceneGame::Init()
 		blood->pool = &poolBloods;
 		blood->SetPlayer(player);
 		blood->sortLayer = 1;
+		blood->OnDebug = [this, blood]()
+		{
+			if (isDebug)
+			{
+				blood->col.setOutlineColor(sf::Color::Green);
+			}
+			else
+			{
+				blood->col.setOutlineColor(sf::Color::Transparent);
+			}
+		};
 	};
 	poolBloods.Init();
 
@@ -118,7 +140,7 @@ void SceneGame::Update(float dt)
 	// Debug Mode
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::F5))
 	{
-		
+		isDebug = !isDebug;
 	}
 }
 void SceneGame::Draw(sf::RenderWindow& window)
@@ -179,11 +201,21 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 
 	RectGameObject* wall = (RectGameObject*)AddGO(new RectGameObject(roomPath));
 	wall->rect.setSize({ (float)sizex, (float)sizey });
-	wall->rect.setOutlineColor(sf::Color::Red);
-	wall->rect.setOutlineThickness(1);
 	wall->rect.setFillColor(sf::Color::Transparent);
+	wall->rect.setOutlineThickness(1);
 	wall->SetOrigin(Origins::C);
 	wall->SetPosition(position);
+	wall->OnDebug = [this, wall]()
+	{
+		if (isDebug)
+		{
+			wall->rect.setOutlineColor(sf::Color::Blue);
+		}
+		else
+		{
+			wall->rect.setOutlineColor(sf::Color::Transparent);
+		}
+	};
 
 	for (int i = 4; i < doc.GetRowCount(); i++)
 	{
@@ -193,6 +225,17 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 		obj->SetPosition(position.x + std::stof(rows[2]), position.y + std::stof(rows[3]));
 		obj->sortLayer = 1;
 		obj->sortOrder = std::stoi(rows[4]);
+		obj->OnDebug = [this, obj]()
+		{
+			if (isDebug)
+			{
+				obj->col.setOutlineColor(sf::Color::Red);
+			}
+			else
+			{
+				obj->col.setOutlineColor(sf::Color::Transparent);
+			}
+		};
 	}
 
 	(roomPath == "room/Spawn.csv") ?
@@ -214,6 +257,17 @@ void SceneGame::SetDoor(int r, int c)
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
+		door->OnDebug = [this, door]()
+		{
+			if (isDebug)
+			{
+				door->col.setOutlineColor(sf::Color::Green);
+			}
+			else
+			{
+				door->col.setOutlineColor(sf::Color::Transparent);
+			}
+		};
 	}
 	if (stage1[r][c + 1].tag != NULL && c < 8)
 	{
@@ -224,6 +278,17 @@ void SceneGame::SetDoor(int r, int c)
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
+		door->OnDebug = [this, door]()
+		{
+			if (isDebug)
+			{
+				door->col.setOutlineColor(sf::Color::Green);
+			}
+			else
+			{
+				door->col.setOutlineColor(sf::Color::Transparent);
+			}
+		};
 	}
 	if (stage1[r - 1][c].tag != NULL && r > 0)
 	{
@@ -234,6 +299,17 @@ void SceneGame::SetDoor(int r, int c)
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
+		door->OnDebug = [this, door]()
+		{
+			if (isDebug)
+			{
+				door->col.setOutlineColor(sf::Color::Green);
+			}
+			else
+			{
+				door->col.setOutlineColor(sf::Color::Transparent);
+			}
+		};
 	}
 	if (stage1[r + 1][c].tag != NULL && r < 8)
 	{
@@ -244,6 +320,17 @@ void SceneGame::SetDoor(int r, int c)
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
 		stage1[r][c].doors.push_back(door);
+		door->OnDebug = [this, door]()
+		{
+			if (isDebug)
+			{
+				door->col.setOutlineColor(sf::Color::Green);
+			}
+			else
+			{
+				door->col.setOutlineColor(sf::Color::Transparent);
+			}
+		};
 	}
 }
 void SceneGame::RandomRooms()
@@ -402,6 +489,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		};
 		poop->OnDie = [this, poop]()
 		{
+			poop->sortLayer = 0;
 			poop->OnBump = nullptr;
 			poop->OnHit = nullptr;
 			hitablelist.remove(poop);
@@ -515,7 +603,8 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		};
 		duke->Pattern1 = [this, duke, wall, r, c]()
 		{
-			if (Utils::Distance(duke->GetPosition(), player->GetPosition()) > 200.0f)
+			if (Utils::Distance(duke->GetPosition(), player->GetPosition()) > 200.0f
+				|| stage1[r][c].monsters.size() > 6)
 			{
 				return false;
 			}
@@ -543,7 +632,8 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		};
 		duke->Pattern2 = [this, duke, wall, r, c]()
 		{
-			if (Utils::Distance(duke->GetPosition(), player->GetPosition()) >  700.0f)
+			if (Utils::Distance(duke->GetPosition(), player->GetPosition()) >  700.0f
+				|| stage1[r][c].monsters.size() > 6)
 			{
 				return false;
 			}
@@ -614,6 +704,28 @@ void SceneGame::DoorControl(int r, int c)
 		for (auto it : stage1[r][c].doors)
 		{
 			it->Open();
+		}
+
+		int per = Utils::RandomRange(1, 100);
+		if (per >= 50) // 50%
+		{
+			Pill* pill = (Pill*)AddGO(new Pill());
+			pill->SetType((Pill::PillType)Utils::RandomRange(0, (int)Pill::PillType::Count - 1));
+			pill->SetPlayer(player);
+			pill->SetPosition(stage1[r][c].pos);
+			pill->OnDebug = [this, pill]()
+			{
+				if (isDebug)
+				{
+					pill->col.setOutlineColor(sf::Color::Green);
+				}
+				else
+				{
+					pill->col.setOutlineColor(sf::Color::Transparent);
+				}
+			};
+			pill->Init();
+			pill->Reset();
 		}
 	}
 }

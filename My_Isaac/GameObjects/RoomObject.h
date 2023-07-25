@@ -19,6 +19,7 @@ protected:
 	float wallRight = 0.0f;
 
 public:
+
 	RoomObject(const std::string& textureId = "", const std::string& name = "");
 	virtual ~RoomObject() override { Release(); }
 

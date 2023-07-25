@@ -2,9 +2,9 @@
 0,graphics/player.png
 0,graphics/basement_bg1.png
 0,graphics/basement_bg2.png
+0,graphics/basement_bg3.png
 0,graphics/spawnUI.png
 0,graphics/grid_rocks1.png
-0,graphics/grid_poop1.png
 0,graphics/grid_spikes1.png
 0,graphics/tear.png
 0,graphics/ui/ui_bg.png
@@ -22,3 +22,4 @@
 0,graphics/blood.png
 0,graphics/Duke_Of_Flies.png
 0,graphics/ui/minimap1.png
+0,graphics/pill.png

@@ -41,10 +41,14 @@ protected:
 	float fps = 0.0f;
 	float fpstimer = 0.0f;
 	TextGameObject* fpstext;
+	TextGameObject* guidetext;
 
 public:
+	
 	MiniMap* minimap;
 	Room stage1[9][9];
+
+	bool isDebug = false;
 
 	SceneGame();
 	virtual ~SceneGame() override;

@@ -16,20 +16,20 @@ Tear::Tear(const std::string& textureId, const std::string& name)
 void Tear::Init()
 {
 	SpriteGameObject::Init();
+	SetOrigin(Origins::C);
 
 	sprite.setScale(1.5f, 1.5f);
 }
 void Tear::Reset()
 {
-	SpriteGameObject::Reset();
-
 	SetPosition(0.0f, 0.0f);
 	range = 300.0f;
 	direction = { 0.0f, 0.0f };
 	damage = 0;
 
 	animation.Play("TearShooting");
-	SetOrigin(Origins::C);
+
+	SpriteGameObject::Reset();
 }
 void Tear::Update(float dt)
 {

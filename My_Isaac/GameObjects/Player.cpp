@@ -50,9 +50,15 @@ void Player::Reset()
 	headAnimation.Play("HeadIdleDown");
 	bodyAnimation.Play("BodyIdleDown");
 	SetPosition(0.0f, 0.0f);
-	SetOrigin(origin);
 	head.setScale(2.0f, 2.0f);
+	headCol.setSize({ head.getGlobalBounds().width, head.getGlobalBounds().height });
+	headCol.setFillColor(sf::Color::Transparent);
+	headCol.setOutlineThickness(1);
 	body.setScale(2.0f, 2.0f);
+	bodyCol.setSize({ body.getGlobalBounds().width, body.getGlobalBounds().height });
+	bodyCol.setFillColor(sf::Color::Transparent);
+	bodyCol.setOutlineThickness(1);
+	SetOrigin(origin);
 
 	for (auto tear : poolTears.GetUseList())
 	{
@@ -79,10 +85,23 @@ void Player::Reset()
 	for (auto it : poolTears.GetPool())
 	{
 		it->SetWall(wall);
+		it->OnDebug = [scene, it]()
+		{
+			if (scene->isDebug)
+			{
+				it->col.setOutlineColor(sf::Color::Blue);
+			}
+			else
+			{
+				it->col.setOutlineColor(sf::Color::Transparent);
+			}
+		};
 	}
 }
 void Player::Update(float dt)
 {
+	if (OnDebug != nullptr) OnDebug();
+
 	headAnimation.Update(dt);
 	bodyAnimation.Update(dt);
 
@@ -205,19 +224,26 @@ void Player::Draw(sf::RenderWindow& window)
 {
 	window.draw(body);
 	window.draw(head);
+
+	window.draw(bodyCol);
+	window.draw(headCol);
 }
 
 void Player::SetPosition(const sf::Vector2f& position)
 {
 	GameObject::SetPosition(position);
-	body.setPosition({position});
+	body.setPosition(position);
+	bodyCol.setPosition(position);
 	head.setPosition(position);
+	headCol.setPosition(position);
 }
 void Player::SetPosition(float x, float y)
 {
 	GameObject::SetPosition(x, y);
 	body.setPosition(x, y);
+	bodyCol.setPosition(x, y);
 	head.setPosition(x, y);
+	headCol.setPosition(x, y);
 }
 
 void Player::SetOrigin(Origins origin)
@@ -227,7 +253,9 @@ void Player::SetOrigin(Origins origin)
 	if (this->origin != Origins::CUSTOM)
 	{
 		Utils::SetOrigin(body, Origins::C);
+		Utils::SetOrigin(bodyCol, Origins::C);
 		Utils::SetOrigin(head, Origins::BC);
+		Utils::SetOrigin(headCol, Origins::BC);
 	}
 }
 
@@ -284,7 +312,9 @@ void Player::OnHit(int damage)
 	life = std::max(0, life - damage);
 	invincibleTimer = 0.0f;
 	headAnimation.Play("HeadHurt");
+	headAnimation.PlayQueue("HeadIdleDown");
 	bodyAnimation.Play("BodyHurt");
+	bodyAnimation.PlayQueue("BodyIdleDown");
 
 	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	if (scene != nullptr)
@@ -294,7 +324,6 @@ void Player::OnHit(int damage)
 
 	if (life <= 0)
 	{
-
 		OnDiePlayer();
 	}
 }
@@ -326,4 +355,20 @@ int Player::GetMaxLife() const
 int Player::GetLife() const
 {
 	return life;
+}
+
+void Player::IncreaseLife(int life)
+{
+	this->life = std::min(maxLife, this->life + life);
+	invincibleTimer = 0.0f;
+
+	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+	if (scene != nullptr)
+	{
+		scene->RenewLife(this->life);
+	}
+}
+void Player::ChangeSpeed(float value)
+{
+	this->speed = std::max(0.0f, this->speed + value);
 }

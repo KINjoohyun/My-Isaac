@@ -26,21 +26,26 @@ void Door::Reset()
 	{
 	case Look::Up:
 		sprite.setRotation(0);
+		col.setRotation(0);
 		SetPosition(wallLeft + wall.width * 0.5f, wallTop);
 		break;
 	case Look::Right:
 		sprite.setRotation(90);
+		col.setRotation(90);
 		SetPosition(wallRight, wallTop + wall.height * 0.5f);
 		break;
 	case Look::Down:
 		sprite.setRotation(180);
+		col.setRotation(180);
 		SetPosition(wallLeft + wall.width * 0.5f, wallBottom);
 		break;
 	case Look::Left:
 		sprite.setRotation(270);
+		col.setRotation(270);
 		SetPosition(wallLeft, wallTop + wall.height * 0.5f);
 		break;
 	}
+	
 }
 void Door::Update(float dt)
 {

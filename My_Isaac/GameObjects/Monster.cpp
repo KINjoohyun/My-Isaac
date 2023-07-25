@@ -40,13 +40,12 @@ void Monster::Init()
 }
 void Monster::Reset()
 {
-	RoomObject::Reset();
-
 	animation.Play("Idle");
-	SetOrigin(origin);
 	sprite.setColor(sf::Color::White);
 	hitedTimer = hitedDuration;
 	attackTimer = attackDuration;
+
+	RoomObject::Reset();
 }
 void Monster::Update(float dt)
 {

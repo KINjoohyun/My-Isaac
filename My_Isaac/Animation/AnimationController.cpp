@@ -107,3 +107,7 @@ std::string AnimationController::GetCurrentClipId() const
 	}
 	return currentClip->id;
 }
+AnimationClip* AnimationController::GetCurrentClip() const
+{
+	return currentClip;
+}

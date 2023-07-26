@@ -19,6 +19,7 @@
 #include "Boss.h"
 #include "MiniMap.h"
 #include "Pill.h"
+#include "GuideObject.h"
 
 SceneGame::SceneGame() :Scene(SceneId::Game)
 {
@@ -125,6 +126,11 @@ void SceneGame::Init()
 	gameover->sortLayer = 100;
 	gameover->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f);
 	gameover->SetActive(false);
+
+	guide = (GuideObject*)AddGO(new GuideObject("graphics/ui/ui_guide.png", "STAGE 1"));
+	guide->SetOrigin(Origins::C);
+	guide->SetPosition({ windowSize.x * 0.5f, -wall->rect.getGlobalBounds().top});
+	guide->sortLayer = 101;
 
 	for (auto go : gameObjects)
 	{
@@ -778,4 +784,9 @@ void SceneGame::OnDiePlayer()
 
 	SpriteGameObject* gameover = (SpriteGameObject*)FindGO("gameover");
 	gameover->SetActive(true);
+}
+void SceneGame::PrintGuide(const std::string& text)
+{
+	guide->SetString(text);
+	guide->Reset();
 }

@@ -65,36 +65,37 @@ void Pill::Update(float dt)
 
 	if (sprite.getGlobalBounds().intersects(player->body.getGlobalBounds()))
 	{
+		SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+
 		switch (type)
 		{
 		case PillType::None:
 			break;
 		case PillType::FullHealth:
 			player->IncreaseLife(999);
-			std::cout << "FullHealth" << std::endl;
+			scene->PrintGuide("FULL HEALTH");
 			break;
 		case PillType::HealthDown:
 			player->OnHit(1);
-			std::cout << "HealthDown" << std::endl;
+			scene->PrintGuide("HEALTH DOWN");
 			break;
 		case PillType::HealthUp:
 			player->IncreaseLife(1);
-			std::cout << "HealthUp" << std::endl;
+			scene->PrintGuide("HEALTH UP");
 			break;
 		case PillType::SpeedDown:
 			player->ChangeSpeed(-70.0f);
-			std::cout << "SpeedDown" << std::endl;
+			scene->PrintGuide("SPEED DOWN");
 			break;
 		case PillType::SpeedUp:
 			player->ChangeSpeed(+70.0f);
-			std::cout << "SpeedUp" << std::endl;
+			scene->PrintGuide("SPEED UP");
 			break;
 		default:
 			std::cout << "WARNING: Not Exist PillType" << std::endl;
 			break;
 		}
 
-		SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 		scene->RemoveGO(this);
 	}
 }

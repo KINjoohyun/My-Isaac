@@ -32,4 +32,5 @@ public:
 	void PlayQueue(const std::string& clipId);
 	void Stop();
 	std::string GetCurrentClipId() const;
+	AnimationClip* GetCurrentClip() const;
 };

@@ -168,6 +168,7 @@
     <ClCompile Include="GameObjects\TextGameObject.cpp" />
     <ClCompile Include="GameObjects\VertexArrayGameObject.cpp" />
     <ClCompile Include="Global\Utils.cpp" />
+    <ClCompile Include="UI\GuideObject.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -215,6 +216,7 @@
     <ClInclude Include="GameObjects\RoomObject.h" />
     <ClInclude Include="GameObjects\Monster.h" />
     <ClInclude Include="GameObjects\Pill.h" />
+    <ClInclude Include="UI\GuideObject.h" />
     <ClInclude Include="UI\Title.h" />
     <ClInclude Include="UI\MiniMap.h" />
     <ClInclude Include="Scenes\SceneEditor.h" />

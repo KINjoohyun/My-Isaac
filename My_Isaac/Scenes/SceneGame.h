@@ -13,6 +13,7 @@ class Door;
 class Monster;
 class TextGameObject;
 class MiniMap;
+class GuideObject;
 
 struct Room
 {
@@ -41,7 +42,7 @@ protected:
 	float fps = 0.0f;
 	float fpstimer = 0.0f;
 	TextGameObject* fpstext;
-	TextGameObject* guidetext;
+	GuideObject* guide;
 	SpriteGameObject* pauseObject;
 
 	bool isAlive = true;
@@ -77,6 +78,7 @@ public:
 	void RemoveMonster(Monster* monster, int r, int c);
 	void DoorControl(int r, int c);
 	void OnDiePlayer();
+	void PrintGuide(const std::string& text);
 
 	template <typename T>
 	void ClearPool(ObjectPool<T>& pool);

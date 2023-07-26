@@ -334,7 +334,11 @@ void Player::OnHit(int damage)
 		bodyAnimation.Play("BodyDead");
 		headAnimation.Play("HeadDead");
 
-		scene->OnDiePlayer();
+		AnimationClip* deadclip = bodyAnimation.GetCurrentClip();
+		deadclip->frames[9].action = [scene]()
+		{
+			scene->OnDiePlayer();
+		};
 	}
 }
 void Player::SetWall(const sf::FloatRect& wall)

@@ -13,6 +13,7 @@ Player::Player(const std::string name)
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyMoveDown.csv"));
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyMoveRight.csv"));
 	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyHurt.csv"));
+	bodyAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/BodyDead.csv"));
 	bodyAnimation.SetTarget(&body);
 
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadIdleDown.csv"));
@@ -24,6 +25,7 @@ Player::Player(const std::string name)
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadShootUp.csv"));
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadShootLeft.csv"));
 	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadHurt.csv"));
+	headAnimation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/HeadDead.csv"));
 	headAnimation.SetTarget(&head);
 }
 
@@ -75,6 +77,7 @@ void Player::Reset()
 	life = maxLife;
 	invincibleTimer = invincibleDuration;
 	attackTimer = attackDuration;
+	isAlive = true;
 
 	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	if (scene != nullptr)
@@ -104,6 +107,7 @@ void Player::Update(float dt)
 
 	headAnimation.Update(dt);
 	bodyAnimation.Update(dt);
+	if (!isAlive) return;
 
 	if (invincibleTimer < invincibleDuration)
 	{
@@ -324,14 +328,18 @@ void Player::OnHit(int damage)
 
 	if (life <= 0)
 	{
-		OnDiePlayer();
-	}
-}
-void Player::OnDiePlayer()
-{
-	std::cout << "DIE" << std::endl;
+		isAlive = false;
+		body.setColor(sf::Color::White);
+		head.setColor(sf::Color::White);
+		bodyAnimation.Play("BodyDead");
+		headAnimation.Play("HeadDead");
 
-	Reset();
+		AnimationClip* deadclip = bodyAnimation.GetCurrentClip();
+		deadclip->frames[9].action = [scene]()
+		{
+			scene->OnDiePlayer();
+		};
+	}
 }
 void Player::SetWall(const sf::FloatRect& wall)
 {

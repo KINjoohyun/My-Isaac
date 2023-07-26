@@ -6,7 +6,7 @@
 #include "SceneGame.h"
 #include "MiniMap.h"
 
-Door::Door(const std::string& textureId, Look look, const sf::Vector2i& currRoom)
+Door::Door(const std::string& textureId, Look look, const std::tuple<int, int>& currRoom)
 	:SpriteGameObject(textureId), look(look)
 {
 	this->currRoom = currRoom;
@@ -61,7 +61,7 @@ void Door::SetPlayer(Player* player)
 {
 	this->player = player;
 }
-void Door::SetDestination(const sf::Vector2f& destination, const sf::Vector2i& nextRoom)
+void Door::SetDestination(const sf::Vector2f& destination, const std::tuple<int, int>& nextRoom)
 {
 	this->destination = destination;
 	this->nextRoom = nextRoom;
@@ -92,7 +92,7 @@ void Door::Entrance()
 {
 	RectGameObject w;
 	w.SetPosition(destination);
-	w.rect.setSize({736.0f, 416.0f});
+	w.rect.setSize({ wall.width, wall.height });
 	w.SetOrigin(Origins::C);
 
 	switch (look)
@@ -114,8 +114,8 @@ void Door::Entrance()
 	player->SetWall(sf::FloatRect(w.rect.getGlobalBounds()));
 	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
 	scene->ViewSet(destination);
-	scene->stage1[currRoom.x][currRoom.y].isPassed = true;
-	scene->stage1[currRoom.x][currRoom.y].isHear = false;
-	scene->stage1[nextRoom.x][nextRoom.y].isHear = true;
+	scene->stage1[std::get<0>(currRoom)][std::get<1>(currRoom)].isPassed = true;
+	scene->stage1[std::get<0>(currRoom)][std::get<1>(currRoom)].isHear = false;
+	scene->stage1[std::get<0>(nextRoom)][std::get<1>(nextRoom)].isHear = true;
 	scene->minimap->RenewMiniMap();
 }

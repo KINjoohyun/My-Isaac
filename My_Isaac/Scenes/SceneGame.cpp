@@ -19,6 +19,8 @@
 #include "Boss.h"
 #include "MiniMap.h"
 #include "Pill.h"
+#include "GuideObject.h"
+#include "UITextButton.h"
 
 SceneGame::SceneGame() :Scene(SceneId::Game)
 {
@@ -37,7 +39,7 @@ void SceneGame::Init()
 	worldView.setCenter(0, -100);
 
 	uiView.setSize(windowSize);
-	uiView.setCenter({ windowSize.x * 0.5f, windowSize.y * 0.5f });
+	uiView.setCenter(windowSize * 0.5f);
 
 	fpstext = (TextGameObject*)AddGO(new TextGameObject("fonts/DNFBitBitOTF.otf"));
 	fpstext->SetOrigin(Origins::TL);
@@ -51,7 +53,8 @@ void SceneGame::Init()
 	fpstext->SetActive(false);
 
 	SpriteGameObject* ui_bg = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/ui_bg.png"));
-	ui_bg->SetOrigin(Origins::TL);
+	ui_bg->SetOrigin(Origins::TC);
+	ui_bg->SetPosition({windowSize.x * 0.5f, 0.0f});
 	ui_bg->sortLayer = 100;
 
 	player = (Player*)AddGO(new Player());
@@ -70,20 +73,10 @@ void SceneGame::Init()
 	};
 	player->sortLayer = 2;
 
-	RandomRooms();
-
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
-			SetDoor(i, j);
-		}
-	}
-
 	minimap = (MiniMap*)AddGO(new MiniMap("graphics/ui/minimap1.png"));
 	minimap->SetPosition({ 110.0f, 100.0f });
 	minimap->sortLayer = 101;
-	
+
 	// 최대체력 그대로 생성중
 	for (int i = 0; i < player->GetMaxLife(); i++)
 	{
@@ -94,8 +87,7 @@ void SceneGame::Init()
 	}
 	RenewLife(player->GetMaxLife());
 
-	RectGameObject* wall = (RectGameObject*)FindGO("room/Spawn.csv");
-	poolBloods.OnCreate = [this, wall](Blood* blood)
+	poolBloods.OnCreate = [this](Blood* blood)
 	{
 		blood->pool = &poolBloods;
 		blood->SetPlayer(player);
@@ -114,15 +106,38 @@ void SceneGame::Init()
 	};
 	poolBloods.Init();
 
+	pauseObject = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/ui_pause.png"));
+	pauseObject->SetOrigin(Origins::C);
+	pauseObject->SetPosition(windowSize* 0.5f);
+	pauseObject->sortLayer = 100;
+	pauseObject->SetActive(false);
+
+	SpriteGameObject* gameover = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/gameover.png", "gameover"));
+	gameover->SetOrigin(Origins::C);
+	gameover->sortLayer = 100;
+	gameover->SetPosition(windowSize * 0.5f);
+	gameover->SetActive(false);
+
+	SpriteGameObject* post = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/ui_post.png", "post"));
+	post->SetOrigin(Origins::BR);
+	post->sortLayer = 100;
+	post->SetPosition({ windowSize.x, windowSize.y });
+	post->SetActive(false);
+
+	guide = (GuideObject*)AddGO(new GuideObject("graphics/ui/ui_guide.png", "STAGE 1"));
+	guide->SetOrigin(Origins::C);
+	guide->SetPosition({ windowSize.x * 0.5f, windowSize.y * 0.3f});
+	guide->sortLayer = 101;
+
 	for (auto go : gameObjects)
 	{
 		go->Init();
 	}
+
+	// Sound
 }
 void SceneGame::Update(float dt)
 {
-	Scene::Update(dt);
-
 	fps++;
 	fpstimer += dt;
 	if (fpstimer >= 1.0f)
@@ -132,6 +147,21 @@ void SceneGame::Update(float dt)
 		fps = 0.0f;
 	}
 
+	if (!isPause)
+	{
+		Scene::Update(dt);
+	}
+	else
+	{
+		pauseObject->Update(dt);
+	}
+	timer += dt;
+
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::P) && isAlive)
+	{
+		isPause = !isPause;
+		pauseObject->SetActive(isPause);
+	}
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Escape))
 	{
 		SCENE_MGR.ChangeScene(SceneId::Title);
@@ -141,6 +171,13 @@ void SceneGame::Update(float dt)
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::F5))
 	{
 		isDebug = !isDebug;
+	}
+
+	if (stage1[std::get<0>(bossroom)][std::get<1>(bossroom)].monsters.empty() && !stage1clear && isAlive)
+	{
+		stage1clear = true;
+
+		PrintGameclear();
 	}
 }
 void SceneGame::Draw(sf::RenderWindow& window)
@@ -156,13 +193,45 @@ void SceneGame::Release()
 		//go->Release();
 		delete go;
 	}
+	lifebar.clear();
+	hitablelist.clear();
 }
 
 void SceneGame::Enter()
 {
+	auto timertext = FindGO("timertext");
+	RemoveGO(timertext);
+	auto restart = FindGO("restart");
+	RemoveGO(restart);
+	auto exitgame = FindGO("exitgame");
+	RemoveGO(exitgame);
+	auto gameclear = FindGO("gameclear");
+	RemoveGO(gameclear);
+
+	RandomRooms();
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			SetDoor(i, j);
+		}
+	}
+
 	Scene::Enter();
 
+	fps = 0.0f;
+	fpstimer = 0.0f;
+	timer = 0.0f;
+	isPause = false;
+	isAlive = true;
+	stage1clear = false;
 	ClearPool(poolBloods);
+
+	SpriteGameObject* gameover = (SpriteGameObject*)FindGO("gameover");
+	gameover->SetActive(false);
+
+	SpriteGameObject* post = (SpriteGameObject*)FindGO("post");
+	post->SetActive(false);
 
 	RectGameObject* wall = (RectGameObject*)FindGO("room/Spawn.csv");
 	player->SetWall(wall->rect.getGlobalBounds());
@@ -178,9 +247,25 @@ void SceneGame::Enter()
 		}
 	}
 	ViewSet(player->GetPosition());
+
+	// Sound
+	bgm.setBuffer(*RESOURCE_MGR.GetSoundBuffer("sounds/basement.ogg"));
+	bgm.play();
 }
 void SceneGame::Exit()
 {
+	isAlive = false;
+	ClearRooms();
+	for (auto it : hitablelist)
+	{
+		RemoveGO(it);
+	}
+	hitablelist.clear();
+	for (auto it : lifebar)
+	{
+		RemoveGO(it);
+	}
+	lifebar.clear();
 	ClearPool(poolBloods);
 	player->Reset();
 
@@ -195,6 +280,7 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 	SpriteGameObject* background = (SpriteGameObject*)AddGO(new SpriteGameObject(bg, "bg"));
 	background->SetOrigin(Origins::C);
 	background->SetPosition(position);
+	objlist.push_back(background);
 
 	int sizex = doc.GetCell<int>(1, 1);
 	int sizey = doc.GetCell<int>(2, 1);
@@ -216,6 +302,7 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 			wall->rect.setOutlineColor(sf::Color::Transparent);
 		}
 	};
+	objlist.push_back(wall);
 
 	for (int i = 4; i < doc.GetRowCount(); i++)
 	{
@@ -236,6 +323,7 @@ void SceneGame::CallRoom(const std::string& roomPath, const sf::Vector2f& positi
 				obj->col.setOutlineColor(sf::Color::Transparent);
 			}
 		};
+		obj->Init();
 	}
 
 	(roomPath == "room/Spawn.csv") ?
@@ -256,7 +344,6 @@ void SceneGame::SetDoor(int r, int c)
 		door->SetDestination(stage1[r][c - 1].pos, { r, c - 1 });
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
-		stage1[r][c].doors.push_back(door);
 		door->OnDebug = [this, door]()
 		{
 			if (isDebug)
@@ -268,6 +355,8 @@ void SceneGame::SetDoor(int r, int c)
 				door->col.setOutlineColor(sf::Color::Transparent);
 			}
 		};
+		door->Init();
+		stage1[r][c].doors.push_back(door);
 	}
 	if (stage1[r][c + 1].tag != NULL && c < 8)
 	{
@@ -277,7 +366,6 @@ void SceneGame::SetDoor(int r, int c)
 		door->SetDestination(stage1[r][c + 1].pos, { r, c + 1 });
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
-		stage1[r][c].doors.push_back(door);
 		door->OnDebug = [this, door]()
 		{
 			if (isDebug)
@@ -289,6 +377,8 @@ void SceneGame::SetDoor(int r, int c)
 				door->col.setOutlineColor(sf::Color::Transparent);
 			}
 		};
+		door->Init();
+		stage1[r][c].doors.push_back(door);
 	}
 	if (stage1[r - 1][c].tag != NULL && r > 0)
 	{
@@ -298,7 +388,6 @@ void SceneGame::SetDoor(int r, int c)
 		door->SetDestination(stage1[r - 1][c].pos, { r - 1, c });
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
-		stage1[r][c].doors.push_back(door);
 		door->OnDebug = [this, door]()
 		{
 			if (isDebug)
@@ -310,6 +399,8 @@ void SceneGame::SetDoor(int r, int c)
 				door->col.setOutlineColor(sf::Color::Transparent);
 			}
 		};
+		door->Init();
+		stage1[r][c].doors.push_back(door);
 	}
 	if (stage1[r + 1][c].tag != NULL && r < 8)
 	{
@@ -319,7 +410,6 @@ void SceneGame::SetDoor(int r, int c)
 		door->SetDestination(stage1[r + 1][c].pos, { r + 1, c });
 		door->SetWall(stage1[r][c].wall);
 		(stage1[r][c].monsters.empty()) ? door->Open() : door->Close();
-		stage1[r][c].doors.push_back(door);
 		door->OnDebug = [this, door]()
 		{
 			if (isDebug)
@@ -331,6 +421,8 @@ void SceneGame::SetDoor(int r, int c)
 				door->col.setOutlineColor(sf::Color::Transparent);
 			}
 		};
+		door->Init();
+		stage1[r][c].doors.push_back(door);
 	}
 }
 void SceneGame::RandomRooms()
@@ -411,6 +503,38 @@ void SceneGame::RandomRooms()
 
 	}
 	stage1[r][c].tag = 'B';
+	bossroom = {r, c};
+}
+void SceneGame::ClearRooms()
+{
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			stage1[i][j].tag = NULL;
+			stage1[i][j].pos = {};
+			stage1[i][j].wall = {};
+			for (auto it : stage1[i][j].monsters)
+			{
+				RemoveGO(it);
+			}
+			stage1[i][j].monsters.clear();
+			for (auto it : stage1[i][j].doors)
+			{
+				RemoveGO(it);
+			}
+			stage1[i][j].doors.clear();
+
+			stage1[i][j].isHear = false;
+			stage1[i][j].isPassed = false;
+			stage1[i][j].isClarify = false;
+		}
+	}
+
+	for (auto it : objlist)
+	{
+		RemoveGO(it);
+	}
 }
 
 void SceneGame::RenewLife(int life)
@@ -444,6 +568,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	case ObjType::None:
 	{
 		SpriteGameObject* none = (SpriteGameObject*)AddGO(new SpriteGameObject(textureId));
+		objlist.push_back(none);
 		return (SpriteGameObject*)none;
 	}
 	break;
@@ -512,6 +637,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 			player->OnHit(1);
 		};
 		spike->SetWall(wall);
+		objlist.push_back(spike);
 		return (SpriteGameObject*)spike;
 	}
 	break;
@@ -595,7 +721,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	{
 		Boss* duke = (Boss*)AddGO(new Boss(objtype, r, c, textureId));
 		duke->SetPlayer(player);
-		duke->SetMonster(1, 50.0f, 50, 800.0f);
+		duke->SetMonster(1, 30.0f, 50, 800.0f, true);
 		duke->OnBump = [this, duke]()
 		{
 			player->SetPosition(player->GetPosition() - Utils::Normalize(duke->GetPosition() - player->GetPosition()));
@@ -624,6 +750,17 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 				attackfly->sortOrder = 1;
 				attackfly->Init();
 				attackfly->Reset();
+				attackfly->OnDebug = [this, attackfly]()
+				{
+					if (isDebug)
+					{
+						attackfly->col.setOutlineColor(sf::Color::Red);
+					}
+					else
+					{
+						attackfly->col.setOutlineColor(sf::Color::Transparent);
+					}
+				};
 				hitablelist.push_back(attackfly);
 				stage1[r][c].monsters.push_back(attackfly);
 			}
@@ -660,6 +797,17 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 				pooter->sortOrder = 1;
 				pooter->Init();
 				pooter->Reset();
+				pooter->OnDebug = [this, pooter]()
+				{
+					if (isDebug)
+					{
+						pooter->col.setOutlineColor(sf::Color::Red);
+					}
+					else
+					{
+						pooter->col.setOutlineColor(sf::Color::Transparent);
+					}
+				};
 				hitablelist.push_back(pooter);
 				stage1[r][c].monsters.push_back(pooter);
 			}
@@ -674,7 +822,9 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 	}
 	default:
 	{
+		std::cout << "WARNING: Not Exist ObjType" << std::endl;
 		Tile* tile = (Tile*)AddGO(new Tile(objtype, textureId));
+		objlist.push_back(tile);
 		return (SpriteGameObject*)tile;
 	}
 	break;
@@ -684,7 +834,7 @@ const std::list<RoomObject*>* SceneGame::GetPoopList() const
 {
 	return &hitablelist;
 }
-void SceneGame::RemoveRGO(RoomObject* roomGO)
+void SceneGame::RemoveRoomGO(RoomObject* roomGO)
 {
 	hitablelist.remove(roomGO);
 	RemoveGO(roomGO);
@@ -728,4 +878,85 @@ void SceneGame::DoorControl(int r, int c)
 			pill->Reset();
 		}
 	}
+}
+void SceneGame::OnDiePlayer()
+{
+	isAlive = false;
+
+	SpriteGameObject* gameover = (SpriteGameObject*)FindGO("gameover");
+	gameover->SetActive(true);
+
+	SpriteGameObject* post = (SpriteGameObject*)FindGO("post");
+	post->SetActive(true);
+
+	PrintMenu();
+}
+void SceneGame::PrintMenu()
+{
+	TextGameObject* timertext = (TextGameObject*)AddGO(new TextGameObject("fonts/DNFBitBitOTF.otf", "timertext"));
+	timertext->SetOrigin(Origins::C);
+	timertext->SetPosition({ windowSize.x * 0.5f, windowSize.y * 0.35f });
+	timertext->text.setString("TIME[ " + std::to_string((int)timer / 60) + " : " + std::to_string((int)timer % 60) + " ]");
+	timertext->text.setOutlineColor(sf::Color::Black);
+	timertext->text.setOutlineThickness(1);
+	timertext->text.setCharacterSize(20);
+	timertext->sortLayer = 105;
+	timertext->Init();
+	timertext->Reset();
+
+	UITextButton* restart = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf", "restart"));
+	restart->SetOrigin(Origins::C);
+	restart->SetPosition({ windowSize.x * 0.875f, windowSize.y * 0.75f });
+	restart->SetText("RESTART", 30);
+	restart->OnEnter = []()
+	{
+
+	};
+	restart->OnExit = []()
+	{
+
+	};
+	restart->OnClick = [this]()
+	{
+		SCENE_MGR.ChangeScene(SceneId::Game);
+	};
+	restart->sortLayer = 105;
+	restart->Init();
+	restart->Reset();
+
+	UITextButton* exitgame = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf", "exitgame"));
+	exitgame->SetOrigin(Origins::C);
+	exitgame->SetPosition({ windowSize.x * 0.875f, windowSize.y * 0.85f });
+	exitgame->SetText("GO TITLE", 30);
+	exitgame->OnEnter = []()
+	{
+
+	};
+	exitgame->OnExit = []()
+	{
+
+	};
+	exitgame->OnClick = [this]()
+	{
+		SCENE_MGR.ChangeScene(SceneId::Title);
+	};
+	exitgame->sortLayer = 105;
+	exitgame->Init();
+	exitgame->Reset();
+}
+void SceneGame::PrintGuide(const std::string& text)
+{
+	guide->SetString(text);
+	guide->Reset();
+}
+void SceneGame::PrintGameclear()
+{
+	SpriteGameObject* gameclear = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/gameclear.png", "gameclear"));
+	gameclear->SetOrigin(Origins::C);
+	gameclear->SetPosition(windowSize * 0.5f);
+	gameclear->sortLayer = 105;
+	gameclear->Init();
+	gameclear->Reset();
+
+	PrintMenu();
 }

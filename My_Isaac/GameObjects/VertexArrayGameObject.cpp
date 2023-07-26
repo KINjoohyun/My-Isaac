@@ -2,16 +2,6 @@
 #include "VertexArrayGameObject.h"
 #include "ResourceMgr.h"
 
-VertexArrayGameObject::VertexArrayGameObject(const std::string& textureId, const std::string& name)
-	:GameObject(name), textureId(textureId), texture(nullptr)
-{
-
-}
-VertexArrayGameObject::~VertexArrayGameObject()
-{
-
-}
-
 void VertexArrayGameObject::Init()
 {
 	

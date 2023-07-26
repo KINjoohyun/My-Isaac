@@ -5,12 +5,6 @@
 #include "SceneGame.h"
 #include "Player.h"
 
-RoomObject::RoomObject(const std::string& textureId, const std::string& name)
-	:SpriteGameObject(textureId, name)
-{
-
-}
-
 void RoomObject::Init()
 {
 	SpriteGameObject::Init();
@@ -60,7 +54,7 @@ void RoomObject::OnDamage(int damage)
 		else
 		{
 			SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
-			scene->RemoveRGO(this);
+			scene->RemoveRoomGO(this);
 		}
 	}
 }

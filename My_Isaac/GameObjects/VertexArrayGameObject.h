@@ -11,8 +11,9 @@ protected:
 public:
 	sf::VertexArray vertexArray;
 
-	VertexArrayGameObject(const std::string& textureId = "", const std::string& name = "");
-	virtual ~VertexArrayGameObject() override;
+	VertexArrayGameObject(const std::string& textureId = "", const std::string& name = "")
+		: GameObject(name), textureId(textureId), texture(nullptr) {}
+	virtual ~VertexArrayGameObject() override { Release(); }
 
 	virtual void Init() override;
 	virtual void Reset() override;

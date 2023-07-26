@@ -2,6 +2,7 @@
 #include "AnimationController.h"
 #include "ResourceMgr.h"
 
+//void AnimationController::AddClip(const AnimationClip& newClip)
 void AnimationController::AddClip(AnimationClip& newClip)
 {
 	if (clips.find(newClip.id) == clips.end())
@@ -105,4 +106,8 @@ std::string AnimationController::GetCurrentClipId() const
 		return "";
 	}
 	return currentClip->id;
+}
+AnimationClip* AnimationController::GetCurrentClip() const
+{
+	return currentClip;
 }

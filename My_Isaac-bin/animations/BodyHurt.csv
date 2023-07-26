@@ -2,7 +2,7 @@ ID,FPS,LOOPTYPE,,
 BodyHurt,10,0,,
 ,,,,
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
-graphics/player.png,15,310,18,14
-graphics/player.png,15,310,18,14
-graphics/player.png,15,310,18,14
+graphics/player.png,104,289,18,14
+graphics/player.png,104,289,18,14
+graphics/player.png,104,289,18,14
 graphics/player.png,15,80,18,14

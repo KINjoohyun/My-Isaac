@@ -12,10 +12,12 @@
 3,animations/HeadShootRight.csv
 3,animations/HeadShootUp.csv
 3,animations/HeadShootLeft.csv
-3,animations/TearShooting.csv
-3,animations/TearSplash.csv
 3,animations/BodyHurt.csv
 3,animations/HeadHurt.csv
+3,animations/BodyDead.csv
+3,animations/HeadDead.csv
+3,animations/TearShooting.csv
+3,animations/TearSplash.csv
 3,animations/AttackFly1.csv
 3,animations/Pooter1.csv
 3,animations/Pooter2.csv
@@ -25,3 +27,4 @@
 3,animations/Duke_Of_Flies1.csv
 3,animations/Duke_Of_Flies2.csv
 3,animations/Duke_Of_Flies3.csv
+3,animations/Title.csv

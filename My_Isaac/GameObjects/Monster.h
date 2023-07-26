@@ -28,7 +28,6 @@ public:
 	virtual void Init() override;
 	virtual void Reset() override;
 	virtual void Update(float dt) override;
-	virtual void Release() override {}
 
 	virtual void OnDamage(int damage) override;
 	void SetMonster(int damage = 0, float speed = 0.0f, int maxHp = 0, float recognize = 0.0f, bool isChase = true);

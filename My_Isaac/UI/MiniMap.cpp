@@ -17,6 +17,7 @@ void MiniMap::Reset()
 {
 	SpriteGameObject::Reset();
 
+	isOpenBoss = false;
 	bossIcon.setTexture(*sprite.getTexture());
 	RenewMiniMap();
 }

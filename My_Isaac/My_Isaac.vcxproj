@@ -168,6 +168,7 @@
     <ClCompile Include="GameObjects\TextGameObject.cpp" />
     <ClCompile Include="GameObjects\VertexArrayGameObject.cpp" />
     <ClCompile Include="Global\Utils.cpp" />
+    <ClCompile Include="UI\GuideObject.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -176,6 +177,7 @@
     <ClCompile Include="GameObjects\RoomObject.cpp" />
     <ClCompile Include="GameObjects\Monster.cpp" />
     <ClCompile Include="GameObjects\Pill.cpp" />
+    <ClCompile Include="UI\Title.cpp" />
     <ClCompile Include="UI\MiniMap.cpp" />
     <ClCompile Include="Scenes\SceneEditor.cpp" />
     <ClCompile Include="Scenes\Scene.cpp" />
@@ -214,6 +216,8 @@
     <ClInclude Include="GameObjects\RoomObject.h" />
     <ClInclude Include="GameObjects\Monster.h" />
     <ClInclude Include="GameObjects\Pill.h" />
+    <ClInclude Include="UI\GuideObject.h" />
+    <ClInclude Include="UI\Title.h" />
     <ClInclude Include="UI\MiniMap.h" />
     <ClInclude Include="Scenes\SceneEditor.h" />
     <ClInclude Include="Scenes\Scene.h" />
@@ -228,6 +232,10 @@
     <ClInclude Include="MapEditor\Tile.h" />
     <ClInclude Include="UI\UIImageButton.h" />
     <ClInclude Include="GameObjects\Tear.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SFML-2.5.1\license.md" />
+    <None Include="SFML-2.5.1\readme.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

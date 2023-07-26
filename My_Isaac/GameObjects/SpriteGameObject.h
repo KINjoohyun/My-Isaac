@@ -13,7 +13,7 @@ public:
 	SpriteGameObject(const std::string textureId = "", const std::string name = "") : GameObject(name), textureId(textureId) {}
 	virtual ~SpriteGameObject() override { Release(); }
 
-	virtual void Init() override;
+	virtual void Init() override {}
 	virtual void Reset() override;
 	virtual void Update(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;

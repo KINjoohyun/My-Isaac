@@ -11,6 +11,11 @@
 0,graphics/ui/ui_heart0.png
 0,graphics/ui/ui_heart1.png
 0,graphics/ui/ui_heart2.png
+0,graphics/ui/ui_pause.png
+0,graphics/ui/gameover.png
+0,graphics/ui/gameclear.png
+0,graphics/ui/ui_guide.png
+0,graphics/ui/ui_post.png
 0,graphics/door1.png
 0,graphics/door_boss.png
 0,graphics/poop1.png
@@ -23,3 +28,7 @@
 0,graphics/Duke_Of_Flies.png
 0,graphics/ui/minimap1.png
 0,graphics/pill.png
+2,sounds/basement.ogg
+2,sounds/Tears_Fire_0.ogg
+2,sounds/Tears_Fire_1.ogg
+2,sounds/Tears_Fire_2.ogg

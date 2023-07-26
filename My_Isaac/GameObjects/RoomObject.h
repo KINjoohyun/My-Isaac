@@ -20,13 +20,12 @@ protected:
 
 public:
 
-	RoomObject(const std::string& textureId = "", const std::string& name = "");
+	RoomObject(const std::string& textureId = "", const std::string& name = "") : SpriteGameObject(textureId, name) {}
 	virtual ~RoomObject() override { Release(); }
 
 	virtual void Init() override;
 	virtual void Reset() override;
 	virtual void Update(float dt) override;
-	virtual void Release() {}
 
 	std::function<void(int damage)> OnHit; // Tear客 面倒
 	std::function<void()> OnBump; // Player客 面倒

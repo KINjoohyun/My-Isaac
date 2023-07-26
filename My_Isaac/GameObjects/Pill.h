@@ -22,13 +22,13 @@ protected:
 	PillType type;
 
 public:
-	Pill(const std::string& textureId = "graphics/pill.png", const std::string& name = "") : SpriteGameObject(textureId, name) {}
+	Pill(const std::string& textureId = "graphics/pill.png", const std::string& name = "")
+		: SpriteGameObject(textureId, name) {}
 	virtual ~Pill() override { Release(); }
 
 	virtual void Init() override;
 	virtual void Reset() override;
 	virtual void Update(float dt) override;
-	virtual void Release() override {}
 
 	void SetPlayer(Player* player);
 	void SetType(PillType type);

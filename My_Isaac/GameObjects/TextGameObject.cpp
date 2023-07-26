@@ -2,16 +2,6 @@
 #include "TextGameObject.h"
 #include "ResourceMgr.h"
 
-TextGameObject::TextGameObject(const std::string fontId, const std::string name)
-	:GameObject(name), fontId(fontId)
-{
-
-}
-TextGameObject::~TextGameObject()
-{
-
-}
-
 void TextGameObject::Init()
 {
 

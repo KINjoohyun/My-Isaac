@@ -1,0 +1,6 @@
+ID,FPS,LOOPTYPE,,
+Idle,10,1,,
+,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
+graphics/title.png,0,0,256,288
+graphics/title.png,256,0,256,288

@@ -23,6 +23,8 @@ protected:
 	float wallLeft = 0.0f;
 	float wallRight = 0.0f;
 
+	sf::Sound shootsound;
+
 public:
 	ObjectPool<Blood>* pool;
 

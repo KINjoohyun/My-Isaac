@@ -36,6 +36,9 @@ protected:
 
 	bool isAlive = true;
 
+	sf::Sound hurtsound;
+	//sf::Sound diesound;
+
 public:
 	sf::Sprite head;
 	sf::RectangleShape headCol;

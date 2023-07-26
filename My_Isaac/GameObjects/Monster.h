@@ -21,6 +21,10 @@ protected:
 
 	float attackTimer = 0.0f;
 	float attackDuration = 1.0f;
+
+	sf::Sound monstersound;
+	std::string soundPath = "";
+
 public:
 	Monster(ObjType objtype, int r, int c, const std::string& textureId = "", const std::string& name = "");
 	virtual ~Monster() override { Release(); }
@@ -33,6 +37,7 @@ public:
 	void SetMonster(int damage = 0, float speed = 0.0f, int maxHp = 0, float recognize = 0.0f, bool isChase = true);
 	const sf::Vector2f& GetDirection();
 	const int& GetDamage();
+	void SetSound(const std::string& path);
 
 	std::function<void()>BloodShoot;
 };

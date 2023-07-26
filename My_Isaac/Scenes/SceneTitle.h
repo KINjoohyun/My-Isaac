@@ -4,7 +4,7 @@
 class SceneTitle : public Scene
 {
 protected:
-
+	
 public:
 	SceneTitle();
 	virtual ~SceneTitle() override;

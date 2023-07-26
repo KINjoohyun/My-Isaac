@@ -20,6 +20,9 @@ protected:
 
 	sf::RenderWindow& window;
 	sf::Vector2f windowSize;
+
+	sf::Sound bgm;
+
 public:
 	Scene(SceneId id = SceneId::None);
 	virtual ~Scene();

@@ -100,6 +100,7 @@ void Player::Reset()
 			}
 		};
 	}
+
 }
 void Player::Update(float dt)
 {
@@ -313,6 +314,9 @@ void Player::OnHit(int damage)
 {
 	if (invincibleTimer < invincibleDuration) return;
 
+	hurtsound.setBuffer(*RESOURCE_MGR.GetSoundBuffer("sounds/Isaac_Hurt_" + std::to_string(Utils::RandomRange(0, 2)) + ".ogg"));
+	hurtsound.play();
+
 	life = std::max(0, life - damage);
 	invincibleTimer = 0.0f;
 	headAnimation.Play("HeadHurt");
@@ -333,6 +337,9 @@ void Player::OnHit(int damage)
 		head.setColor(sf::Color::White);
 		bodyAnimation.Play("BodyDead");
 		headAnimation.Play("HeadDead");
+
+		hurtsound.setBuffer(*RESOURCE_MGR.GetSoundBuffer("sounds/isaacdies.ogg"));
+		hurtsound.play();
 
 		AnimationClip* deadclip = bodyAnimation.GetCurrentClip();
 		deadclip->frames[9].action = [scene]()

@@ -121,6 +121,10 @@ void SceneTitle::Release()
 void SceneTitle::Enter()
 {
 	Scene::Enter();
+
+	bgm.setBuffer(*RESOURCE_MGR.GetSoundBuffer("sounds/title_bgm.ogg"));
+	bgm.play();
+	bgm.setLoop(true);
 }
 void SceneTitle::Exit()
 {

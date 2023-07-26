@@ -26,6 +26,8 @@ protected:
 
 	const std::list<RoomObject*>* hitablelist;
 
+	sf::Sound shootsound;
+
 public:
 	ObjectPool<Tear>* pool;
 

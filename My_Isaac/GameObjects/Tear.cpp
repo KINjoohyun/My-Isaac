@@ -27,9 +27,10 @@ void Tear::Reset()
 	direction = { 0.0f, 0.0f };
 	damage = 0;
 
-	animation.Play("TearShooting");
-
 	SpriteGameObject::Reset();
+
+	animation.Play("TearShooting");
+	shootsound.setBuffer(*RESOURCE_MGR.GetSoundBuffer("sounds/Tears_Fire_" + std::to_string(Utils::RandomRange(0, 2)) + ".ogg"));
 }
 void Tear::Update(float dt)
 {
@@ -79,6 +80,8 @@ void Tear::Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, fl
 	this->direction = direction;
 	this->speed = speed;
 	this->damage = damage;
+
+	shootsound.play();
 }
 void Tear::SetWall(const sf::FloatRect& wall)
 {

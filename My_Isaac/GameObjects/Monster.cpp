@@ -46,6 +46,12 @@ void Monster::Reset()
 	attackTimer = attackDuration;
 
 	RoomObject::Reset();
+
+	if (soundPath != "")
+	{
+		monstersound.setBuffer(*RESOURCE_MGR.GetSoundBuffer(soundPath));
+		monstersound.play();
+	}
 }
 void Monster::Update(float dt)
 {
@@ -122,4 +128,8 @@ const sf::Vector2f& Monster::GetDirection()
 const int& Monster::GetDamage()
 {
 	return damage;
+}
+void Monster::SetSound(const std::string& path)
+{
+	this->soundPath = path;
 }

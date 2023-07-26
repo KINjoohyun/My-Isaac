@@ -248,9 +248,9 @@ void SceneGame::Enter()
 	}
 	ViewSet(player->GetPosition());
 
-	// Sound
 	bgm.setBuffer(*RESOURCE_MGR.GetSoundBuffer("sounds/basement.ogg"));
 	bgm.play();
+	bgm.setLoop(true);
 }
 void SceneGame::Exit()
 {
@@ -646,6 +646,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		Monster* attackfly = (Monster*)AddGO(new Monster(objtype, r, c));
 		attackfly->SetPlayer(player);
 		attackfly->SetMonster(1, 150.0f, 3, 500.0f);
+		attackfly->SetSound("sounds/Fly.ogg");
 		attackfly->OnBump = [this, attackfly]()
 		{
 			player->OnHit(attackfly->GetDamage());
@@ -661,6 +662,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		Monster* pooter = (Monster*)AddGO(new Monster(objtype, r, c));
 		pooter->SetPlayer(player);
 		pooter->SetMonster(1, 100.0f, 4, 400.0f);
+		pooter->SetSound("sounds/Fly.ogg");
 		pooter->OnBump = [this, pooter]()
 		{
 			player->OnHit(pooter->GetDamage());
@@ -683,6 +685,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 		Monster* sucker = (Monster*)AddGO(new Monster(objtype, r, c));
 		sucker->SetPlayer(player);
 		sucker->SetMonster(1, 100.0f, 5, 400.0f);
+		sucker->SetSound("sounds/Fly.ogg");
 		sucker->OnBump = [this, sucker]()
 		{
 			player->OnHit(sucker->GetDamage());
@@ -739,6 +742,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 				Monster* attackfly = (Monster*)AddGO(new Monster(ObjType::AttackFly, r, c));
 				attackfly->SetPlayer(player);
 				attackfly->SetMonster(1, 150.0f, 3, 500.0f);
+				attackfly->SetSound("sounds/Fly.ogg");
 				attackfly->OnBump = [this, attackfly]()
 				{
 					player->OnHit(1);
@@ -779,6 +783,7 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 				Monster* pooter = (Monster*)AddGO(new Monster(ObjType::Pooter, r, c));
 				pooter->SetPlayer(player);
 				pooter->SetMonster(1, 100.0f, 4, 400.0f);
+				pooter->SetSound("sounds/Fly.ogg");
 				pooter->OnBump = [this, pooter]()
 				{
 					player->OnHit(1);
@@ -882,6 +887,9 @@ void SceneGame::DoorControl(int r, int c)
 void SceneGame::OnDiePlayer()
 {
 	isAlive = false;
+	bgm.setBuffer(*RESOURCE_MGR.GetSoundBuffer("sounds/you_died.ogg"));
+	bgm.play();
+	bgm.setLoop(false);
 
 	SpriteGameObject* gameover = (SpriteGameObject*)FindGO("gameover");
 	gameover->SetActive(true);
@@ -959,4 +967,9 @@ void SceneGame::PrintGameclear()
 	gameclear->Reset();
 
 	PrintMenu();
+}
+void SceneGame::SoundPlaying(const std::string& path)
+{
+	gamesound.setBuffer(*RESOURCE_MGR.GetSoundBuffer(path));
+	gamesound.play();
 }

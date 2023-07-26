@@ -27,9 +27,10 @@ void Blood::Reset()
 	speed = 0.0f;
 	damage = 0;
 
-	animation.Play("BloodShooting");
-
 	SpriteGameObject::Reset();
+
+	animation.Play("BloodShooting");
+	shootsound.setBuffer(*RESOURCE_MGR.GetSoundBuffer("sounds/Blood_Fire_" + std::to_string(Utils::RandomRange(0, 2)) + ".ogg"));
 }
 void Blood::Update(float dt)
 {
@@ -73,6 +74,8 @@ void Blood::Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, f
 	this->direction = direction;
 	this->speed = speed;
 	this->damage = damage;
+
+	shootsound.play();
 }
 void Blood::SetWall(const sf::FloatRect& wall)
 {

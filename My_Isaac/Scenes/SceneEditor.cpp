@@ -66,6 +66,10 @@ void SceneEditor::Enter()
 {
 	Scene::Enter();
 
+	bgm.setBuffer(*RESOURCE_MGR.GetSoundBuffer("sounds/angelroom.ogg"));
+	bgm.play();
+	bgm.setLoop(true);
+
 	RoomReset();
 }
 void SceneEditor::Exit()

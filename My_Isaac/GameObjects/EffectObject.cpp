@@ -25,6 +25,9 @@ void EffectObject::Reset()
 	SetPosition(0.0f, 0.0f);
 	timer = 0.0f;
 	animation.Stop();
+
+	splashsound.setBuffer(*RESOURCE_MGR.GetSoundBuffer("sounds/Splash" + std::to_string(Utils::RandomRange(0, 2)) + ".ogg"));
+	splashsound.play();
 }
 void EffectObject::Update(float dt)
 {

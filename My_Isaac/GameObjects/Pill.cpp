@@ -96,6 +96,7 @@ void Pill::Update(float dt)
 			break;
 		}
 
+		scene->SoundPlaying("sounds/pillpickup.ogg");
 		scene->RemoveGO(this);
 	}
 }

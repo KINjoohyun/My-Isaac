@@ -53,7 +53,7 @@ protected:
 	std::tuple<int, int> bossroom = {0, 0};
 	bool stage1clear = false;
 
-	sf::Sound bgm;
+	sf::Sound gamesound;
 
 public:
 	
@@ -89,6 +89,7 @@ public:
 	void PrintMenu();
 	void PrintGuide(const std::string& text);
 	void PrintGameclear();
+	void SoundPlaying(const std::string& path);
 
 	template <typename T>
 	void ClearPool(ObjectPool<T>& pool);

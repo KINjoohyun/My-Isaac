@@ -11,6 +11,8 @@ protected:
 	float timer = 0.0f;
 	float duration = 0.8f;
 	std::string anim;
+
+	sf::Sound splashsound;
 public:
 	ObjectPool<EffectObject>* pool;
 

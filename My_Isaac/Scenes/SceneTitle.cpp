@@ -42,7 +42,7 @@ void SceneTitle::Init()
 
 	UITextButton* button1 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
 	button1->SetOrigin(Origins::C);
-	button1->SetText("Game Start", 50);
+	button1->SetText("GAME START", 50);
 	button1->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 150.0f);
 	button1->OnEnter = []()
 	{
@@ -60,7 +60,7 @@ void SceneTitle::Init()
 
 	UITextButton* button2 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
 	button2->SetOrigin(Origins::C);
-	button2->SetText("Map Editor", 50);
+	button2->SetText("MAP EDITOR", 50);
 	button2->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 250.0f);
 	button2->OnEnter = []()
 	{
@@ -75,6 +75,24 @@ void SceneTitle::Init()
 		SCENE_MGR.ChangeScene(SceneId::Editor);
 	};
 	button2->sortLayer = 100;
+
+	UITextButton* button3 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
+	button3->SetOrigin(Origins::C);
+	button3->SetText("EXIT", 50);
+	button3->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 350.0f);
+	button3->OnEnter = []()
+	{
+
+	};
+	button3->OnExit = []()
+	{
+
+	};
+	button3->OnClick = [this]()
+	{
+		window.close();
+	};
+	button3->sortLayer = 100;
 
 	Title* title = (Title*)AddGO(new Title());
 

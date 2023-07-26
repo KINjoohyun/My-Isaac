@@ -246,4 +246,8 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="SFML-2.5.1\readme.md" />
+    <None Include="SFML-2.5.1\license.md" />
+  </ItemGroup>
 </Project>

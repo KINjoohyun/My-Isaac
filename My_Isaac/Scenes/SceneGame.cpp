@@ -133,6 +133,8 @@ void SceneGame::Init()
 	{
 		go->Init();
 	}
+
+	// Sound
 }
 void SceneGame::Update(float dt)
 {
@@ -245,6 +247,10 @@ void SceneGame::Enter()
 		}
 	}
 	ViewSet(player->GetPosition());
+
+	// Sound
+	bgm.setBuffer(*RESOURCE_MGR.GetSoundBuffer("sounds/basement.ogg"));
+	bgm.play();
 }
 void SceneGame::Exit()
 {
@@ -921,7 +927,7 @@ void SceneGame::PrintMenu()
 	UITextButton* exitgame = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf", "exitgame"));
 	exitgame->SetOrigin(Origins::C);
 	exitgame->SetPosition({ windowSize.x * 0.875f, windowSize.y * 0.85f });
-	exitgame->SetText("EXIT GAME", 30);
+	exitgame->SetText("GO TITLE", 30);
 	exitgame->OnEnter = []()
 	{
 

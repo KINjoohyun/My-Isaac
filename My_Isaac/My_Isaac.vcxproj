@@ -233,6 +233,10 @@
     <ClInclude Include="UI\UIImageButton.h" />
     <ClInclude Include="GameObjects\Tear.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="SFML-2.5.1\license.md" />
+    <None Include="SFML-2.5.1\readme.md" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

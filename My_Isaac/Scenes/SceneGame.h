@@ -53,6 +53,8 @@ protected:
 	std::tuple<int, int> bossroom = {0, 0};
 	bool stage1clear = false;
 
+	sf::Sound bgm;
+
 public:
 	
 	MiniMap* minimap;

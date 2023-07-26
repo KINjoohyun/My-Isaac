@@ -54,7 +54,7 @@ void RoomObject::OnDamage(int damage)
 		else
 		{
 			SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
-			scene->RemoveRGO(this);
+			scene->RemoveRoomGO(this);
 		}
 	}
 }

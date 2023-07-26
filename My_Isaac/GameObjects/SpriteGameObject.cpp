@@ -2,10 +2,6 @@
 #include "SpriteGameObject.h"
 #include "ResourceMgr.h"
 
-void SpriteGameObject::Init()
-{
-	
-}
 void SpriteGameObject::Reset()
 {
 	if (RESOURCE_MGR.GetTexture(textureId) != nullptr)

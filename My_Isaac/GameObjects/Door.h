@@ -20,8 +20,8 @@ protected:
 
 	Player* player;
 	sf::Vector2f destination;
-	sf::Vector2i currRoom;
-	sf::Vector2i nextRoom;
+	std::tuple<int, int> currRoom;
+	std::tuple<int, int> nextRoom;
 
 	sf::FloatRect wall;
 	float wallTop = 0.0f;
@@ -30,7 +30,7 @@ protected:
 	float wallRight = 0.0f;
 
 public:
-	Door(const std::string& textureId, Look look, const sf::Vector2i& currRoom);
+	Door(const std::string& textureId, Look look, const std::tuple<int, int>& currRoom);
 	virtual ~Door() override { Release(); }
 
 	virtual void Init() override;
@@ -39,7 +39,7 @@ public:
 	virtual void Release() override { }
 	
 	void SetPlayer(Player* player);
-	void SetDestination(const sf::Vector2f& destination, const sf::Vector2i& nextRoom);
+	void SetDestination(const sf::Vector2f& destination, const std::tuple<int, int>& nextRoom);
 	void SetWall(const sf::FloatRect& wall);
 	void Open();
 	void Close();

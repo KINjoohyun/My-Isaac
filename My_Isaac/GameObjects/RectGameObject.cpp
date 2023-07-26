@@ -1,14 +1,6 @@
 #include "stdafx.h"
 #include "RectGameObject.h"
 
-void RectGameObject::Init()
-{
-	
-}
-void RectGameObject::Reset()
-{
-	
-}
 void RectGameObject::Update(float dt)
 {
 	if (OnDebug != nullptr) OnDebug();
@@ -16,10 +8,6 @@ void RectGameObject::Update(float dt)
 void RectGameObject::Draw(sf::RenderWindow& window)
 {
 	window.draw(rect);
-}
-void RectGameObject::Release()
-{
-
 }
 
 void RectGameObject::SetPosition(const sf::Vector2f& position)

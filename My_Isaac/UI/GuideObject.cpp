@@ -26,6 +26,7 @@ void GuideObject::Update(float dt)
 	else
 	{
 		SetActive(false);
+		timer = 0.0f;
 	}
 }
 void GuideObject::Draw(sf::RenderWindow& window)

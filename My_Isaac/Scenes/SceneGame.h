@@ -45,7 +45,7 @@ protected:
 	SpriteGameObject* pauseObject;
 
 	bool isAlive = true;
-	int test = 0;
+	bool isPause = false;
 
 public:
 	

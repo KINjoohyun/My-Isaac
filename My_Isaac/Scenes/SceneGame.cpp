@@ -95,7 +95,7 @@ void SceneGame::Init()
 	RenewLife(player->GetMaxLife());
 
 	RectGameObject* wall = (RectGameObject*)FindGO("room/Spawn.csv");
-	poolBloods.OnCreate = [this, wall](Blood* blood)
+	poolBloods.OnCreate = [this](Blood* blood)
 	{
 		blood->pool = &poolBloods;
 		blood->SetPlayer(player);
@@ -116,8 +116,8 @@ void SceneGame::Init()
 
 	pauseObject = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/ui_pause.png"));
 	pauseObject->SetOrigin(Origins::C);
-	pauseObject->sortLayer = 100;
 	pauseObject->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f);
+	pauseObject->sortLayer = 100;
 	pauseObject->SetActive(false);
 
 	SpriteGameObject* gameover = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/ui/gameover.png", "gameover"));
@@ -133,8 +133,6 @@ void SceneGame::Init()
 }
 void SceneGame::Update(float dt)
 {
-	Scene::Update(dt);
-
 	fps++;
 	fpstimer += dt;
 	if (fpstimer >= 1.0f)
@@ -144,9 +142,19 @@ void SceneGame::Update(float dt)
 		fps = 0.0f;
 	}
 
+	if (!isPause)
+	{
+		Scene::Update(dt);
+	}
+	else
+	{
+		pauseObject->Update(dt);
+	}
+
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Escape) && isAlive)
 	{
-		pauseObject->SetActive(!pauseObject->GetActive());
+		isPause = !isPause;
+		pauseObject->SetActive(isPause);
 	}
 
 	// Debug Mode
@@ -637,6 +645,17 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 				attackfly->sortOrder = 1;
 				attackfly->Init();
 				attackfly->Reset();
+				attackfly->OnDebug = [this, attackfly]()
+				{
+					if (isDebug)
+					{
+						attackfly->col.setOutlineColor(sf::Color::Red);
+					}
+					else
+					{
+						attackfly->col.setOutlineColor(sf::Color::Transparent);
+					}
+				};
 				hitablelist.push_back(attackfly);
 				stage1[r][c].monsters.push_back(attackfly);
 			}
@@ -673,6 +692,17 @@ SpriteGameObject* SceneGame::LoadObj(ObjType objtype, const std::string& texture
 				pooter->sortOrder = 1;
 				pooter->Init();
 				pooter->Reset();
+				pooter->OnDebug = [this, pooter]()
+				{
+					if (isDebug)
+					{
+						pooter->col.setOutlineColor(sf::Color::Red);
+					}
+					else
+					{
+						pooter->col.setOutlineColor(sf::Color::Transparent);
+					}
+				};
 				hitablelist.push_back(pooter);
 				stage1[r][c].monsters.push_back(pooter);
 			}

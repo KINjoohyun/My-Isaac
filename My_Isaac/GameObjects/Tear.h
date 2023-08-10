@@ -4,7 +4,7 @@
 #include "ObjectPool.h"
 
 class Player;
-class Poop;
+class RoomObject;
 
 class Tear : public SpriteGameObject
 {
@@ -24,7 +24,9 @@ protected:
 	float wallLeft = 0.0f;
 	float wallRight = 0.0f;
 
-	const std::list<Poop*>* poops;
+	const std::list<RoomObject*>* hitablelist;
+
+	sf::Sound shootsound;
 
 public:
 	ObjectPool<Tear>* pool;
@@ -35,10 +37,9 @@ public:
 	virtual void Init() override;
 	virtual void Reset() override;
 	virtual void Update(float dt) override;
-	virtual void Release() override { }
 
 	void Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, float speed, int damage);
 	void SetWall(const sf::FloatRect& wall);
 	void SetPlayer(Player* player);
-	void SetPoops(const std::list<Poop*>* list);
+	void SetHitlist(const std::list<RoomObject*>* list);
 };

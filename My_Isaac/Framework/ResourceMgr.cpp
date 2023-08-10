@@ -121,6 +121,7 @@ void ResourceMgr::Load(ResourceTypes t, const std::string path, bool isDefault)
 			mapSoundBuffer.insert({ path, { sb, isDefault } });
 		}
 	}
+	break;
 	case ResourceTypes::AnimationClip:
 	{
 		auto it = mapAnimationClip.find(path);

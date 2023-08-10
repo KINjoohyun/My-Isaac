@@ -1,35 +1,13 @@
 #include "stdafx.h"
 #include "RectGameObject.h"
 
-RectGameObject::RectGameObject(const std::string name)
-	:GameObject(name)
-{
-
-}
-RectGameObject::~RectGameObject()
-{
-
-}
-
-void RectGameObject::Init()
-{
-	
-}
-void RectGameObject::Reset()
-{
-	
-}
 void RectGameObject::Update(float dt)
 {
-	
+	if (OnDebug != nullptr) OnDebug();
 }
 void RectGameObject::Draw(sf::RenderWindow& window)
 {
 	window.draw(rect);
-}
-void RectGameObject::Release()
-{
-
 }
 
 void RectGameObject::SetPosition(const sf::Vector2f& position)

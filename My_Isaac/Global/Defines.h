@@ -58,6 +58,7 @@ enum class ObjType
 	AttackFly,
 	Pooter,
 	Sucker,
+	DukeOfFlies,
 
 	Count,
 };

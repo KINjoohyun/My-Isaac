@@ -2,7 +2,8 @@
 class AnimationController
 {
 protected:
-	std::unordered_map<std::string, AnimationClip> clips;
+	//std::unordered_map<std::string, AnimationClip> clips;
+	std::unordered_map<std::string, AnimationClip*> clips;
 	std::queue<std::string> queue;
 
 	float speed = 1.0f;
@@ -17,7 +18,8 @@ protected:
 	sf::Sprite* target = nullptr;
 
 public:
-	void AddClip(const AnimationClip& newClip);
+	//void AddClip(const AnimationClip& newClip);
+	void AddClip(AnimationClip& newClip);
 	void SetTarget(sf::Sprite* sprite) { target = sprite; }
 	sf::Sprite* GetTarget() const { return target; }
 	bool IsPlaying() { return isPlaying; }
@@ -30,4 +32,5 @@ public:
 	void PlayQueue(const std::string& clipId);
 	void Stop();
 	std::string GetCurrentClipId() const;
+	AnimationClip* GetCurrentClip() const;
 };

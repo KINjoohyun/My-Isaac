@@ -4,7 +4,7 @@
 #include "SceneMgr.h"
 #include "SceneGame.h"
 #include "Player.h"
-#include "Poop.h"
+#include "RoomObject.h"
 
 Tear::Tear(const std::string& textureId, const std::string& name)
 	:SpriteGameObject(textureId, name)
@@ -16,21 +16,21 @@ Tear::Tear(const std::string& textureId, const std::string& name)
 void Tear::Init()
 {
 	SpriteGameObject::Init();
+	SetOrigin(Origins::C);
 
 	sprite.setScale(1.5f, 1.5f);
 }
 void Tear::Reset()
 {
-	SpriteGameObject::Reset();
-
 	SetPosition(0.0f, 0.0f);
 	range = 300.0f;
 	direction = { 0.0f, 0.0f };
-	speed = 0.0f;
 	damage = 0;
 
+	SpriteGameObject::Reset();
+
 	animation.Play("TearShooting");
-	SetOrigin(Origins::C);
+	shootsound.setBuffer(*RESOURCE_MGR.GetSoundBuffer("sounds/Tears_Fire_" + std::to_string(Utils::RandomRange(0, 2)) + ".ogg"));
 }
 void Tear::Update(float dt)
 {
@@ -41,33 +41,33 @@ void Tear::Update(float dt)
 
 	range -= speed * dt;
 
-	if (animation.GetCurrentClipId() == "TearShooting")
+	if (!wall.contains(position) || range < 0.0f)
 	{
-		if (!wall.contains(position) || range < 0.0f)
-		{
-			SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
-			player->TearSplash(position);
+		SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+		player->Splash(position, "TearSplash");
 
-			pool->Return(this);
-			scene->RemoveGO(this);
-			return;
-		}
+		pool->Return(this);
+		scene->RemoveGO(this);
+		return;
+	}
 
-		if (poops != nullptr)
+	if (hitablelist != nullptr)
+	{
+		for (auto it : *hitablelist)
 		{
-			for (auto it : *poops)
+			if (sprite.getGlobalBounds().intersects(it->sprite.getGlobalBounds()) && isActive)
 			{
-				if (sprite.getGlobalBounds().intersects(it->sprite.getGlobalBounds()) && isActive)
+				if (it->OnHit != nullptr)
 				{
 					it->OnHit(damage);
-
-					SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
-					player->TearSplash(position);
-
-					pool->Return(this);
-					scene->RemoveGO(this);
-					break;
 				}
+
+				SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrentScene();
+				player->Splash(position, "TearSplash");
+
+				pool->Return(this);
+				scene->RemoveGO(this);
+				break;
 			}
 		}
 	}
@@ -80,6 +80,8 @@ void Tear::Shoot(const sf::Vector2f& position, const sf::Vector2f& direction, fl
 	this->direction = direction;
 	this->speed = speed;
 	this->damage = damage;
+
+	shootsound.play();
 }
 void Tear::SetWall(const sf::FloatRect& wall)
 {
@@ -94,7 +96,7 @@ void Tear::SetPlayer(Player* player)
 {
 	this->player = player;
 }
-void Tear::SetPoops(const std::list<Poop*>* list)
+void Tear::SetHitlist(const std::list<RoomObject*>* list)
 {
-	this->poops = list;
+	this->hitablelist = list;
 }

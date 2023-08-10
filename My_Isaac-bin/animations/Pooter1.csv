@@ -1,0 +1,6 @@
+ID,FPS,LOOPTYPE,,
+Idle,10,1,,
+,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
+graphics/Pooter.png,0,0,32,32
+graphics/Pooter.png,32,0,32,32

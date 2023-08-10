@@ -2,16 +2,6 @@
 #include "TextGameObject.h"
 #include "ResourceMgr.h"
 
-TextGameObject::TextGameObject(const std::string fontId, const std::string name)
-	:GameObject(name), fontId(fontId)
-{
-
-}
-TextGameObject::~TextGameObject()
-{
-
-}
-
 void TextGameObject::Init()
 {
 
@@ -26,7 +16,10 @@ void TextGameObject::Reset()
 }
 void TextGameObject::Update(float dt)
 {
-
+	if (action != nullptr)
+	{
+		action();
+	}
 }
 void TextGameObject::Draw(sf::RenderWindow& window)
 {

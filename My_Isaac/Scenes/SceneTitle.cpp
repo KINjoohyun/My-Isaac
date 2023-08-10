@@ -9,6 +9,7 @@
 #include "StringTable.h"
 #include "Variables.h"
 #include "UITextButton.h"
+#include "Title.h"
 
 SceneTitle::SceneTitle() : Scene(SceneId::Title)
 {
@@ -32,16 +33,16 @@ void SceneTitle::Init()
 	SpriteGameObject* empty = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/emptyscreen.png", "empty"));
 	empty->SetOrigin(Origins::C);
 	empty->SetPosition(0.0f, 0.0f);
-	empty->sortLayer = -100;
+	empty->sortLayer = -1;
 
 	SpriteGameObject* logo = (SpriteGameObject*)AddGO(new SpriteGameObject("graphics/logo.png", "logo"));
 	logo->SetOrigin(Origins::TC);
-	logo->SetPosition({ 0.0f, -windowSize.y * 0.5f + 100.0f });
+	logo->SetPosition({ 0.0f, -windowSize.y * 0.5f + 50.0f });
 	logo->sortLayer = 0;
 
 	UITextButton* button1 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
 	button1->SetOrigin(Origins::C);
-	button1->SetText("Game Start", 50);
+	button1->SetText("GAME START", 50);
 	button1->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 150.0f);
 	button1->OnEnter = []()
 	{
@@ -59,7 +60,7 @@ void SceneTitle::Init()
 
 	UITextButton* button2 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
 	button2->SetOrigin(Origins::C);
-	button2->SetText("Map Editor", 50);
+	button2->SetText("MAP EDITOR", 50);
 	button2->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 250.0f);
 	button2->OnEnter = []()
 	{
@@ -74,6 +75,26 @@ void SceneTitle::Init()
 		SCENE_MGR.ChangeScene(SceneId::Editor);
 	};
 	button2->sortLayer = 100;
+
+	UITextButton* button3 = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf"));
+	button3->SetOrigin(Origins::C);
+	button3->SetText("EXIT", 50);
+	button3->SetPosition(windowSize.x * 0.5f, windowSize.y * 0.5f + 350.0f);
+	button3->OnEnter = []()
+	{
+
+	};
+	button3->OnExit = []()
+	{
+
+	};
+	button3->OnClick = [this]()
+	{
+		window.close();
+	};
+	button3->sortLayer = 100;
+
+	Title* title = (Title*)AddGO(new Title());
 
 	for (auto go : gameObjects)
 	{
@@ -100,6 +121,10 @@ void SceneTitle::Release()
 void SceneTitle::Enter()
 {
 	Scene::Enter();
+
+	bgm.setBuffer(*RESOURCE_MGR.GetSoundBuffer("sounds/title_bgm.ogg"));
+	bgm.play();
+	bgm.setLoop(true);
 }
 void SceneTitle::Exit()
 {

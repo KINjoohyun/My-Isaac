@@ -1,0 +1,19 @@
+ID,FPS,LOOPTYPE,,
+BloodSplash,20,0,,
+,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
+graphics/blood.png,0,0,64,64
+graphics/blood.png,64,0,64,64
+graphics/blood.png,128,0,64,64
+graphics/blood.png,192,0,64,64
+graphics/blood.png,0,64,64,64
+graphics/blood.png,64,64,64,64
+graphics/blood.png,128,64,64,64
+graphics/blood.png,192,64,64,64
+graphics/blood.png,0,128,64,64
+graphics/blood.png,64,128,64,64
+graphics/blood.png,128,128,64,64
+graphics/blood.png,192,128,64,64
+graphics/blood.png,0,192,64,64
+graphics/blood.png,64,192,64,64
+graphics/blood.png,128,192,64,64

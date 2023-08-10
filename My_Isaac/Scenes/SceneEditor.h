@@ -17,6 +17,7 @@ protected:
 	int gridx = 0;
 	int gridy = 0;
 	std::vector<RectGameObject*> grids;
+
 public:
 	SceneEditor();
 	virtual ~SceneEditor() override;

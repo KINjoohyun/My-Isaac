@@ -177,6 +177,7 @@
     <ClCompile Include="GameObjects\RoomObject.cpp" />
     <ClCompile Include="GameObjects\Monster.cpp" />
     <ClCompile Include="GameObjects\Pill.cpp" />
+    <ClCompile Include="UI\TextBox.cpp" />
     <ClCompile Include="UI\Title.cpp" />
     <ClCompile Include="UI\MiniMap.cpp" />
     <ClCompile Include="Scenes\SceneEditor.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="GameObjects\Monster.h" />
     <ClInclude Include="GameObjects\Pill.h" />
     <ClInclude Include="UI\GuideObject.h" />
+    <ClInclude Include="UI\TextBox.h" />
     <ClInclude Include="UI\Title.h" />
     <ClInclude Include="UI\MiniMap.h" />
     <ClInclude Include="Scenes\SceneEditor.h" />

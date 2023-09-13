@@ -22,6 +22,7 @@ void InputMgr::Update(float dt)
 {
 	downList.clear();
 	upList.clear();
+	textList.clear();
 
 	for (auto& it : axismap)
 	{
@@ -46,6 +47,13 @@ void InputMgr::UpdateEvent(const sf::Event& ev)
 	switch (ev.type)
 	{
 	// Keyboard
+	case sf::Event::TextEntered:
+		if (ev.text.unicode < 128)
+		{
+			char ch = (char)ev.text.unicode;
+			textList.push_back(ch);
+		}
+		break;
 	case sf::Event::KeyPressed:
 		if (std::find(ingList.begin(), ingList.end(), ev.key.code) == ingList.end())
 		{

@@ -9,7 +9,7 @@ ResourceMgr::~ResourceMgr()
 
 void ResourceMgr::Init()
 {
-	LoadFormCSV("scripts/DefaultResourceList.csv", true); //파일의 경로를 적은 파일의 경로를 적은 파일을 호출하는 함수를 호출하는 함수
+	LoadFormCSV("scripts/DefaultResourceList.csv", true);
 }
 void ResourceMgr::UnLoadAll()
 {
@@ -192,6 +192,7 @@ void ResourceMgr::Unload(ResourceTypes t, const std::string id)
 			}
 		}
 	}
+	break;
 	case ResourceTypes::AnimationClip:
 	{
 		auto it = mapAnimationClip.find(id);
@@ -229,7 +230,6 @@ sf::Font* ResourceMgr::GetFont(const std::string& id)
 	{
 		return std::get<0>(it->second);
 	}
-
 	return nullptr;
 }
 sf::SoundBuffer* ResourceMgr::GetSoundBuffer(const std::string& id)

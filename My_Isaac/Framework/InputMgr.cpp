@@ -8,17 +8,13 @@ InputMgr::InputMgr()
 	AxisInfo infoH; // horizontal info
 	infoH.axis = Axis::Horizontal;
 	infoH.positives.push_back((int)sf::Keyboard::Key::D);
-	//infoH.positives.push_back((int)sf::Keyboard::Key::Right);
 	infoH.negatives.push_back((int)sf::Keyboard::Key::A);
-	//infoH.negatives.push_back((int)sf::Keyboard::Key::Left);
 	axismap.insert({ infoH.axis, infoH });
 
 	AxisInfo infoV; // vertical info
 	infoV.axis = Axis::Vertical;
 	infoV.positives.push_back((int)sf::Keyboard::Key::S);
-	//infoV.positives.push_back((int)sf::Keyboard::Key::Down);
 	infoV.negatives.push_back((int)sf::Keyboard::Key::W);
-	//infoV.negatives.push_back((int)sf::Keyboard::Key::Up);
 	axismap.insert({ infoV.axis, infoV });
 }
 
@@ -26,6 +22,7 @@ void InputMgr::Update(float dt)
 {
 	downList.clear();
 	upList.clear();
+	textList.clear();
 
 	for (auto& it : axismap)
 	{
@@ -50,6 +47,13 @@ void InputMgr::UpdateEvent(const sf::Event& ev)
 	switch (ev.type)
 	{
 	// Keyboard
+	case sf::Event::TextEntered:
+		if (ev.text.unicode < 128)
+		{
+			char ch = (char)ev.text.unicode;
+			textList.push_back(ch);
+		}
+		break;
 	case sf::Event::KeyPressed:
 		if (std::find(ingList.begin(), ingList.end(), ev.key.code) == ingList.end())
 		{

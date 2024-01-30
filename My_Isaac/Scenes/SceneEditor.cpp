@@ -11,6 +11,7 @@
 #include "UIImageButton.h"
 #include "Tile.h"
 #include "RectGameObject.h"
+#include "TextBox.h"
 
 #include "rapidcsv.h"
 
@@ -47,6 +48,11 @@ void SceneEditor::Update(float dt)
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Escape))
 	{
 		SCENE_MGR.ChangeScene(SceneId::Title);
+	}
+
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Enter))
+	{
+		TextBoxApply();
 	}
 }
 void SceneEditor::Draw(sf::RenderWindow& window)
@@ -201,29 +207,12 @@ void SceneEditor::SetTools()
 	};
 	bg2->sortLayer = 100;
 
-	for (int i = 1; i <= 9; i++)
-	{
-		std::string path;
-		path = "room/Room" + std::to_string(i) + ".csv";
-
-		UITextButton* roomButton = (UITextButton*)AddGO(new UITextButton("fonts/DNFBitBitOTF.otf", path));
-		roomButton->SetOrigin(Origins::C);
-		roomButton->SetText(path, 12, sf::Color::White, 1.0f);
-		roomButton->SetPosition(windowSize.x - 60.0f, windowSize.y * 0.15f + (windowSize.y * 0.05f * i));
-		roomButton->OnEnter = []()
-		{
-
-		};
-		roomButton->OnExit = []()
-		{
-
-		};
-		roomButton->OnClick = [&, path]()
-		{
-			roomName = path;
-		};
-		roomButton->sortLayer = 100;
-	}
+	roomTB = (TextBox*)AddGO(new TextBox("fonts/DNFBitBitOTF.otf", "room/Room.csv"));
+	roomTB->box.setSize({ 100, 50 });
+	roomTB->text.setCharacterSize(10);
+	roomTB->SetOrigin(Origins::C);
+	roomTB->SetPosition(windowSize.x - 60.0f, windowSize.y * 0.2f);
+	roomTB->sortLayer = 101;
 	
 	UIImageButton* rocks1 = (UIImageButton*)AddGO(new UIImageButton("graphics/grid_rocks1.png"));
 	rocks1->SetOrigin(Origins::C);
@@ -467,4 +456,9 @@ void SceneEditor::TileRemove(Tile* tile)
 {
 	currentRoom.remove(tile);
 	RemoveGO(tile);
+}
+
+void SceneEditor::TextBoxApply()
+{
+	roomName = roomTB->text.getString();
 }

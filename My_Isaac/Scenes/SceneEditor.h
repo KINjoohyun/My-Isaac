@@ -4,6 +4,7 @@
 
 class SpriteGameObject;
 class RectGameObject;
+class TextBox;
 
 class SceneEditor : public Scene
 {
@@ -11,6 +12,8 @@ protected:
 	std::list<Tile*> currentRoom;
 	SpriteGameObject* roomImage = nullptr;
 	std::string roomName = "";
+
+	TextBox* roomTB = nullptr;
 
 	int sizex = 0;
 	int sizey = 0;
@@ -38,4 +41,5 @@ public:
 	void SetGrid(int sizex, int sizey, int r, int c);
 
 	void TileRemove(Tile* tile);
+	void TextBoxApply();
 };

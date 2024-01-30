@@ -33,6 +33,7 @@ protected:
 	sf::Vector2f mousePos;
 
 	std::map<Axis, AxisInfo> axismap;
+
 public:
 	void Update(float dt);
 	void UpdateEvent(const sf::Event& ev);
@@ -41,6 +42,7 @@ public:
 	bool GetKeyDown(sf::Keyboard::Key key);
 	bool GetKey(sf::Keyboard::Key key);
 	bool GetKeyUp(sf::Keyboard::Key key);
+	std::vector<char> textList;
 
 	// Mouse ют╥б
 	sf::Vector2f& GetMousePos();
